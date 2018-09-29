@@ -24,6 +24,7 @@ def risposte(msg):
                 ])
 
     feedback = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="Vai in 'Home' e lascia il tuo feedback", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
                     [InlineKeyboardButton(text="Vai in 'Home' e lascia il tuo feedback", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')]
                 ])
 
