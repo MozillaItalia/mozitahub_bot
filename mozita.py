@@ -29,7 +29,7 @@ def risposte(msg):
 
     start = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Mostrami che cosa posso fare', callback_data='/azioni')],
-                    [InlineKeyboardButton(text='Ho bisogno di assistenza', callback_data='/support')],
+                    [InlineKeyboardButton(text='Ho bisogno di assistenza', callback_data='/supporto')],
                 ])
 
     support = InlineKeyboardMarkup(inline_keyboard=[
@@ -38,7 +38,8 @@ def risposte(msg):
                 ])
 
     azioni = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Supporto', callback_data='/support'),
+                    [InlineKeyboardButton(text='Gruppi', callback_data='/gruppi'),
+                    InlineKeyboardButton(text='Supporto', callback_data='/supporto'),
                     InlineKeyboardButton(text='Gruppi', callback_data='/gruppi'),
                     InlineKeyboardButton(text='Collabora', callback_data='/collabora')],
                     [InlineKeyboardButton(text='Info', callback_data='/info'),
@@ -105,7 +106,7 @@ def risposte(msg):
     elif text=="/start":
         bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto cio' che puoi fare digitando /azioni.")
         bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare?", reply_markup=start)
-    elif text=="/support":
+    elif text=="/supporto":
         bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assistera' nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunita' direttamente da Telegram.")
         bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=support)
     elif text=="/gruppi":
@@ -118,7 +119,7 @@ def risposte(msg):
     elif text=="/feedback":
         bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudichera' o aggredira', ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback)
     elif text=="/help":
-        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/support: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia\n/collabora: per unirti ai volontari Mozilla Italia\n/info: avere informazioni riguardo questo bot\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.")
+        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia\n/collabora: per unirti ai volontari Mozilla Italia\n/info: avere informazioni riguardo questo bot\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.")
         bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=azioni)
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
