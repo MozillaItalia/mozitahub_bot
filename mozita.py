@@ -38,18 +38,17 @@ def risposte(msg):
                 ])
 
     azioni = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text='Home', callback_data='/home')],
                     [InlineKeyboardButton(text='Gruppi', callback_data='/gruppi'),
                     InlineKeyboardButton(text='Supporto', callback_data='/supporto'),
-                    InlineKeyboardButton(text='Gruppi', callback_data='/gruppi'),
                     InlineKeyboardButton(text='Collabora', callback_data='/collabora')],
-                    [InlineKeyboardButton(text='Info', callback_data='/info'),
-                    InlineKeyboardButton(text='Home', callback_data='/home'),
-                    InlineKeyboardButton(text='Vademecum', callback_data='/vademecum')],
-                    [InlineKeyboardButton(text='News', callback_data='/news'),
-                    InlineKeyboardButton(text='Feedback', callback_data='/feedback'),
+                    [InlineKeyboardButton(text='Vademecum', callback_data='/vademecum'),
+                    InlineKeyboardButton(text='News', callback_data='/news'),
                     InlineKeyboardButton(text='IoT', callback_data='/iot')],
                     [InlineKeyboardButton(text='Developer', callback_data='/developer'),
                     InlineKeyboardButton(text='Design', callback_data='/design')],
+                    [InlineKeyboardButton(text='Feedback', callback_data='/feedback'),
+                    InlineKeyboardButton(text='Info', callback_data='/info')],
                 ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -100,7 +99,7 @@ def risposte(msg):
     '''
 
     if text=="/home":
-        bot.sendMessage(chat_id, "Mozilla Italia - Home e' gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di provenienza. Unisciti anche tu e diventa parte di questa grande famiglia!", reply_markup=home)
+        bot.sendMessage(chat_id, "Mozilla Italia - Home e' gruppo dove vengono trattate varie tematiche come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.", reply_markup=home)
     #elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text=="/start":
