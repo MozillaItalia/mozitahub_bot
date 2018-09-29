@@ -93,8 +93,9 @@ def risposte(msg):
 
     '''
     nome_nome = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Testo bottone', callback_data='testo')],
-                    [InlineKeyboardButton(text='Testo bottone', url='https://t.me/')],
+                    [InlineKeyboardButton(text='Testo bottone' (riga 1, col 1), callback_data='testo'),
+                    InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='testo2')],
+                    [InlineKeyboardButton(text='Testo bottone 3 (riga 2, col 1-2)', url='https://t.me/')],
                 ])
     '''
 
