@@ -28,7 +28,7 @@ def risposte(msg):
                 ])
 
     start = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Mostrami che cosa posso fare', callback_data='/azioni')],
+                    [InlineKeyboardButton(text='Mostrami che cosa posso fare', callback_data='/help')],
                     [InlineKeyboardButton(text='Ho bisogno di assistenza', callback_data='/supporto')],
                 ])
 
@@ -103,7 +103,7 @@ def risposte(msg):
     #elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text=="/start":
-        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto cio' che puoi fare digitando /azioni.")
+        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto cio' che puoi fare digitando /help.")
         bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare?", reply_markup=start)
     elif text=="/supporto":
         bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assistera' nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunita' direttamente da Telegram.")
