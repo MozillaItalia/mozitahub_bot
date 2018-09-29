@@ -6,17 +6,18 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 TOKEN="---NASCOSTO---"
 
 def risposte(msg):
+    localtime = time.asctime( time.localtime(time.time()) )
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
     except:
-        print("Exception:001")
+        print("Exception:001 - "localtime)
         ##entra in questa eccezione se NON è avviato come comando diretto (digitato come comando e inviato)
     try:
         query_id, chat_id, text = telepot.glance(msg, flavor='callback_query')
         print(query_data)
     except:
-        print("Exception:002")
+        print("Exception:002 - "localtime)
         ##entra in questa eccezione se NON è stato premendo su un pulsante delle inlineKeyboard
     ##i try-except precedente servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
     home = InlineKeyboardMarkup(inline_keyboard=[
