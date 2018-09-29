@@ -6,7 +6,7 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 TOKEN="---NASCOSTO---"
 
 def risposte(msg):
-    localtime = time.asctime( time.localtime(time.time()) )
+    localtime = time.strptime( time.localtime(time.time()),[])
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
