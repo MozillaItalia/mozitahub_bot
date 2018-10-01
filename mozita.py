@@ -36,9 +36,10 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Ho bisogno di assistenza', callback_data='/supporto')],
                 ])
 
-    support = InlineKeyboardMarkup(inline_keyboard=[
+    supporto = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Supporto via Telegram', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
                     InlineKeyboardButton(text='Supporto via forum', callback_data='/forum')],
+                    [InlineKeyboardButton(text='Leggi FAQ dal forum di Mozilla Italia', url='https://forum.mozillaitalia.org/index.php?board=9.0')]
                 ])
 
     help = InlineKeyboardMarkup(inline_keyboard=[
@@ -111,8 +112,8 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto cio' che puoi fare digitando /help.")
         bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare?", reply_markup=start)
     elif text=="/supporto":
-        bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assistera' nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunita' direttamente da Telegram.")
-        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=support)
+        bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assistera' nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunita' direttamente da Telegram.\n\nTi consigliamo, comunque, di leggere prima le FAQ (le risposte a domande frequenti) poiche' potresti trovare la soluzione al tuo probema direttamente li'.")
+        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=supporto)
     elif text=="/gruppi":
         bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo piu' adatto alle tue caratteristiche, alle tue abilita' e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si e' interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a piu' gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico :)", reply_markup=gruppi)
     elif text=="/collabora":
