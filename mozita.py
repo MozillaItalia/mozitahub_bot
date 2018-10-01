@@ -2,11 +2,12 @@ import telepot
 import time
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+import datetime
 
 TOKEN="---NASCOSTO---"
 
 def risposte(msg):
-    localtime = time.strptime( time.localtime(time.time()),[%d:%e:%Y %H:%M:%S])
+    localtime=date.strftime(%d/%m/%Y %H:%M:%S)
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
