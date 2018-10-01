@@ -31,7 +31,7 @@ def risposte(msg):
 
     feedback = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text="Vai in 'Home' e lascia il tuo feedback", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-                    [InlineKeyboardButton(text="Unisciti al gruppo 'Home' e chiedi di voler contribuire al bot", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')]
+                    [InlineKeyboardButton(text="Chiedi di voler contribuire al bot in 'Home'", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')]
                 ])
 
     start = InlineKeyboardMarkup(inline_keyboard=[
