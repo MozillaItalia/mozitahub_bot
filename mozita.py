@@ -6,6 +6,9 @@ from datetime import datetime
 
 TOKEN="---NASCOSTO---"
 
+versione="0.0.3 alpha"
+ultimoAggiornamento="01-10-2018"
+
 def risposte(msg):
     localtime=datetime.now()
     localtime=localtime.strftime("%d/%m/%y %H:%M:%S")
@@ -129,7 +132,7 @@ def risposte(msg):
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
     elif text=="/info":
-        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: 0.0.2 preview\nUltimo aggiornamento: 29-09-2018\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)")
+        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)")
     elif text=="/forum":
         bot.sendMessage(chat_id, "La comunita' di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic e' necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato gia' aperto e, magari, anche risolto.", reply_markup=forum)
     elif text=="/developer":
