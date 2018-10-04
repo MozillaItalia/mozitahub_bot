@@ -135,8 +135,8 @@ def risposte(msg):
                 ])
     
     call = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/listaCall')],
-                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossimaCall')],
+                    [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/listacall')],
+                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossimacall')],
                 ])
 
     listaCall = InlineKeyboardMarkup(inline_keyboard=[
@@ -193,9 +193,9 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Unisciti al gruppo ufficiale di Mozilla Italia dedicato allo sviluppo delle IoT.", reply_markup=iot)
     elif text=="/call":
         bot.sendMessage(chat_id, "La comunita' di Mozilla Italia organizza, salvo imprevisti, il primo venerdi' di ogni mese una call comunitaria, per poter parlare di tutto ciò che e' accaduto in quel mese nella comunita', di nuovi progetti, eventi o proposte. Tutti possono partecipare, sia membri di Mozilla Italia sia non membri, ma comunque interessati.\nQueste call vengono registrate e successivamente pubblicate per poterle (ri)vedere liberamente.", reply_markup=call)
-    elif text=="/listaCall":
+    elif text=="/listacall":
         bot.sendMessage(chat_id, "Questo e' tutte l'elenco delle call gia' tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
-    elif text=="/prossimaCall":
+    elif text=="/prossimacall":
         bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
     else:
         bot.sendMessage(chat_id, "Errore: comando non riconosciuto", reply_markup=start)
