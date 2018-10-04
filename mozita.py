@@ -92,6 +92,9 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Design', callback_data='/design'),
                     InlineKeyboardButton(text='Feedback', callback_data='/feedback'),
                     InlineKeyboardButton(text='Info', callback_data='/info')],
+                    [InlineKeyboardButton(text='Call', callback_data='/call'), 
+                    InlineKeyboardButton(text='Lista call', callback_data='/listacall'), 
+                    InlineKeyboardButton(text='Prossima call', callback_data='/prossimacall')],
                 ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
