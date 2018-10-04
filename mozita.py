@@ -6,8 +6,10 @@ from datetime import datetime
 
 TOKEN="---NASCOSTO---"
 
+#COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
+
 versione="0.0.3 alpha"
-ultimoAggiornamento="01-10-2018"
+ultimoAggiornamento="04-10-2018"
 
 def risposte(msg):
     localtime=datetime.now()
@@ -24,7 +26,40 @@ def risposte(msg):
     except:
         print("Exception:002 - "+localtime)
         ##entra in questa eccezione se NON è stato premendo su un pulsante delle inlineKeyboard
-    ##i try-except precedente servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
+    ##i try-except precedenti servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
+
+    if(datetime.now().month==12):
+        annoCall=datetime.now().year+1
+        meseCall="Gennaio"
+    else:
+        annoCall=datetime.now().year
+        meseCall=datetime.now().month+1
+        if(meseCall==1):
+            meseCall="Gennaio"
+        elif(meseCall==2):
+            meseCall="Febbraio"
+        elif(meseCall==3):
+            meseCall="Marzo"
+        elif(meseCall==4):
+            meseCall="Aprile"
+        elif(meseCall==5):
+            meseCall="Maggio"
+        elif(meseCall==6):
+            meseCall="Giugno"
+        elif(meseCall==7):
+            meseCall="Luglio"
+        elif(meseCall==8):
+            meseCall="Agosto"
+        elif(meseCall==9):
+            meseCall="Settembre"
+        elif(meseCall==10):
+            meseCall="Ottobre"
+        elif(meseCall==11):
+            meseCall="Novembre"
+        elif(meseCall==12):
+            meseCall="Dicembre"
+        #non è possibile utilizzare la funzione datetime.now().(month+1).strftime("%B") perché lo restituisce in inglese
+
     home = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vai al gruppo Home', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
                 ])
@@ -98,11 +133,26 @@ def risposte(msg):
     forum = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vai al forum di Mozilla Italia', url='https://forum.mozillaitalia.org/')],
                 ])
+    
+    call = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/lista_call')],
+                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossima_call')],
+                ])
 
+    nome_nome = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text='Guarda la call di Dicembre 2017', url='http://edovio.in/call/Call_MozillaItalia_271217.mp4')],
+                    [InlineKeyboardButton(text='Guarda la call di Gennaio 2018', url='https://drive.google.com/file/d/1FPBtUT1NVyem2e1q1d_F_dZ6Lzmb64EK/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Marzo 2018', url='https://drive.google.com/file/d/1XY4tUt9tzYUZjy08tRB1vkhpwfQ7xA9Q/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (1)', url='https://drive.google.com/file/d/1PJXI4h88NjXNp2hMINYMnu_0ADhdG0ZK/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (2)', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Maggio 2018', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Agosto 2018', url='https://drive.google.com/file/d/1swzPNUJYh6Jd7wVaQvVr2TCVoc96f67n/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Settembre 2018', url='https://drive.google.com/file/d/1lQFgj-32bWGaaHGReW8fY0kdIuRt4eTZ/view')],
+                ])
     '''
     nome_nome = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Testo bottone' (riga 1, col 1), callback_data='testo'),
-                    InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='testo2')],
+                    [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
+                    InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='/comando2')],
                     [InlineKeyboardButton(text='Testo bottone 3 (riga 2, col 1-2)', url='https://t.me/')],
                 ])
     '''
@@ -141,6 +191,12 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Unisciti al gruppo dei designer di Mozilla Italia.", reply_markup=design)
     elif text=="/iot":
         bot.sendMessage(chat_id, "Unisciti al gruppo ufficiale di Mozilla Italia dedicato allo sviluppo delle IoT.", reply_markup=iot)
+    elif text=="/call":
+        bot.sendMessage(chat_id, "La comunita' di Mozilla Italia organizza, salvo imprevisti, il primo venerdi' di ogni mese una call comunitaria, per poter parlare di tutto ciò che e' accaduto in quel mese nella comunita', di nuovi progetti, eventi o proposte. Tutti possono partecipare, sia membri di Mozilla Italia sia non membri, ma comunque interessati.\nQueste call vengono registrate e successivamente pubblicate per poterle (ri)vedere liberamente.", reply_markup=call)
+    elif text=="/listaCall":
+        bot.sendMessage(chat_id, "Questo e' tutte l'elenco delle call gia' tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
+    elif text=="/prossimaCall":
+        bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
     else:
         bot.sendMessage(chat_id, "Errore: comando non riconosciuto", reply_markup=start)
 
