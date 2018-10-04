@@ -29,10 +29,10 @@ def risposte(msg):
     ##i try-except precedenti servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
 
     if(datetime.now().month==12):
-        annoCall=datetime.now().year+1
+        annoCall=str(datetime.now().year+1)
         meseCall="Gennaio"
     else:
-        annoCall=datetime.now().year
+        annoCall=str(datetime.now().year)
         meseCall=datetime.now().month+1
         if(meseCall==1):
             meseCall="Gennaio"
