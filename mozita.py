@@ -139,7 +139,7 @@ def risposte(msg):
     
     call = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/listacall')],
-                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossimacall')],
+                    [InlineKeyboardButton(text='Scopri quando e\' la prossima call', callback_data='/prossimacall')],
                 ])
 
     listaCall = InlineKeyboardMarkup(inline_keyboard=[
