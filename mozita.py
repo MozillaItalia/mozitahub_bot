@@ -135,11 +135,11 @@ def risposte(msg):
                 ])
     
     call = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/lista_call')],
-                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossima_call')],
+                    [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/listaCall')],
+                    [InlineKeyboardButton(text='Scopri quanto e\' la prossima call', callback_data='/prossimaCall')],
                 ])
 
-    nome_nome = InlineKeyboardMarkup(inline_keyboard=[
+    listaCall = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Guarda la call di Dicembre 2017', url='http://edovio.in/call/Call_MozillaItalia_271217.mp4')],
                     [InlineKeyboardButton(text='Guarda la call di Gennaio 2018', url='https://drive.google.com/file/d/1FPBtUT1NVyem2e1q1d_F_dZ6Lzmb64EK/view')],
                     [InlineKeyboardButton(text='Guarda la call di Marzo 2018', url='https://drive.google.com/file/d/1XY4tUt9tzYUZjy08tRB1vkhpwfQ7xA9Q/view')],
