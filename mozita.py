@@ -157,6 +157,7 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Guarda la call di Maggio 2018', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
                     [InlineKeyboardButton(text='Guarda la call di Agosto 2018', url='https://drive.google.com/file/d/1swzPNUJYh6Jd7wVaQvVr2TCVoc96f67n/view')],
                     [InlineKeyboardButton(text='Guarda la call di Settembre 2018', url='https://drive.google.com/file/d/1lQFgj-32bWGaaHGReW8fY0kdIuRt4eTZ/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Ottobre 2018', url='https://drive.google.com/file/d/1iX5yIXqTYvtE69VLnPufW-xaaFYSUCLv/view')],
                 ])
 
     progetti = InlineKeyboardMarkup(inline_keyboard=[
