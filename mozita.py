@@ -8,7 +8,7 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.1.0 alpha"
+versione="0.1.1 alpha"
 ultimoAggiornamento="26-10-2018"
 
 def risposte(msg):
@@ -32,8 +32,10 @@ def risposte(msg):
         meseCall="Gennaio"
     else:
         annoCall=str(datetime.now().year)
-        meseCall=datetime.now().month
-        if(int(localtime.strftime("%d"))<=7) meseCall=datetime.now().month+1
+        if(int(localtime.strftime("%d"))<=7):
+            meseCall=datetime.now().month+1
+        else:
+            meseCall=datetime.now().month
         if(meseCall==1):
             meseCall="Gennaio"
         elif(meseCall==2):
