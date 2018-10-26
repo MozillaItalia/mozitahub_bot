@@ -8,12 +8,15 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.1.1 alpha"
+versione="0.1.2 alpha"
 ultimoAggiornamento="26-10-2018"
 
 def risposte(msg):
     localtime=datetime.now()
     localtime=localtime.strftime("%d/%m/%y %H:%M:%S")
+    giorno=datetime.now()
+    giorno=giorno.strftime("%d")
+    day=int(giorno)
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
@@ -32,7 +35,7 @@ def risposte(msg):
         meseCall="Gennaio"
     else:
         annoCall=str(datetime.now().year)
-        if(int(localtime.strftime("%d"))<=7):
+        if(day<=7):
             meseCall=datetime.now().month+1
         else:
             meseCall=datetime.now().month
@@ -94,8 +97,8 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Design', callback_data='/design'),
                     InlineKeyboardButton(text='Feedback', callback_data='/feedback'),
                     InlineKeyboardButton(text='Info', callback_data='/info')],
-                    [InlineKeyboardButton(text='Call', callback_data='/call'), 
-                    InlineKeyboardButton(text='Lista call', callback_data='/listacall'), 
+                    [InlineKeyboardButton(text='Call', callback_data='/call'),
+                    InlineKeyboardButton(text='Lista call', callback_data='/listacall'),
                     InlineKeyboardButton(text='Prossima call', callback_data='/prossimacall')],
                     [InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti')],
                 ])
@@ -139,7 +142,7 @@ def risposte(msg):
     forum = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vai al forum di Mozilla Italia', url='https://forum.mozillaitalia.org/')],
                 ])
-    
+
     call = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vedi tutte le call', callback_data='/listacall')],
                     [InlineKeyboardButton(text='Scopri quando e\' la prossima call', callback_data='/prossimacall')],
@@ -155,7 +158,7 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Guarda la call di Agosto 2018', url='https://drive.google.com/file/d/1swzPNUJYh6Jd7wVaQvVr2TCVoc96f67n/view')],
                     [InlineKeyboardButton(text='Guarda la call di Settembre 2018', url='https://drive.google.com/file/d/1lQFgj-32bWGaaHGReW8fY0kdIuRt4eTZ/view')],
                 ])
-    
+
     progetti = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Common Voice', url='https://voice.mozilla.org/it/new')],
                     [InlineKeyboardButton(text='Internet Health Report', url='https://internethealthreport.org/')],
@@ -170,13 +173,13 @@ def risposte(msg):
                     [InlineKeyboardButton(text='MDN (Mozilla Developer Network)', url='https://developer.mozilla.org/it/')],
                     [InlineKeyboardButton(text='Firefox Lockbox', url='https://testpilot.firefox.com/experiments/firefox-lockbox/')],
                 ])
-    
+
     progettimozita = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vademecum', url='https://github.com/MozillaItalia/firefox-vademecum')],
                     [InlineKeyboardButton(text='MozIta Hub Bot', url='https://github.com/Sav22999/mozitahub_bot')],
                     [InlineKeyboardButton(text='Slide Common Voice', url='https://docs.google.com/presentation/d/1oFkstTY140Tp6cazOgSC6LBeTRF0labJNCl-0DogfQI/edit?ts=5babc6c8#slide=id.g4165a8ce60_0_51')],
                 ])
-    
+
     '''
     nome_nome = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
