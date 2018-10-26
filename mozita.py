@@ -8,8 +8,8 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.0.3 alpha"
-ultimoAggiornamento="04-10-2018"
+versione="0.1.0 alpha"
+ultimoAggiornamento="26-10-2018"
 
 def risposte(msg):
     localtime=datetime.now()
@@ -22,18 +22,18 @@ def risposte(msg):
         ##entra in questa eccezione se NON è avviato come comando diretto (digitato come comando e inviato)
     try:
         query_id, chat_id, text = telepot.glance(msg, flavor='callback_query')
-        print(query_data)
     except:
         print("Exception:002 - "+localtime)
         ##entra in questa eccezione se NON è stato premendo su un pulsante delle inlineKeyboard
-    ##i try-except precedenti servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
+    ##I try-except precedenti servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
 
     if(datetime.now().month==12):
         annoCall=str(datetime.now().year+1)
         meseCall="Gennaio"
     else:
         annoCall=str(datetime.now().year)
-        meseCall=datetime.now().month+1
+        meseCall=datetime.now().month
+        if(int(localtime.strftime("%d"))<=7) meseCall=datetime.now().month+1
         if(meseCall==1):
             meseCall="Gennaio"
         elif(meseCall==2):
@@ -95,6 +95,7 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Call', callback_data='/call'), 
                     InlineKeyboardButton(text='Lista call', callback_data='/listacall'), 
                     InlineKeyboardButton(text='Prossima call', callback_data='/prossimacall')],
+                    [InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti')],
                 ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -152,6 +153,28 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Guarda la call di Agosto 2018', url='https://drive.google.com/file/d/1swzPNUJYh6Jd7wVaQvVr2TCVoc96f67n/view')],
                     [InlineKeyboardButton(text='Guarda la call di Settembre 2018', url='https://drive.google.com/file/d/1lQFgj-32bWGaaHGReW8fY0kdIuRt4eTZ/view')],
                 ])
+    
+    progetti = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text='Common Voice', url='https://voice.mozilla.org/it/new')],
+                    [InlineKeyboardButton(text='Internet Health Report', url='https://internethealthreport.org/')],
+                    [InlineKeyboardButton(text='Thimble', url='https://thimble.mozilla.org/it/')],
+                    [InlineKeyboardButton(text='Firefox', url='https://www.mozilla.org/it/firefox/new/')],
+                    [InlineKeyboardButton(text='Thunderbird', url='https://www.thunderbird.net/it/')],
+                    [InlineKeyboardButton(text='SeaMonkey', url='http://www.seamonkey-project.org/')],
+                    [InlineKeyboardButton(text='Firefox Mobile', url='https://www.mozilla.org/it/firefox/mobile/')],
+                    [InlineKeyboardButton(text='Firefox Focus', url='https://support.mozilla.org/it/kb/firefox-focus-android')],
+                    [InlineKeyboardButton(text='Rust', url='https://www.rust-lang.org/en-US/')],
+                    [InlineKeyboardButton(text='Firefox Reality', url='https://blog.mozilla.org/blog/2018/09/18/firefox-reality-now-available/')],
+                    [InlineKeyboardButton(text='MDN (Mozilla Developer Network)', url='https://developer.mozilla.org/it/')],
+                    [InlineKeyboardButton(text='Firefox Lockbox', url='https://testpilot.firefox.com/experiments/firefox-lockbox/')],
+                ])
+    
+    progettimozita = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text='Vademecum', url='https://github.com/MozillaItalia/firefox-vademecum')],
+                    [InlineKeyboardButton(text='MozIta Hub Bot', url='https://github.com/Sav22999/mozitahub_bot')],
+                    [InlineKeyboardButton(text='Slide Common Voice', url='https://docs.google.com/presentation/d/1oFkstTY140Tp6cazOgSC6LBeTRF0labJNCl-0DogfQI/edit?ts=5babc6c8#slide=id.g4165a8ce60_0_51')],
+                ])
+    
     '''
     nome_nome = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
@@ -180,12 +203,12 @@ def risposte(msg):
     elif text=="/feedback":
         bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudichera' o aggredira', ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback)
     elif text=="/help":
-        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/collabora: per unirti ai volontari Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/info: avere informazioni riguardo questo bot./call: avere informazioni sulle call mensili comunitarie.\n/listaCall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/prossimaCall: per sapere rapidamente qual e' la prossima call comunitaria.")
+        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/collabora: per unirti ai volontari Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n/info: avere informazioni riguardo questo bot./call: avere informazioni sulle call mensili comunitarie.\n/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/prossimacall: per sapere rapidamente qual e' la prossima call comunitaria.")
         bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help)
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
     elif text=="/info":
-        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)")
+        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)\n- Sara Todaro (@kitsunenosaraT)")
     elif text=="/forum":
         bot.sendMessage(chat_id, "La comunita' di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic e' necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato gia' aperto e, magari, anche risolto.", reply_markup=forum)
     elif text=="/developer":
@@ -200,6 +223,9 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Questo e' tutte l'elenco delle call gia' tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
     elif text=="/prossimacall":
         bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
+    elif text=="/progetti":
+        bot.sendMessage(chat_id, "Questi sono i progetti di mozilla attualmente attivi:", reply_markup=progetti)
+        bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di mozilla italia:", reply_markup=progettimozita)
     else:
         bot.sendMessage(chat_id, "Errore: comando non riconosciuto", reply_markup=start)
 
