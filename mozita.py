@@ -8,8 +8,8 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.1.2 alpha"
-ultimoAggiornamento="26-10-2018"
+versione="0.1.3 alpha"
+ultimoAggiornamento="27-10-2018"
 
 def risposte(msg):
     localtime=datetime.now()
@@ -36,9 +36,9 @@ def risposte(msg):
     else:
         annoCall=str(datetime.now().year)
         if(day<=7):
-            meseCall=datetime.now().month+1
-        else:
             meseCall=datetime.now().month
+        else:
+            meseCall=datetime.now().month+1
         if(meseCall==1):
             meseCall="Gennaio"
         elif(meseCall==2):
@@ -97,10 +97,10 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Design', callback_data='/design'),
                     InlineKeyboardButton(text='Feedback', callback_data='/feedback'),
                     InlineKeyboardButton(text='Info', callback_data='/info')],
+                    [InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti')],
                     [InlineKeyboardButton(text='Call', callback_data='/call'),
                     InlineKeyboardButton(text='Lista call', callback_data='/listacall'),
                     InlineKeyboardButton(text='Prossima call', callback_data='/prossimacall')],
-                    [InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti')],
                 ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -209,7 +209,7 @@ def risposte(msg):
     elif text=="/feedback":
         bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudichera' o aggredira', ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback)
     elif text=="/help":
-        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/collabora: per unirti ai volontari Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n/info: avere informazioni riguardo questo bot./call: avere informazioni sulle call mensili comunitarie.\n/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/prossimacall: per sapere rapidamente qual e' la prossima call comunitaria.")
+        bot.sendMessage(chat_id, "Ecco cosa puoi fare su MozIta HUB:\n/home: per essere reindirizzato al gruppo piu' attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novita', richiesta di informazione o supporto, e altro ancora. E' il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/collabora: per unirti ai volontari Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n/info: avere informazioni riguardo questo bot.\n/call: avere informazioni sulle call mensili comunitarie.\n/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/prossimacall: per sapere rapidamente qual e' la prossima call comunitaria.")
         bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help)
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
