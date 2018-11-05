@@ -3,6 +3,7 @@ import time
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
+import calendar
 
 TOKEN="---NASCOSTO---"
 
@@ -64,6 +65,7 @@ def risposte(msg):
         elif(meseCall==12):
             meseCall="Dicembre"
         #non è possibile utilizzare la funzione datetime.now().(month+1).strftime("%B") perché lo restituisce in inglese
+        giorno_call = first_friday_of_the_month(annoCall, meseCall)
 
     home = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text='Vai al gruppo Home', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
@@ -228,14 +230,17 @@ def risposte(msg):
     elif text=="/listacall":
         bot.sendMessage(chat_id, "Questo e' tutte l'elenco delle call gia' tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
     elif text=="/prossimacall":
-        bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
+        bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+" "+ giorno_call + ", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
     elif text=="/progetti":
         bot.sendMessage(chat_id, "Questi sono i progetti di mozilla attualmente attivi:", reply_markup=progetti)
         bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di mozilla italia:", reply_markup=progettimozita)
     else:
         bot.sendMessage(chat_id, "Errore: comando non riconosciuto", reply_markup=start)
 
-
+def first_friday_of_the_month(year, month):
+    for day, weekday in calendar.Calendar().itermonthdays2(year, month):
+        if weekday == 4:
+            return day
 
 bot=telepot.Bot(TOKEN)
 MessageLoop(bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
