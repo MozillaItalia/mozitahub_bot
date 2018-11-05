@@ -24,6 +24,9 @@ def first_friday_of_the_month(year, month):
 def risposte(msg):
     localtime=datetime.now()
     localtime=localtime.strftime("%d/%m/%y %H:%M:%S")
+    file=open("log.txt","a") #apre il file in scrittura "append" per inserire orario e data -> log di utilizzo del bot (ANONIMO)
+    file.write(localtime+"\n") #ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich, Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
+    file.close()
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
