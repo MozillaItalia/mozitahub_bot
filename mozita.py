@@ -3,20 +3,27 @@ import time
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
+import calendar
 
 TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.1.3 alpha"
-ultimoAggiornamento="27-10-2018"
+versione="0.1.4 alpha"
+ultimoAggiornamento="05-11-2018"
+
+def first_friday_of_the_month(year, month):
+    #questa funzione serve per calcolare il primo venerdì del mese
+    for day, weekday in calendar.Calendar().itermonthdays2(year, month):
+        if weekday == 4:
+            if(day!=0):
+                return day
+            else:
+                return day+7
 
 def risposte(msg):
     localtime=datetime.now()
     localtime=localtime.strftime("%d/%m/%y %H:%M:%S")
-    giorno=datetime.now()
-    giorno=giorno.strftime("%d")
-    day=int(giorno)
     try:
         chat_id=msg['chat']['id']
         text=msg['text']
@@ -33,12 +40,16 @@ def risposte(msg):
     if(datetime.now().month==12):
         annoCall=str(datetime.now().year+1)
         meseCall="Gennaio"
+        giornoCall=str(first_friday_of_the_month(int(annoCall),1))
     else:
         annoCall=str(datetime.now().year)
-        if(day<=7):
-            meseCall=datetime.now().month
-        else:
+        giornoCall=first_friday_of_the_month(int(annoCall),datetime.now().month)
+        if(datetime.now().day>=giornoCall):
             meseCall=datetime.now().month+1
+            giornoCall=str(first_friday_of_the_month(int(annoCall),datetime.now().month+1))
+        else:
+            meseCall=datetime.now().month
+            giornoCall=str(giornoCall)
         if(meseCall==1):
             meseCall="Gennaio"
         elif(meseCall==2):
@@ -152,12 +163,15 @@ def risposte(msg):
                     [InlineKeyboardButton(text='Guarda la call di Dicembre 2017', url='http://edovio.in/call/Call_MozillaItalia_271217.mp4')],
                     [InlineKeyboardButton(text='Guarda la call di Gennaio 2018', url='https://drive.google.com/file/d/1FPBtUT1NVyem2e1q1d_F_dZ6Lzmb64EK/view')],
                     [InlineKeyboardButton(text='Guarda la call di Marzo 2018', url='https://drive.google.com/file/d/1XY4tUt9tzYUZjy08tRB1vkhpwfQ7xA9Q/view')],
-                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (1)', url='https://drive.google.com/file/d/1PJXI4h88NjXNp2hMINYMnu_0ADhdG0ZK/view')],
-                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (2)', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (1 parte)', url='https://drive.google.com/file/d/1PJXI4h88NjXNp2hMINYMnu_0ADhdG0ZK/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Aprile 2018 (2 parte)', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
                     [InlineKeyboardButton(text='Guarda la call di Maggio 2018', url='https://drive.google.com/file/d/1B8H2Lf5Egz2GKy8iDWDihn8fBlXx5BLO/view')],
                     [InlineKeyboardButton(text='Guarda la call di Agosto 2018', url='https://drive.google.com/file/d/1swzPNUJYh6Jd7wVaQvVr2TCVoc96f67n/view')],
                     [InlineKeyboardButton(text='Guarda la call di Settembre 2018', url='https://drive.google.com/file/d/1lQFgj-32bWGaaHGReW8fY0kdIuRt4eTZ/view')],
                     [InlineKeyboardButton(text='Guarda la call di Ottobre 2018', url='https://drive.google.com/file/d/1iX5yIXqTYvtE69VLnPufW-xaaFYSUCLv/view')],
+                    [InlineKeyboardButton(text='Guarda la call di Novembre 2018 (1 parte)', url='https://drive.google.com/open?id=1UrMQWfyeXe7e9aX_MfBb-VlxhUiNoF2p')],
+                    [InlineKeyboardButton(text='Guarda la call di Novembre 2018 (2 parte)', url='https://drive.google.com/open?id=1ujRRICyS7kbHi3o6aa_l_c0DFz8JgN8v')],
+                    [InlineKeyboardButton(text='Guarda la call di Novembre 2018 (3 parte)', url='https://drive.google.com/open?id=1u4FVeGaB6biNWdy5ililpYqfOvyuNlDV')],
                 ])
 
     progetti = InlineKeyboardMarkup(inline_keyboard=[
@@ -214,7 +228,7 @@ def risposte(msg):
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
     elif text=="/info":
-        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)\n- Sara Todaro (@kitsunenosaraT)")
+        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)\n- Sara Todaro (@kitsunenosaraT)\n-Simone Massaro (@mone27)")
     elif text=="/forum":
         bot.sendMessage(chat_id, "La comunita' di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic e' necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato gia' aperto e, magari, anche risolto.", reply_markup=forum)
     elif text=="/developer":
@@ -228,14 +242,12 @@ def risposte(msg):
     elif text=="/listacall":
         bot.sendMessage(chat_id, "Questo e' tutte l'elenco delle call gia' tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
     elif text=="/prossimacall":
-        bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella di "+meseCall+" "+annoCall+", il primo venerdi' del mese alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
+        bot.sendMessage(chat_id, "La prossima call comunitaria sara' quella del "+giornoCall+" "+meseCall+" "+annoCall+", (il primo venerdi' del mese) alle ore 18:30.\nQuesta e' una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
     elif text=="/progetti":
         bot.sendMessage(chat_id, "Questi sono i progetti di mozilla attualmente attivi:", reply_markup=progetti)
         bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di mozilla italia:", reply_markup=progettimozita)
     else:
         bot.sendMessage(chat_id, "Errore: comando non riconosciuto", reply_markup=start)
-
-
 
 bot=telepot.Bot(TOKEN)
 MessageLoop(bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
