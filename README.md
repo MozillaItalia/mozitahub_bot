@@ -8,3 +8,14 @@ Per segnalare errori aprire un nuovo ticket (si prega di aprire un ticket per og
 Il token per accedere al bot diretto è nascosto.
 
 Grazie a tutti.
+
+# librerie utilizzate
+telepot, time, datetime e calendar
+
+# collaboratori
+- Saverio (@Sav22999) - Creatore (e attuale Moderatore)
+- Daniele (@Mte90)
+- Sara (@kitsunenosaraT)
+- Martin (@Martinligabue)
+- Simone (@mone27)
+- Damiano (@dag7dev)
