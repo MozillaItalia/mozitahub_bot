@@ -9,8 +9,8 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.1.4 alpha"
-ultimoAggiornamento="05-11-2018"
+versione="0.1.5 alpha"
+ultimoAggiornamento="10-11-2018"
 
 def first_friday_of_the_month(year, month):
     #questa funzione serve per calcolare il primo venerdì del mese
@@ -36,10 +36,11 @@ def risposte(msg):
         print("Exception:002 - "+localtime)
         ##entra in questa eccezione se NON è stato premendo su un pulsante delle inlineKeyboard
     ##I try-except precedenti servono per assegnare, in qualunque circostanza, chat_id e text corettamente (in base al caso)
-
+    
+    listaMesi=["Gennario","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]
     if(datetime.now().month==12):
         annoCall=str(datetime.now().year+1)
-        meseCall="Gennaio"
+        meseCall=listaMesi[0]
         giornoCall=str(first_friday_of_the_month(int(annoCall),1))
     else:
         annoCall=str(datetime.now().year)
@@ -50,30 +51,7 @@ def risposte(msg):
         else:
             meseCall=datetime.now().month
             giornoCall=str(giornoCall)
-        if(meseCall==1):
-            meseCall="Gennaio"
-        elif(meseCall==2):
-            meseCall="Febbraio"
-        elif(meseCall==3):
-            meseCall="Marzo"
-        elif(meseCall==4):
-            meseCall="Aprile"
-        elif(meseCall==5):
-            meseCall="Maggio"
-        elif(meseCall==6):
-            meseCall="Giugno"
-        elif(meseCall==7):
-            meseCall="Luglio"
-        elif(meseCall==8):
-            meseCall="Agosto"
-        elif(meseCall==9):
-            meseCall="Settembre"
-        elif(meseCall==10):
-            meseCall="Ottobre"
-        elif(meseCall==11):
-            meseCall="Novembre"
-        elif(meseCall==12):
-            meseCall="Dicembre"
+        meseCall=listaMesi[meseCall-1]
         #non è possibile utilizzare la funzione datetime.now().(month+1).strftime("%B") perché lo restituisce in inglese
 
     home = InlineKeyboardMarkup(inline_keyboard=[
@@ -228,7 +206,7 @@ def risposte(msg):
     elif text=="/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novita' da Mozilla Italia.", reply_markup=news)
     elif text=="/info":
-        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)\n- Sara Todaro (@kitsunenosaraT)\n-Simone Massaro (@mone27)")
+        bot.sendMessage(chat_id, "MozIta Hub e' un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: "+ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):\n- Damiano Gualandri (@shadow_dg)\n- Daniele Scasciafratte (@Mte90)\n- Martin Ligabue (@MartinLigabue)\n- Sara Todaro (@sara_tod)\n-Simone Massaro (@mone27)")
     elif text=="/forum":
         bot.sendMessage(chat_id, "La comunita' di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic e' necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato gia' aperto e, magari, anche risolto.", reply_markup=forum)
     elif text=="/developer":
