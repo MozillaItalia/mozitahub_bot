@@ -1,0 +1,23 @@
+# Eccezioni
+Questo è l'elenco delle eccezioni gestite nel bot, con la relativa descrizione:
+ - 01: Errore nell'ottenimento della stringa da salvare su file history_hub.txt
+ - 02: Errore salvataggio file "history_hub.txt"
+ - 03: Errore salvataggio file "all_users.json"
+ - 04: Errore salvataggio file "avvisi_on_list.json"
+ - 05: Errore salvataggio file "avvisi_on_list.json"
+ - 06: Errore salvataggio file "avvisi_on_list.json"
+ - 07: Errore in /admin all users (possibile causa: chat_id errato)
+ - 08: Errore in /admin avviso (possibile causa: chat_id errato)
+ - 09: Errore salvataggio file "call_mensili_list.json"
+ - 10: Errore salvataggio file "call_mensili_list.json"
+ - 11: Errore salvataggio file "call_mensili_list.json"
+ - 12: Errore salvataggio file "avvisi_on_list.json"
+ - 13: Errore salvataggio file "avvisi_on_list.json"
+ - 14: Errore salvataggio file "progetti_mozita_list.json"
+ - 15: Errore salvataggio file "progetti_mozita_list.json"
+ - 16: Errore salvataggio file "progetti_mozita_list.json"
+ - 17: Errore salvataggio file "progetti_list.json"
+ - 18: Errore salvataggio file "progetti_list.json"
+ - 19: Errore salvataggio file "progetti_list.json"
+ - 20: Errore salvataggio file "collaboratori_hub.json"
+ - 21: Errore salvataggio file "collaboratori_hub.json"
