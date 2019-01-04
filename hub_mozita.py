@@ -11,8 +11,8 @@ TOKEN="---NASCOSTO---"
 
 #COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
 
-versione="0.2 alpha"
-ultimoAggiornamento="17-12-2018"
+versione="0.2.1 alpha"
+ultimoAggiornamento="04-01-2019"
 
 adminlist_path="adminlist_hub.json"
 call_mensili_list_path="call_mensili_list.json"
@@ -269,7 +269,7 @@ def risposte(msg):
     #elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text=="/start":
-        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help.")
+        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi, lì potrai attivarli e disattivarli rapidamente.")
         bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare?", reply_markup=start)
         if nousername:
             bot.sendMessage(chat_id, "Attenzione: non hai impostato alcun username. Per poterti unire ai gruppi Mozilla Italia è necessario averne impostato uno (altrimenti si viene automaticamente cacciati e bloccati).")
@@ -349,6 +349,7 @@ def risposte(msg):
     if admin:
         ## CONTROLLO AZIONI ADMIN
         azione=list(text.split(" "))
+        admin_err1=False
         if(azione[0]=="/admin" and len(azione)>=2):
             if(azione[1]=="help" and len(azione)==2):
                 # Elenco azioni
@@ -360,7 +361,7 @@ def risposte(msg):
                 messaggio=' '.join(azione)
                 for x in avvisi_on_list:
                     try:
-                        bot.sendMessage(x, messaggio)
+                        bot.sendMessage(x, messaggio + "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.")
                         bot.sendMessage(chat_id, "Messaggio inviato alla chat: "+str(x))
                     except Exception as e:
                         print("Excep:08 -> "+str(e))
@@ -434,6 +435,8 @@ def risposte(msg):
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list.json'.")
                     else:
                         bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' non è stata trovata.")
+                else:
+                    admin_err1=True
             elif(azione[1]=="avvisi" and azione[2]=="list" and len(azione)==5):
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if(azione[3]=="aggiungi"):
@@ -470,6 +473,8 @@ def risposte(msg):
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
                     else:
                         bot.sendMessage(chat_id, "La chat_id '"+str(temp_chat_id)+"' non è stata trovata.")
+                else:
+                    admin_err1=True
             elif(azione[1]=="progetto" and azione[2]=="mozita" and len(azione)>=5):
                 # Azioni sui progetti comunitari (mozilla italia)
                 if(azione[3]=="aggiungi"):
@@ -527,6 +532,8 @@ def risposte(msg):
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
                     else:
                         bot.sendMessage(chat_id, "Il progetto comunitario '"+str(nome)+"' non è stato trovato.")
+                else:
+                    admin_err1=True
             elif(azione[1]=="progetto" and len(azione)>=4):
                 # Azione sui progetti (mozilla)
                 if(azione[2]=="aggiungi"):
@@ -581,6 +588,8 @@ def risposte(msg):
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
                     else:
                         bot.sendMessage(chat_id, "Il progetto '"+str(nome)+"' non è stato trovato.")
+                else:
+                    admin_err1=True
             elif(azione[1]=="collaboratore" and len(azione)>=4):
                 # Azione sui collaboratori
                 if(azione[2]=="aggiungi"):
@@ -615,6 +624,15 @@ def risposte(msg):
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
                     else:
                         bot.sendMessage(chat_id, "'"+str(nome)+"' non è presente nella lista dei collaboratori.")
+                else:
+                    admin_err1=True
+            else:
+                admin_err1=True
+        else:
+            bot.sendMessage(chat_id, "Errore: Comando non riconosciuto.\nRicorda che se vuoi ottenere aiuto su ciò che puoi fare nella sezione ADMIN devi digitare anche la parola 'help'. In questo modo:\n'/admin help'.")
+
+        if admin_err1:
+            bot.sendMessage(chat_id, "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita '/admin help'")
 
     try:
         stampa=str(localtime)+"  --  Utente: "+str(user_name)+" ("+str(user_id)+")["+str(status_user)+"]  --  Chat: "+str(chat_id)+"\n >> >> Tipo messaggio: "+str(type_msg)+"\n >> >> Contenuto messaggio: "+str(text)+"\n--------------------\n"
@@ -630,8 +648,12 @@ def risposte(msg):
     except Exception as e:
         print("Excep:02 -> "+str(e))
 
-bot=telepot.Bot(TOKEN)
-MessageLoop(bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
+
+try:
+    bot=telepot.Bot(TOKEN)
+    MessageLoop(bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
+except Exception as e:
+    print("ERRORE GENERALE.\n\nError: "+str(e)+"\n--------------------\n")
 
 while 1:
     time.sleep(10)
