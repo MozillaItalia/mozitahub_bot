@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import telepot
 import time
 from telepot.loop import MessageLoop
@@ -6,10 +7,16 @@ from datetime import datetime
 import calendar
 import json
 from pathlib import Path
+from configparser import ConfigParser
 
-TOKEN="---NASCOSTO---"
+if ! os.path.isfile('config.ini'):
+    print('Il file di configurazione non è presente. Rinomina il file config-sample.ini e inserisci il token.')
+    exit
 
-#COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
+config_parser = ConfigParser()
+config_parser.read(os.path.join(script_path, 'config.ini'))
+
+TOKEN=config_parser.get('access', 'token')
 
 versione="0.2.1 alpha"
 ultimoAggiornamento="04-01-2019"
