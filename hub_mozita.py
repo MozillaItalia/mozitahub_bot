@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from configparser import ConfigParser
 
-if ! os.path.isfile('config.ini'):
+if not os.path.isfile('config.ini'):
     print('Il file di configurazione non è presente. Rinomina il file config-sample.ini e inserisci il token.')
     exit
 
