@@ -20,6 +20,10 @@ config_parser.read(os.path.join(script_path, 'config.ini'))
 
 TOKEN=config_parser.get('access', 'token')
 
+if TOKEN == '':
+    print('Token non presente!')
+    exit()
+
 versione="0.2.1 alpha"
 ultimoAggiornamento="04-01-2019"
 
@@ -112,7 +116,6 @@ def risposte(msg):
     if not "chat" in msg:
         msg=msg["message"]
     chat_id=msg['chat']['id']
-    message_id=msg['message_id']
 
     if(datetime.now().month==12):
         annoCall=str(datetime.now().year+1)
