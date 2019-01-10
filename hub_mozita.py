@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import telepot
 import time
 from telepot.loop import MessageLoop
@@ -5,11 +6,23 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 import calendar
 import json
+import os
 from pathlib import Path
+from configparser import ConfigParser
 
-TOKEN="---NASCOSTO---"
+if not os.path.isfile('config.ini'):
+    print('Il file di configurazione non è presente. Rinomina il file config-sample.ini e inserisci il token.')
+    exit()
 
-#COPIARE E INCOLLARE DA QUI - IL TOKEN E' GIA' INSERITO
+script_path = os.path.dirname(os.path.realpath(__file__))
+config_parser = ConfigParser()
+config_parser.read(os.path.join(script_path, 'config.ini'))
+
+TOKEN=config_parser.get('access', 'token')
+
+if TOKEN == '':
+    print('Token non presente!')
+    exit()
 
 versione="0.2.1 alpha"
 ultimoAggiornamento="04-01-2019"
@@ -103,7 +116,6 @@ def risposte(msg):
     if not "chat" in msg:
         msg=msg["message"]
     chat_id=msg['chat']['id']
-    message_id=msg['message_id']
 
     if(datetime.now().month==12):
         annoCall=str(datetime.now().year+1)

@@ -98,5 +98,9 @@ Elenco delle librerie utilizzate nel codice (Python):
  - Json
  - Pathlib
  
+## Installare le dipendenze
+
+`pip3 install -r requirements.txt`
+ 
 # Eccezioni
 La lista di tutte le eccezioni catturate (e gestite), è riportata nel file "ECCEZIONI.md".
