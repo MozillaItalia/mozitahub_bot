@@ -6,13 +6,15 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 import calendar
 import json
+import os
 from pathlib import Path
 from configparser import ConfigParser
 
 if not os.path.isfile('config.ini'):
     print('Il file di configurazione non è presente. Rinomina il file config-sample.ini e inserisci il token.')
-    exit
+    exit()
 
+script_path = os.path.dirname(os.path.realpath(__file__))
 config_parser = ConfigParser()
 config_parser.read(os.path.join(script_path, 'config.ini'))
 
