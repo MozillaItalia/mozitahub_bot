@@ -1,1 +1,24 @@
-﻿
+﻿17/01/19 23:42:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+17/01/19 23:43:22  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /supporto
+--------------------
+17/01/19 23:44:09  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /forum
+--------------------
+17/01/19 23:44:49  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /help
+--------------------
+17/01/19 23:45:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /progetti
+--------------------
+17/01/19 23:45:32  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /prossimacall
+--------------------

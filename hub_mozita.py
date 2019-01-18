@@ -10,22 +10,22 @@ import os
 from pathlib import Path
 from configparser import ConfigParser
 
-if not os.path.isfile('config.ini'):
-    print('Il file di configurazione non è presente. Rinomina il file config-sample.ini e inserisci il token.')
-    exit()
+if not os.path.isfile("config.ini"):
+    print("Il file di configurazione non è presente. Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci il token.")
+    #exit()
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 config_parser = ConfigParser()
-config_parser.read(os.path.join(script_path, 'config.ini'))
+config_parser.read(os.path.join(script_path,"config.ini"))
 
-TOKEN=config_parser.get('access', 'token')
+TOKEN=config_parser.get("access","token")
 
-if TOKEN == '':
-    print('Token non presente!')
-    exit()
+if TOKEN == "":
+    print("Token non presente.")
+    #exit()
 
-versione="0.2.1 alpha"
-ultimoAggiornamento="04-01-2019"
+versione="0.2.2 alpha"
+ultimoAggiornamento="18-01-2019"
 
 adminlist_path="adminlist_hub.json"
 call_mensili_list_path="call_mensili_list.json"
