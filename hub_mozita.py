@@ -24,10 +24,10 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione="0.2.2 alpha"
-ultimoAggiornamento="18-01-2019"
+versione="1.0.1"
+ultimoAggiornamento="27-01-2019"
 
-print(f"Versione: {versione} - Aggiornamento: {ultimoAggiornamento}")
+print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
 adminlist_path="adminlist_hub.json"
 call_mensili_list_path="call_mensili_list.json"
