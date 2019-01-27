@@ -27,6 +27,8 @@ if TOKEN == "":
 versione="0.2.2 alpha"
 ultimoAggiornamento="18-01-2019"
 
+print(f"Versione: {versione} - Aggiornamento: {ultimoAggiornamento}")
+
 adminlist_path="adminlist_hub.json"
 call_mensili_list_path="call_mensili_list.json"
 avvisi_on_list_path="avvisi_on_list.json"
