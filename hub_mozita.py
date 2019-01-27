@@ -11,7 +11,7 @@ import os
 from configparser import ConfigParser
 
 if not os.path.isfile("config.ini"):
-    print("Il file di configurazione non è presente. Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci il token.")
+    print("Il file di configurazione non è presente. Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci il token.".encode("utf-8"))
     exit()
 
 script_path = os.path.dirname(os.path.realpath(__file__))
