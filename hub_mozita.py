@@ -24,8 +24,8 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.0.1"
-ultimoAggiornamento = "27-01-2019"
+versione = "1.0.2"
+ultimoAggiornamento = "30-01-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -185,6 +185,7 @@ def risposte(msg):
             text='Lista call', callback_data='/listacall'),
          InlineKeyboardButton(text='Prossima call', callback_data='/prossimacall')],
         [InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti'),
+         InlineKeyboardButton(text='Avvisi', callback_data='/avvisi'),
          InlineKeyboardButton(text='Regolamento', callback_data='/regolamento')],
     ])
 
