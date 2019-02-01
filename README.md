@@ -58,12 +58,12 @@ Ecco ciò che si può fare se si è admin.
 	- A tutti gli utenti (NO SPAM, solo messaggi importanti -> usare con parsimonia): `/admin all users *MESSAGGIO DA INVIARE*`
 	  > /admin all users *Testo messaggio di esempio*
  - Gestire call mensili (elenco):
-    - Inserire una call mensile: `/admin call aggiungi *NOME CALL* *LINK*`
-      > /admin call aggiungi *Guarda call di Mese Anno* *https://mozillaitalia.org/*
-    - Modificare una call mensile (modificare il link): `/admin call modifica *NOME CALL* *LINK MODIFICATO*`
-      > /admin call modifica *Guarda call di Mese Anno* *https://mozillaitalia.org*
-    - Eliminare una call mensile: ``
-      > /admin call elimina *NOME CALL*
+    - Inserire una call mensile: `/admin call aggiungi *MESE* *ANNO* *LINK*`
+      > /admin call aggiungi *Gennaio* *2019* *https://mozillaitalia.org/*
+    - Modificare una call mensile (modificare il link): `/admin call modifica *MESE* *ANNO* *LINK*`
+      > /admin call modifica *Gennaio* *2019* *https://mozillaitalia.org/nuovaURL*
+    - Eliminare una call mensile: `/admin call elimina *MESE* *ANNO*`
+      > /admin call elimina *Gennaio* *2019*
  - Gestire utenti (iscritti a "Avvisi news"):
     - Aggiungere forzatamente un utente alla lista: `/admin avvisi list aggiungi *CHAT_ID*`
       > /admin avvisi list aggiungi *123456789*
