@@ -24,8 +24,8 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.0.2"
-ultimoAggiornamento = "30-01-2019"
+versione = "1.0.3"
+ultimoAggiornamento = "31-01-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -64,7 +64,6 @@ else:
 
 listaMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
              "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
-
 
 def first_friday_of_the_month(year, month):
     # questa funzione serve per calcolare il primo venerdì del mese
@@ -129,8 +128,7 @@ def risposte(msg):
         giornoCall = str(first_friday_of_the_month(int(annoCall), 1))
     else:
         annoCall = str(datetime.now().year)
-        giornoCall = first_friday_of_the_month(
-            int(annoCall), datetime.now().month)
+        giornoCall = first_friday_of_the_month(int(annoCall), datetime.now().month)
         if(datetime.now().day >= giornoCall):
             meseCall = datetime.now().month+1
             giornoCall = str(first_friday_of_the_month(
@@ -168,7 +166,7 @@ def risposte(msg):
     ])
 
     help = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Home', callback_data='/home'),
+        [InlineKeyboardButton(text='Home 🦊', callback_data='/home'),
          InlineKeyboardButton(text='Gruppi', callback_data='/gruppi'),
          InlineKeyboardButton(text='Supporto', callback_data='/supporto')],
         [InlineKeyboardButton(text='Collabora', callback_data='/collabora'),
@@ -312,7 +310,7 @@ def risposte(msg):
     # elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
-        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia Hub.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi, lì potrai attivarli e disattivarli rapidamente.")
+        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia 🇮🇹 Bot.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi, lì potrai attivarli e disattivarli rapidamente.")
         bot.sendMessage(
             chat_id, "Dopo questa breve presentazione, che cosa desideri fare?", reply_markup=start)
         if nousername:
@@ -338,7 +336,7 @@ def risposte(msg):
     elif text == "/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news)
     elif text == "/info":
-        bot.sendMessage(chat_id, "MozIta Hub è un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: " +
+        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia\nVersione: "+versione+"\nUltimo aggiornamento: " +
                         ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa))
     elif text == "/forum":
         bot.sendMessage(chat_id, "La comunità di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic è necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato già aperto e, magari, anche risolto.", reply_markup=forum)
