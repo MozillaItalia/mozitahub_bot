@@ -1,19 +1,19 @@
 # MozIta HUB Bot
-Questo è il repository della beta del nuovo bot hub della comunità di Mozilla Italia su Telegram.
+Questo è il repository del bot di Mozilla Italia "@MozItaBot" su Telegram.
 
 
 # Informazioni utili
-Questo progetto è una beta del nuovo bot hub di Mozilla Italia (su Telegram).
-È sviluppato in Python e per funzionare necessita di essere avviato su un server (o su un computer).
 Per segnalare errori aprire un nuovo ticket (si prega di aprire un ticket per ogni errore/idee/bug/ecc, poiché raggrupparli tutti in un unico issue è dispersivo).
-`Il token per accedere al bot diretto è nascosto (per ragioni ovvie).`
+Il bot è attualmente funzionante, basta cercare su Telegram _@MozItaBot_ e il gioco è fatto.
+I messaggi supportano anche il Markdown.
 
 Grazie a tutti.
 
 ### Installazione ed esecuzione bot
 Per poter eseguire il codice, quindi far girare il bot, è necessario seguire i seguenti passaggi (in ordine):
  - Clonare questa repository, quindi premere su *Fork* in alto a destra
- - Installare Python 3 (o verificare di averlo già installato) **sviluppato e testato con Python 3.6.6**, ma dovrebbe funzionare anche con altre versioni
+ - Installare Python 3 (o verificare di averlo già installato) **sviluppato e testato con Python 3.7**, ma dovrebbe funzionare anche con altre versioni
+ - Il bot attualmente gira su server con Python 3.5
  - Installare la libreria **telepot**, tramite *pip* (o verificare di averla già installata)
    > pip3 install telepot
 
@@ -22,6 +22,7 @@ Per poter eseguire il codice, quindi far girare il bot, è necessario seguire i 
 Il funzionamento del bot è molto basilare. Si prefigge l'obiettivo di rendere più dinamico l'approccio di chi vuole avere informazioni su Mozilla e, magari, di chi vuole unirsi nella nostra grande famiglia.
 
 Sono disponibili svariate funzionalità:
+ - /start: messaggio iniziale
  - /home: per essere reindirizzati al gruppo più attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. È il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.
  - /gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.
  - /supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla
