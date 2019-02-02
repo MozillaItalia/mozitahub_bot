@@ -1,4 +1,4 @@
-# MozIta HUB Bot
+# Mozilla Italia Bot - @MozItaBot
 Questo è il repository del bot di Mozilla Italia "@MozItaBot" su Telegram.
 
 
