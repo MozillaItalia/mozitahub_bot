@@ -24,8 +24,8 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.0.4"
-ultimoAggiornamento = "01-02-2019"
+versione = "1.1.1"
+ultimoAggiornamento = "02-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -63,6 +63,23 @@ else:
     all_users = []
 
 listaMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
+
+def generaListaPerAnno(year,type):
+    call_mensili_list_ANNO_path = "call_mensili_list_"+str(year)+".json"
+    if Path(call_mensili_list_ANNO_path).exists():
+        call_mensili_list_ANNO = json.loads(open(call_mensili_list_ANNO_path).read())
+    else:
+        call_mensili_list_ANNO = []
+    if(str(type)=="button"):
+        load_listaCallANNO=[]
+        for x in call_mensili_list_ANNO:
+            load_listaCallANNO.append([InlineKeyboardButton(text=str(x), url=str(call_mensili_list_ANNO[x]))])
+        return InlineKeyboardMarkup(inline_keyboard=load_listaCallANNO)
+    elif str(type)=="":
+        load_listaCallANNO={}
+        for x in call_mensili_list_ANNO:
+            load_listaCallANNO[str(x)]=str(call_mensili_list_ANNO[x])
+        return load_listaCallANNO
 
 def first_friday_of_the_month(year, month):
     # questa funzione serve per calcolare il primo venerdì del mese
@@ -114,7 +131,7 @@ def risposte(msg):
     if "username" in msg['from']:
         user_name = msg['from']['username']
     else:
-        user_name = "NessunUsername"
+        user_name = "[*NessunUsername*]"
         nousername = True
 
     if not "chat" in msg:
@@ -148,10 +165,8 @@ def risposte(msg):
     ])
 
     start = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(
-            text='Mostrami che cosa posso fare ➡️', callback_data='/help')],
-        [InlineKeyboardButton(
-            text='Ho bisogno di assistenza 🆘', callback_data='/supporto')],
+        [InlineKeyboardButton(text='Mostrami che cosa posso fare ➡️', callback_data='/help')],
+        [InlineKeyboardButton(text='Ho bisogno di assistenza 🆘', callback_data='/supporto')],
     ])
 
     supporto = InlineKeyboardMarkup(inline_keyboard=[
@@ -227,9 +242,13 @@ def risposte(msg):
 
     load_listaCall = []
     for x in call_mensili_list:
-        load_listaCall.append([InlineKeyboardButton(text=str(x), url=str(call_mensili_list[x]))])
+        load_listaCall.append([InlineKeyboardButton(text=str(x), callback_data=str(call_mensili_list[x]))])
 
     listaCall = InlineKeyboardMarkup(inline_keyboard=load_listaCall)
+
+    listaCall2017 = generaListaPerAnno(2017,"button")
+    listaCall2018 = generaListaPerAnno(2018,"button")
+    listaCall2019 = generaListaPerAnno(2019,"button")
 
     load_progetti = []
     for x in progetti_list:
@@ -285,26 +304,26 @@ def risposte(msg):
         stato_avvisi = "DISATTIVATO ❎"
 
     if text == "/home":
-        bot.sendMessage(chat_id, "'Mozilla Italia - Home' è gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di provenienza. Unisciti anche tu e diventa parte di questa grande famiglia!", reply_markup=home)
+        bot.sendMessage(chat_id, "'Mozilla Italia - Home' è gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di provenienza. Unisciti anche tu e diventa parte di questa grande famiglia!", reply_markup=home, parse_mode="Markdown")
     # elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
-        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia 🇮🇹 Bot.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help ❓.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi 📢, lì potrai attivarli e disattivarli rapidamente.")
-        bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare? 😄", reply_markup=start)
+        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia 🇮🇹 Bot.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help ❓.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi 📢, lì potrai attivarli e disattivarli rapidamente.", parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare? 😄", reply_markup=start, parse_mode="Markdown")
         if nousername:
-            bot.sendMessage(chat_id, "‼️ Attenzione: non hai impostato alcun username. Per poterti unire ai gruppi Mozilla Italia è necessario averne impostato uno (altrimenti si viene automaticamente cacciati e bloccati).")
+            bot.sendMessage(chat_id, "‼️ *Attenzione: non hai impostato alcun username.* Per poterti unire ai gruppi Mozilla Italia *è consigliato* averne impostato uno..", parse_mode="Markdown")
     elif text == "/supporto":
-        bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assisterà nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunità direttamente da Telegram.\n\nTi consigliamo, comunque, di leggere prima le FAQ (le risposte a domande frequenti) poichè potresti trovare la soluzione al tuo probema direttamente lì.")
-        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=supporto)
+        bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assisterà nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunità direttamente da Telegram.\n\nTi consigliamo, comunque, di leggere prima le FAQ (le risposte a domande frequenti) poichè potresti trovare la soluzione al tuo probema direttamente lì.", parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=supporto, parse_mode="Markdown")
     elif text == "/gruppi":
-        bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo più adatto alle tue caratteristiche, alle tue abilità e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si è interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a più gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico :)", reply_markup=gruppi)
+        bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo più adatto alle tue caratteristiche, alle tue abilità e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si è interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a più gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico :)", reply_markup=gruppi, parse_mode="Markdown")
     elif text == "/collabora":
-        bot.sendMessage(chat_id, "In Mozilla abbiamo bisogno di tutte le abilità!\nLa comunità di Mozilla Italia, infatti, si occupa di tradurre progetti e documentazione Mozilla, sviluppare progetti interni a Mozilla Italia, ma anche direttamente per Mozilla, prestare supporto tecnico a utenti bisognosi e tanto altro.")
-        bot.sendMessage(chat_id, "Sai già come potresti essere utile e contribuire a Mozilla Italia?", reply_markup=collabora)
+        bot.sendMessage(chat_id, "In Mozilla abbiamo bisogno di tutte le abilità!\nLa comunità di Mozilla Italia, infatti, si occupa di tradurre progetti e documentazione Mozilla, sviluppare progetti interni a Mozilla Italia, ma anche direttamente per Mozilla, prestare supporto tecnico a utenti bisognosi e tanto altro.", parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Sai già come potresti essere utile e contribuire a Mozilla Italia?", reply_markup=collabora, parse_mode="Markdown")
     elif text == "/vademecum":
-        bot.sendMessage(chat_id, "Il vademecum è un volantino che, in foglio A4 fronte-retro, riesce a spiegarti (molto brevemente) che cosa è Mozilla, che cosa è Mozilla Italia, i progetti attivi e altro.\nEsistono 2 tipi di Vademecum: il Generale, adatto a tutti, e il Tecnico, adatto più specificatamente per gli sviluppatori e programmatori (o chi è in questo campo).\nQuindi, di quale versione vuoi prendere visione?", reply_markup=vademecum)
+        bot.sendMessage(chat_id, "Il vademecum è un volantino che, in foglio A4 fronte-retro, riesce a spiegarti (molto brevemente) che cosa è Mozilla, che cosa è Mozilla Italia, i progetti attivi e altro.\nEsistono 2 tipi di Vademecum: il Generale, adatto a tutti, e il Tecnico, adatto più specificatamente per gli sviluppatori e programmatori (o chi è in questo campo).\nQuindi, di quale versione vuoi prendere visione?", reply_markup=vademecum, parse_mode="Markdown")
     elif text == "/feedback":
-        bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback)
+        bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback, parse_mode="Markdown")
     elif text == "/help":
         bot.sendMessage(chat_id, "Ecco cosa puoi fare con MozItaBot:\n"+
             "/start: visualizzare il messaggio iniziale\n"+
@@ -327,60 +346,64 @@ def risposte(msg):
             "/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n"+
             "/design: il gruppo dei volontari designer di Mozilla Italia.\n"+
             "/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n"+
-            "/admin help: (solo per admin) gestire alcune impostazioni del bot."
-            )
-        bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help)
+            "*/admin help: (solo per admin) gestire alcune impostazioni del bot.*"
+            , parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help, parse_mode="Markdown")
     elif text == "/news":
-        bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news)
+        bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news, parse_mode="Markdown")
     elif text == "/info":
-        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: "+versione+"\nUltimo aggiornamento: " +ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa))
+        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: "+versione+"\nUltimo aggiornamento: " +ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa), parse_mode="Markdown")
     elif text == "/forum":
-        bot.sendMessage(chat_id, "La comunità di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic è necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato già aperto e, magari, anche risolto.", reply_markup=forum)
+        bot.sendMessage(chat_id, "La comunità di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic è necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato già aperto e, magari, anche risolto.", reply_markup=forum, parse_mode="Markdown")
     elif text == "/developer":
-        bot.sendMessage(chat_id, "Entra a far parte del gruppo dedicato agli sviluppatori Mozilla Italia.", reply_markup=developer)
+        bot.sendMessage(chat_id, "Entra a far parte del gruppo dedicato agli sviluppatori Mozilla Italia.", reply_markup=developer, parse_mode="Markdown")
     elif text == "/design":
-        bot.sendMessage(
-            chat_id, "Unisciti al gruppo dei designer di Mozilla Italia.", reply_markup=design)
+        bot.sendMessage(chat_id, "Unisciti al gruppo dei designer di Mozilla Italia.", reply_markup=design, parse_mode="Markdown")
     elif text == "/iot":
-        bot.sendMessage(
-            chat_id, "Unisciti al gruppo ufficiale di Mozilla Italia dedicato allo sviluppo delle IoT.", reply_markup=iot)
+        bot.sendMessage(chat_id, "Unisciti al gruppo ufficiale di Mozilla Italia dedicato allo sviluppo delle IoT.", reply_markup=iot, parse_mode="Markdown")
     elif text == "/call":
         bot.sendMessage(chat_id, "La comunità di Mozilla Italia organizza, salvo imprevisti, il primo venerdì di ogni mese una call comunitaria, per poter parlare di tutto ciò che è accaduto in quel mese nella comunità, di nuovi progetti, eventi o proposte. Tutti possono partecipare, sia membri di Mozilla Italia sia non membri, ma comunque interessati.\nQueste call vengono registrate e successivamente pubblicate per poterle (ri)vedere liberamente.", reply_markup=call)
     elif text == "/listacall":
-        bot.sendMessage(chat_id, "Questo è tutte l'elenco delle call già tenute, con il relativo link per poterle guardare.", reply_markup=listaCall)
+        bot.sendMessage(chat_id, "Questo è tutte l'elenco delle call già tenute, con il relativo link per poterle guardare.", reply_markup=listaCall, parse_mode="Markdown")
     elif text == "/prossimacall":
-        bot.sendMessage(chat_id, "La prossima call comunitaria sarà quella del "+giornoCall+" "+meseCall+" "+annoCall+", (il primo venerdì del mese) alle ore 18:30.\nQuesta è una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.")
+        bot.sendMessage(chat_id, "La prossima call comunitaria sarà quella del "+giornoCall+" "+meseCall+" "+annoCall+", (il primo venerdì del mese) alle ore 18:30.\nQuesta è una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.", parse_mode="Markdown")
     elif text == "/progetti":
-        bot.sendMessage(chat_id, "Questi sono i progetti di Mozilla attualmente attivi:", reply_markup=progetti)
-        bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di Mozilla Italia:", reply_markup=progettimozita)
+        bot.sendMessage(chat_id, "Questi sono i progetti di Mozilla attualmente attivi:", reply_markup=progetti, parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di Mozilla Italia:", reply_markup=progettimozita, parse_mode="Markdown")
     elif text == "/regolamento":
-        bot.sendMessage(chat_id, "Leggi il regolamento vigente nei gruppi comunitari di Mozilla Italia:", reply_markup=regolamento)
+        bot.sendMessage(chat_id, "Leggi il regolamento vigente nei gruppi comunitari di Mozilla Italia:", reply_markup=regolamento, parse_mode="Markdown")
     elif text == "/avvisi":
-        bot.sendMessage(chat_id, "Il tuo stato attutale è: "+stato_avvisi + "\n\nPuoi attivare o disattivare gli avvisi in qualunque momento, digitando '/avvisiOn' o '/avvisiOff', o premendo i seguenti pulsanti:", reply_markup=avvisi)
+        bot.sendMessage(chat_id, "Il tuo stato attutale è: "+stato_avvisi + "\n\nPuoi attivare o disattivare gli avvisi in qualunque momento, digitando '/avvisiOn' o '/avvisiOff', o premendo i seguenti pulsanti:", reply_markup=avvisi, parse_mode="Markdown")
     elif text == "/avvisiOn":
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai attivato correttamente gli avvisi news di Mozilla Italia.\nOra riceverai notizie sulle novità riguardo il mondo mozilla e mozilla italia periodicamente.\nNel caso volessi disattivarli è sufficiente digitare '/avvisiOff'.")
+                bot.sendMessage(chat_id, "Hai attivato correttamente gli avvisi news di Mozilla Italia.\nOra riceverai notizie sulle novità riguardo il mondo mozilla e mozilla italia periodicamente.\nNel caso volessi disattivarli è sufficiente digitare '/avvisiOff'.", parse_mode="Markdown")
             except Exception as e:
                 print("Excep:05 -> "+str(e))
-                bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante l'attivazione degli avvisi.")
+                bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante l'attivazione degli avvisi.", parse_mode="Markdown")
         else:
-            bot.sendMessage(chat_id, "Gli avvisi sono già stati attivati.")
+            bot.sendMessage(chat_id, "Gli avvisi sono già stati attivati.", parse_mode="Markdown")
     elif text == "/avvisiOff":
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai disattivato correttamente gli avvisi news di Mozilla Italia.\nDa ora non ricevere più novità.\nPuoi riattivarli velocemente digitando '/avvisiOn'.\n\nN.B. Potresti, tuttavia, ricevere gli avvisi ritenuti 'fondamentali' per la comunità.")
+                bot.sendMessage(chat_id, "Hai disattivato correttamente gli avvisi news di Mozilla Italia.\nDa ora non ricevere più novità.\nPuoi riattivarli velocemente digitando '/avvisiOn'.\n\nN.B. Potresti, tuttavia, ricevere gli avvisi ritenuti *fondamentali* per la comunità.", parse_mode="Markdown")
             except Exception as e:
                 print("Excep:06 -> "+str(e))
                 bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante la disattivazione degli avvisi.")
         else:
             bot.sendMessage(chat_id, "Gli avvisi sono già stati disattivati.")
+    elif "/anno2017" in text:
+        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2017*:", reply_markup=listaCall2017, parse_mode="Markdown")
+    elif "/anno2018" in text:
+        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2018*:", reply_markup=listaCall2018, parse_mode="Markdown")
+    elif "/anno2019" in text:
+        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2019*:", reply_markup=listaCall2019, parse_mode="Markdown")
     elif "/admin" in text:
         if status_user == "A":
             if type_msg == "LK":
@@ -397,23 +420,26 @@ def risposte(msg):
         if(azione[0] == "/admin" and len(azione) >= 2):
             if(azione[1] == "help" and len(azione) == 2):
                 # Elenco azioni
-                bot.sendMessage(chat_id, "Ecco l'elenco delle azione che puoi eseguire:\n/admin\n>> avviso Messaggio da inviare\n>> all users Messaggio da inviare (solo messaggi 'fondamentali')\n>> call\n>> >> aggiungi Nome call da aggiungere LinkCall\n>> >> modifica Nome call da modificare LinkCallModificato\n>> >> elimina Nome call da eliminare\n>> avvisi list\n>> >> aggiungi Chat_id\n>> >> elimina Chat_id\n>> progetto\n>> >> aggiungi Nome progetto da aggiungere LinkProgetto\n>> >> modifica Nome progetto da modificare LinkProgettoModificato\n>> >> elimina Nome progetto da eliminare\n>> progetto mozita\n>> >> aggiungi Nome progetto comunitario da aggiungere LinkProgetto\n>> >> modifica Nome progetto comunitario da modificare LinkProgettoModificato\n>> >> elimina Nome progetto comunitario da eliminare\n>> collaboratore\n>> >> aggiungi Nome Cognome (@usernameTelegram)\n>> >> elimina Nome Cognome (@usernameTelegram)\n\nEsempi:\n/admin avviso Messaggio di prova\n/admin call aggiungi Nome call di esempio https://mozillaitalia.it")
+                bot.sendMessage(chat_id, "Ecco l'elenco delle azione che puoi eseguire:\n/admin\n>> avviso *Messaggio da inviare*\n>> all users *Messaggio da inviare* (solo messaggi 'fondamentali')\n>> call\n>> >> aggiungi *Mese (eventuale parte)* *Anno* *LinkCall*\n>> >> modifica *Mese (eventuale parte)* *Anno* *LinkCallModificato*\n>> >> elimina *Mese (eventuale parte)* *Anno*\n>> avvisi list\n>> >> aggiungi *Chat_id*\n>> >> elimina *Chat_id*\n>> progetto\n>> >> aggiungi *Nome progetto da aggiungere* *LinkProgetto*\n>> >> modifica *Nome progetto da modificare* *LinkProgettoModificato*\n>> >> elimina *Nome progetto da eliminare*\n>> progetto mozita\n>> >> aggiungi *Nome progetto comunitario da aggiungere* *LinkProgetto*\n>> >> modifica *Nome progetto comunitario da modificare* *LinkProgettoModificato*\n>> >> elimina *Nome progetto comunitario da eliminare*\n>> collaboratore\n>> >> aggiungi *Nome Cognome (@usernameTelegram)*\n>> >> elimina *Nome Cognome (@usernameTelegram)*\n\nEsempi:\n/admin avviso Messaggio di prova\n/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it")
             elif(azione[1] == "avviso" and len(azione) >= 3):
                 # Azioni sugli avvisi
                 del azione[0]
                 del azione[0]
                 messaggio = ' '.join(azione)
+                error08=False
                 for x in avvisi_on_list:
                     try:
-                        bot.sendMessage(
-                            x, messaggio + "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.")
-                        bot.sendMessage(
-                            chat_id, "Messaggio inviato alla chat: "+str(x))
+                        bot.sendMessage(x, messaggio + "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.", parse_mode="Markdown")
+                        bot.sendMessage(chat_id, "✔️ Messaggio inviato alla chat: "+str(x))
                     except Exception as e:
                         print("Excep:08 -> "+str(e))
-                        bot.sendMessage(
-                            chat_id, "Non è stato possibile inviare il messaggio alla chat: "+str(x))
-                bot.sendMessage(chat_id, "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.")
+                        bot.sendMessage(chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: "+str(x))
+                        error08=True
+                if(not error08):
+                    bot.sendMessage(chat_id, "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="Markdown")
+                else:
+                    bot.sendMessage(chat_id, "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="Markdown")
+
             elif(azione[1] == "all" and azione[2] == "users" and len(azione) >= 4):
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
@@ -423,14 +449,12 @@ def risposte(msg):
                 for x in all_users:
                     try:
                         bot.sendMessage(x, messaggio)
-                        bot.sendMessage(
-                            chat_id, "Messaggio inviato alla chat: "+str(x))
+                        bot.sendMessage(chat_id, "Messaggio inviato alla chat: "+str(x))
                     except Exception as e:
                         print("Excep:07 -> "+str(e))
-                        bot.sendMessage(
-                            chat_id, "Non è stato possibile inviare il messaggio alla chat: "+str(x))
+                        bot.sendMessage(chat_id, "Non è stato possibile inviare il messaggio alla chat: "+str(x))
                 bot.sendMessage(chat_id, "Messaggio inviato correttamente a tutti gli utenti.")
-            elif(azione[1] == "call" and len(azione) >= 5):
+            elif(azione[1] == "call" and len(azione) >= 6):
                 # Azioni sulle call mensili
                 if(azione[2] == "aggiungi"):
                     del azione[0]
@@ -438,56 +462,73 @@ def risposte(msg):
                     del azione[0]
                     link = azione[-1]
                     del azione[-1]
+                    anno = azione[-1]
+                    del azione[-1]
                     nome = ' '.join(azione)
-                    if not (nome in call_mensili_list):
-                        call_mensili_list[str(nome)] = str(link)
-                        try:
-                            with open(call_mensili_list_path, "wb") as f:
-                                f.write(json.dumps(
-                                    call_mensili_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "Call mensile '"+str(nome)+"' ("+str(link)+") inserita correttamente.")
-                        except Exception as e:
-                            print("Excep:09 -> "+str(e))
-                            bot.sendMessage(
-                                chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list.json'.")
+                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                        call_mensili_list_anno=generaListaPerAnno(int(anno),"")
+                        call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
+                        if not (nome in call_mensili_list_anno.keys()):
+                            call_mensili_list_anno[str(nome)] = str(link)
+                            try:
+                                with open(call_mensili_list_anno_path, "wb") as f:
+                                    f.write(json.dumps(call_mensili_list_anno).encode("utf-8"))
+                                bot.sendMessage(chat_id, "Call mensile '"+str(nome)+"' ("+str(link)+") inserita correttamente nel '"+str(anno)+"'.")
+                            except Exception as e:
+                                print("Excep:09 -> "+str(e))
+                                bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list"+str(anno)+".json'.")
+                        else:
+                            bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' è già presente nel '"+str(anno)+"'.")
                     else:
-                        bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' è già presente.")
+                        bot.sendMessage(chat_id, "L'anno selezionato '"+str(anno)+"' non è valido.")
                 elif(azione[2] == "modifica"):
                     del azione[0]
                     del azione[0]
                     del azione[0]
                     link = azione[-1]
                     del azione[-1]
+                    anno = azione[-1]
+                    del azione[-1]
                     nome = ' '.join(azione)
-                    if nome in call_mensili_list:
-                        call_mensili_list[str(nome)] = str(link)
-                        try:
-                            with open(call_mensili_list_path, "wb") as f:
-                                f.write(json.dumps(
-                                    call_mensili_list).encode("utf-8"))
-                            bot.sendMessage(chat_id, "Call mensile '"+str(nome)+"' ("+str(link)+") modificata correttamente.")
-                        except Exception as e:
-                            print("Excep:10 -> "+str(e))
-                            bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list.json'.")
+                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                        call_mensili_list_anno=generaListaPerAnno(int(anno),"")
+                        call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
+                        if nome in call_mensili_list_anno.keys():
+                            call_mensili_list_anno[str(nome)] = str(link)
+                            try:
+                                with open(call_mensili_list_anno_path, "wb") as f:
+                                    f.write(json.dumps(call_mensili_list_anno).encode("utf-8"))
+                                bot.sendMessage(chat_id, "Call mensile '"+str(nome)+"' ("+str(link)+") del '"+str(anno)+"' modificata correttamente.")
+                            except Exception as e:
+                                print("Excep:10 -> "+str(e))
+                                bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list_"+str(anno)+".json'.")
+                        else:
+                            bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' non è stata trovata nel '"+str(anno)+"'.")
                     else:
-                        bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' non è stata trovata.")
+                        bot.sendMessage(chat_id, "L'anno selezionato '"+str(anno)+"' non è valido.")
                 elif(azione[2] == "elimina"):
                     del azione[0]
                     del azione[0]
                     del azione[0]
+                    anno = azione[-1]
+                    del azione[-1]
                     nome = ' '.join(azione)
-                    if nome in call_mensili_list:
-                        del call_mensili_list[str(nome)]
-                        try:
-                            with open(call_mensili_list_path, "wb") as f:
-                                f.write(json.dumps(call_mensili_list).encode("utf-8"))
-                            bot.sendMessage(chat_id, "Call mensile '"+str(nome)+"' eliminata correttamente.")
-                        except Exception as e:
-                            print("Excep:11 -> "+str(e))
-                            bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list.json'.")
+                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                        call_mensili_list_anno=generaListaPerAnno(int(anno),"")
+                        call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
+                        if nome in call_mensili_list_anno:
+                            del call_mensili_list_anno[str(nome)]
+                            try:
+                                with open(call_mensili_list_anno_path, "wb") as f:
+                                    f.write(json.dumps(call_mensili_list_anno).encode("utf-8"))
+                                bot.sendMessage(chat_id, "Call mensile '"+str(nome)+"' del '"+str(anno)+"' eliminata correttamente.")
+                            except Exception as e:
+                                print("Excep:11 -> "+str(e))
+                                bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list"+str(anno)+".json'.")
+                        else:
+                            bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' non è stata trovata nel '"+str(anno)+"'.")
                     else:
-                        bot.sendMessage(chat_id, "La call mensile '"+str(nome)+"' non è stata trovata.")
+                        bot.sendMessage(chat_id, "L'anno selezionato '"+str(anno)+"' non è valido.")
                 else:
                     admin_err1 = True
             elif(azione[1] == "avvisi" and azione[2] == "list" and len(azione) == 5):
@@ -520,8 +561,7 @@ def risposte(msg):
                         avvisi_on_list.remove(temp_chat_id)
                         try:
                             with open(avvisi_on_list_path, "wb") as f:
-                                f.write(json.dumps(
-                                    avvisi_on_list).encode("utf-8"))
+                                f.write(json.dumps(avvisi_on_list).encode("utf-8"))
                             bot.sendMessage(chat_id, "La chat_id '"+str(temp_chat_id)+"' è stata eliminata correttamente.")
                         except Exception as e:
                             print("Excep:13 -> "+str(e))
@@ -580,8 +620,7 @@ def risposte(msg):
                         del progetti_mozita_list[str(nome)]
                         try:
                             with open(progetti_mozita_list_path, "wb") as f:
-                                f.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
+                                f.write(json.dumps(progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(chat_id, "Progetto comunitario '"+str(nome)+"' eliminato correttamente.")
                         except Exception as e:
                             print("Excep:16 -> "+str(e))
@@ -603,10 +642,8 @@ def risposte(msg):
                         progetti_list[str(nome)] = str(link)
                         try:
                             with open(progetti_list_path, "wb") as f:
-                                f.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "Progetto '"+str(nome)+"' ("+str(link)+") inserito correttamente.")
+                                f.write(json.dumps(progetti_list).encode("utf-8"))
+                            bot.sendMessage(chat_id, "Progetto '"+str(nome)+"' ("+str(link)+") inserito correttamente.")
                         except Exception as e:
                             print("Excep:17 -> "+str(e))
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -624,8 +661,7 @@ def risposte(msg):
                         try:
                             with open(progetti_list_path, "wb") as f:
                                 f.write(json.dumps(progetti_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "Progetto '"+str(nome)+"' ("+str(link)+") modificato correttamente.")
+                            bot.sendMessage(chat_id, "Progetto '"+str(nome)+"' ("+str(link)+") modificato correttamente.")
                         except Exception as e:
                             print("Excep:18 -> "+str(e))
                             bot.sendMessage(chat_id, "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
