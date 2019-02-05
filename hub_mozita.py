@@ -24,8 +24,8 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.1"
-ultimoAggiornamento = "02-02-2019"
+versione = "1.1.3"
+ultimoAggiornamento = "05-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -352,7 +352,7 @@ def risposte(msg):
     elif text == "/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news, parse_mode="Markdown")
     elif text == "/info":
-        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: "+versione+"\nUltimo aggiornamento: " +ultimoAggiornamento+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa), parse_mode="Markdown")
+        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: "+str(versione)+"\nUltimo aggiornamento: "+str(ultimoAggiornamento)+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa))
     elif text == "/forum":
         bot.sendMessage(chat_id, "La comunità di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic è necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato già aperto e, magari, anche risolto.", reply_markup=forum, parse_mode="Markdown")
     elif text == "/developer":
@@ -366,14 +366,14 @@ def risposte(msg):
     elif text == "/listacall":
         bot.sendMessage(chat_id, "Questo è tutte l'elenco delle call già tenute, con il relativo link per poterle guardare.", reply_markup=listaCall, parse_mode="Markdown")
     elif text == "/prossimacall":
-        bot.sendMessage(chat_id, "La prossima call comunitaria sarà quella del "+giornoCall+" "+meseCall+" "+annoCall+", (il primo venerdì del mese) alle ore 18:30.\nQuesta è una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.", parse_mode="Markdown")
+        bot.sendMessage(chat_id, "La prossima call comunitaria sarà quella del *"+giornoCall+" "+meseCall+" "+annoCall+"*, _(il primo venerdì del mese)_ alle ore *18:30*.\nQuesta è una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.", parse_mode="Markdown")
     elif text == "/progetti":
         bot.sendMessage(chat_id, "Questi sono i progetti di Mozilla attualmente attivi:", reply_markup=progetti, parse_mode="Markdown")
         bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di Mozilla Italia:", reply_markup=progettimozita, parse_mode="Markdown")
     elif text == "/regolamento":
         bot.sendMessage(chat_id, "Leggi il regolamento vigente nei gruppi comunitari di Mozilla Italia:", reply_markup=regolamento, parse_mode="Markdown")
     elif text == "/avvisi":
-        bot.sendMessage(chat_id, "Il tuo stato attutale è: "+stato_avvisi + "\n\nPuoi attivare o disattivare gli avvisi in qualunque momento, digitando '/avvisiOn' o '/avvisiOff', o premendo i seguenti pulsanti:", reply_markup=avvisi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Il tuo stato attutale è: *"+stato_avvisi+"*\n\nPuoi attivare o disattivare gli avvisi in qualunque momento, digitando '/avvisiOn' o '/avvisiOff', o premendo i seguenti pulsanti:", reply_markup=avvisi, parse_mode="Markdown")
     elif text == "/avvisiOn":
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)

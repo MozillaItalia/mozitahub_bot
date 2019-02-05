@@ -22,3 +22,703 @@
  >> >> Tipo messaggio: BIC
  >> >> Contenuto messaggio: /prossimacall
 --------------------
+18/01/19 21:07:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+27/01/19 18:41:04  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 12:16:52  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /supporto
+--------------------
+01/02/19 12:16:52  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 12:18:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 12:18:20  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /home
+--------------------
+01/02/19 12:18:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /home
+--------------------
+01/02/19 14:44:08  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 14:44:39  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 14:44:55  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+01/02/19 15:29:45  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+01/02/19 15:29:56  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisiOff
+--------------------
+01/02/19 15:29:58  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+01/02/19 15:30:00  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisiOn
+--------------------
+01/02/19 15:30:01  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+01/02/19 15:30:06  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 15:30:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 15:34:22  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin
+--------------------
+01/02/19 15:34:53  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+01/02/19 15:44:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 15:44:49  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /feedback
+--------------------
+01/02/19 15:48:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 15:58:09  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 16:00:10  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+01/02/19 16:00:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Messaggio prova formattazione
+--------------------
+01/02/19 16:00:54  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso **Messaggio** prova __formattazione__
+--------------------
+01/02/19 19:38:23  --  Utente: mone27 (75870906)[-]  --  Chat: 75870906
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 19:38:38  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 19:38:45  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+01/02/19 19:50:06  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /listacall
+--------------------
+01/02/19 20:01:57  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+01/02/19 20:32:07  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 20:35:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 20:35:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+01/02/19 20:35:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+01/02/19 20:35:29  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 20:35:31  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 20:35:35  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 20:36:44  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+01/02/19 20:36:45  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 20:36:48  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 20:36:50  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 20:38:31  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 20:38:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 20:38:42  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 20:40:18  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 20:40:20  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 20:40:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 20:40:54  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+01/02/19 20:49:14  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+01/02/19 22:41:36  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 link.it
+--------------------
+01/02/19 22:45:21  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 link.try
+--------------------
+01/02/19 22:47:13  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+01/02/19 22:47:14  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 22:47:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 22:47:19  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 22:47:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:00:52  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+01/02/19 23:00:55  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+01/02/19 23:00:57  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+01/02/19 23:00:58  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 23:28:35  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:30:06  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:34:40  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:40:44  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:44:17  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: NM
+ >> >> Contenuto messaggio: load_listaCallANNO=[]
+        for x in call_mensili_list_ANNO:
+            load_listaCallANNO.append([InlineKeyboardButton(text=str(x), url=str(call_mensili_list_ANNO[x]))])
+--------------------
+01/02/19 23:44:31  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:45:55  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:46:25  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:47:09  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:48:01  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:49:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+01/02/19 23:49:55  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+01/02/19 23:50:13  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+02/02/19 00:03:46  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiung Call di prova 2019
+--------------------
+02/02/19 00:03:52  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019
+--------------------
+02/02/19 00:18:39  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+02/02/19 00:23:26  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Call di prova 2019 linkprova.test
+--------------------
+02/02/19 00:24:24  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Gennaio 2019 https://drive.google.com/file/d/1C5qebEorPsFvo2XaSUV9C6DgxoOFFx4D/view?usp=sharing
+--------------------
+02/02/19 00:24:42  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Febbraio 2019 https://drive.google.com/file/d/1zaQiDT0qiA4JqfkZ0-ChzwUzdqJDVqYw/view?usp=sharing
+--------------------
+02/02/19 00:25:01  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+02/02/19 00:26:00  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Mese Ciao 2017 link.it
+--------------------
+02/02/19 00:27:56  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Mese Ciao 2017 link.it
+--------------------
+02/02/19 00:27:56  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+02/02/19 00:27:56  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+02/02/19 00:28:03  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+02/02/19 00:32:01  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call aggiungi Mese a caso 2017 link.it
+--------------------
+02/02/19 00:32:14  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+02/02/19 00:32:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+02/02/19 00:33:00  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call modifica Mese Ciao 2017 link.com
+--------------------
+02/02/19 00:33:18  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call elimina Mese Ciao 2017
+--------------------
+02/02/19 00:33:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+02/02/19 00:33:31  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call elimina Mese a caso
+--------------------
+02/02/19 00:33:44  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call elimina Mese a caso 2018
+--------------------
+02/02/19 00:33:54  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin call elimina Mese a caso 2017
+--------------------
+02/02/19 00:42:14  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+02/02/19 00:42:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+02/02/19 00:42:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+02/02/19 00:42:30  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+02/02/19 00:42:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /amin help
+--------------------
+02/02/19 00:42:46  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+02/02/19 10:40:37  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+02/02/19 10:40:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+02/02/19 10:42:09  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+02/02/19 10:45:57  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+02/02/19 18:48:58  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 18:51:15  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: NM
+ >> >> Contenuto messaggio: <B>HTML</B>
+--------------------
+02/02/19 18:51:21  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: NM
+ >> >> Contenuto messaggio: *B*
+--------------------
+02/02/19 18:51:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: B
+--------------------
+02/02/19 18:51:26  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: B
+--------------------
+02/02/19 18:51:34  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: (link)[link.it]
+--------------------
+02/02/19 19:02:31  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice prova
+--------------------
+02/02/19 19:03:04  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:03:18  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+02/02/19 19:03:20  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisiOn
+--------------------
+02/02/19 19:03:50  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice prova
+--------------------
+02/02/19 19:03:57  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice **prova**
+--------------------
+02/02/19 19:04:08  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice <b>prova</b>
+--------------------
+02/02/19 19:05:13  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice prova
+--------------------
+02/02/19 19:05:18  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice **prova**
+--------------------
+02/02/19 19:05:56  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una semplice ****prova****
+--------------------
+02/02/19 19:06:12  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+02/02/19 19:06:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisiOff
+--------------------
+02/02/19 19:07:08  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:07:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:08:05  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:08:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:08:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una prova
+--------------------
+02/02/19 19:09:22  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una ****prova****
+--------------------
+02/02/19 19:09:44  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una <b>prova</b>
+--------------------
+02/02/19 19:10:29  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Questa è una <b>prova</b>.
+--------------------
+02/02/19 19:11:28  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+02/02/19 19:11:29  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisiOn
+--------------------
+02/02/19 19:11:41  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova
+--------------------
+02/02/19 19:12:18  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova2
+--------------------
+02/02/19 19:12:50  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova3
+--------------------
+02/02/19 19:13:59  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova3
+--------------------
+02/02/19 19:14:40  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova4
+--------------------
+02/02/19 19:14:49  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova5</b>
+--------------------
+02/02/19 19:15:14  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova6</b>
+--------------------
+02/02/19 19:15:55  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova7</b>
+--------------------
+02/02/19 19:16:19  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova8</b>
+--------------------
+02/02/19 19:16:43  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova8</b> Ciao
+--------------------
+02/02/19 19:17:54  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso <b>Prova8</b>
+--------------------
+02/02/19 19:18:02  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova9
+--------------------
+02/02/19 19:18:06  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova10
+--------------------
+02/02/19 19:19:19  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: [iii](link.it)
+--------------------
+02/02/19 19:20:17  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso *Prova11*
+--------------------
+02/02/19 19:20:23  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso _Prova12_
+--------------------
+02/02/19 19:20:52  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso [Prova12](http://link.it)
+--------------------
+02/02/19 19:21:01  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: [Prova12](http://link.it)
+--------------------
+02/02/19 19:21:25  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso [Prova12](http://link.it)
+--------------------
+02/02/19 19:25:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova   13
+Prova     14
+--------------------
+02/02/19 19:25:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova   13
+Prova     14
+--------------------
+02/02/19 19:25:45  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin avviso Prova   13 P rova     14
+--------------------
+02/02/19 19:34:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+02/02/19 19:34:17  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+02/02/19 19:41:26  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /admin help
+--------------------
+02/02/19 19:49:35  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+05/02/19 18:16:26  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+05/02/19 18:19:02  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /info
+--------------------
+05/02/19 18:19:10  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+05/02/19 18:19:12  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /prossimacall
+--------------------
+05/02/19 18:20:22  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /prossimacall
+--------------------
+05/02/19 18:20:27  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /listacall
+--------------------
+05/02/19 18:20:28  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2017
+--------------------
+05/02/19 18:20:29  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2018
+--------------------
+05/02/19 18:20:33  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /anno2019
+--------------------
+05/02/19 18:21:56  --  Utente: Mte90 (69903837)[-]  --  Chat: 69903837
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /start
+--------------------
+05/02/19 18:22:00  --  Utente: Mte90 (69903837)[-]  --  Chat: 69903837
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /help
+--------------------
+05/02/19 18:22:31  --  Utente: Mte90 (69903837)[-]  --  Chat: 69903837
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listascall
+--------------------
+05/02/19 18:22:36  --  Utente: Mte90 (69903837)[-]  --  Chat: 69903837
+ >> >> Tipo messaggio: LK
+ >> >> Contenuto messaggio: /listacall
+--------------------
+05/02/19 18:23:05  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /avvisi
+--------------------
+05/02/19 18:23:16  --  Utente: Sav22999 (240188083)[A]  --  Chat: 240188083
+ >> >> Tipo messaggio: BIC
+ >> >> Contenuto messaggio: /home
+--------------------
