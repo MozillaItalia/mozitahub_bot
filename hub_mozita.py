@@ -24,7 +24,7 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.5"
+versione = "1.1.6"
 ultimoAggiornamento = "17-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
@@ -315,43 +315,21 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia 🇮🇹 Bot.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help ❓.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi 📢, lì potrai attivarli e disattivarli rapidamente.", parse_mode="Markdown")
         bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare? 😄", reply_markup=start, parse_mode="Markdown")
         if nousername:
-            bot.sendMessage(chat_id, "‼️ *Attenzione: non hai impostato alcun username.* Per poterti unire ai gruppi Mozilla Italia *è consigliato* averne impostato uno..", parse_mode="Markdown")
+            bot.sendMessage(chat_id, "‼️ *Attenzione: non hai impostato alcun username.* Per poterti unire ai gruppi Mozilla Italia *è consigliato* averne impostato uno.", parse_mode="Markdown")
     elif text == "/supporto":
         bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assisterà nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunità direttamente da Telegram.\n\nTi consigliamo, comunque, di leggere prima le FAQ (le risposte a domande frequenti) poichè potresti trovare la soluzione al tuo probema direttamente lì.", parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare :)", reply_markup=supporto, parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare 😄", reply_markup=supporto, parse_mode="Markdown")
     elif text == "/gruppi":
-        bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo più adatto alle tue caratteristiche, alle tue abilità e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si è interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a più gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico :)", reply_markup=gruppi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo più adatto alle tue caratteristiche, alle tue abilità e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si è interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a più gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico 😄", reply_markup=gruppi, parse_mode="Markdown")
     elif text == "/collabora":
         bot.sendMessage(chat_id, "In Mozilla abbiamo bisogno di tutte le abilità!\nLa comunità di Mozilla Italia, infatti, si occupa di tradurre progetti e documentazione Mozilla, sviluppare progetti interni a Mozilla Italia, ma anche direttamente per Mozilla, prestare supporto tecnico a utenti bisognosi e tanto altro.", parse_mode="Markdown")
         bot.sendMessage(chat_id, "Sai già come potresti essere utile e contribuire a Mozilla Italia?", reply_markup=collabora, parse_mode="Markdown")
     elif text == "/vademecum":
         bot.sendMessage(chat_id, "Il vademecum è un volantino che, in foglio A4 fronte-retro, riesce a spiegarti (molto brevemente) che cosa è Mozilla, che cosa è Mozilla Italia, i progetti attivi e altro.\nEsistono 2 tipi di Vademecum: il Generale, adatto a tutti, e il Tecnico, adatto più specificatamente per gli sviluppatori e programmatori (o chi è in questo campo).\nQuindi, di quale versione vuoi prendere visione?", reply_markup=vademecum, parse_mode="Markdown")
     elif text == "/feedback":
-        bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla :)", reply_markup=feedback, parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla 😄", reply_markup=feedback, parse_mode="Markdown")
     elif text == "/help":
-        bot.sendMessage(chat_id, "Ecco cosa puoi fare con MozItaBot:\n"+
-            "/start: visualizzare il messaggio iniziale\n"+
-            "/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n"+
-            "/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n"+
-            "/avvisi: vedere lo stato attuale degli avvisi, per attivarli o per disattivarli.\n"+
-            "/avvisiOn: scorciatoia rapida per attivare gli avvisi.\n"+
-            "/avvisiOff: scorciatoia rapida per disattivare gli avvisi.\n"+
-            "/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n"+
-            "/call: avere informazioni sulle call mensili comunitarie.\n"+
-            "/prossimacall: per sapere rapidamente qual è la prossima call comunitaria.\n"+
-            "/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n"+
-            "/info: avere informazioni riguardo questo bot.\n"+
-            "/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n"+
-            "/regolamento: per leggere il regolamento comunitario.\n"+
-            "/home: per essere reindirizzato al gruppo più attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. È il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n"+
-            "/collabora: per unirti ai volontari Mozilla Italia.\n"+
-            "/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n"+
-            "/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n"+
-            "/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n"+
-            "/design: il gruppo dei volontari designer di Mozilla Italia.\n"+
-            "/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n"+
-            "*/admin help: (solo per admin) gestire alcune impostazioni del bot.*"
-            , parse_mode="Markdown")
+        bot.sendMessage(chat_id, "Ecco cosa puoi fare con MozItaBot:\n/start: visualizzare il messaggio iniziale\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/avvisi: vedere lo stato attuale degli avvisi, per attivarli o per disattivarli.\n/avvisiOn: scorciatoia rapida per attivare gli avvisi.\n/avvisiOff: scorciatoia rapida per disattivare gli avvisi.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/call: avere informazioni sulle call mensili comunitarie.\n/prossimacall: per sapere rapidamente qual è la prossima call comunitaria.\n/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/info: avere informazioni riguardo questo bot.\n/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n/regolamento: per leggere il regolamento comunitario.\n/home: per essere reindirizzato al gruppo più attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. È il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/collabora: per unirti ai volontari Mozilla Italia.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n*/admin help: (solo per admin) gestire alcune impostazioni del bot.*", parse_mode="Markdown")
         bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help, parse_mode="Markdown")
     elif text == "/news":
         bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news, parse_mode="Markdown")
@@ -759,8 +737,7 @@ def risposte(msg):
 
 try:
     bot = telepot.Bot(TOKEN)
-    MessageLoop(
-        bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
+    MessageLoop(bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
 except Exception as e:
     print("ERRORE GENERALE.\n\nError: "+str(e)+"\n--------------------\n")
 
