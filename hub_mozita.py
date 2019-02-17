@@ -24,10 +24,13 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.3"
-ultimoAggiornamento = "05-02-2019"
+versione = "1.1.4"
+ultimoAggiornamento = "17-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
+
+MIN_ANNO=2017 #costante - anno minimo delle call
+MAX_ANNO=2019 #variabile - anno massimo delle call
 
 adminlist_path = "adminlist_hub.json"
 call_mensili_list_path = "call_mensili_list.json"
@@ -465,7 +468,7 @@ def risposte(msg):
                     anno = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                    if(anno.isdigit() and int(anno)<=MAX_ANNO and int(anno)>=MIN_ANNO):
                         call_mensili_list_anno=generaListaPerAnno(int(anno),"")
                         call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
                         if not (nome in call_mensili_list_anno.keys()):
@@ -490,7 +493,7 @@ def risposte(msg):
                     anno = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                    if(anno.isdigit() and int(anno)<=MAX_ANNO and int(anno)>=MIN_ANNO):
                         call_mensili_list_anno=generaListaPerAnno(int(anno),"")
                         call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
                         if nome in call_mensili_list_anno.keys():
@@ -513,7 +516,7 @@ def risposte(msg):
                     anno = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if(anno.isdigit() and int(anno)<=2019 and int(anno)>=2017):
+                    if(anno.isdigit() and int(anno)<=MAX_ANNO and int(anno)>=MIN_ANNO):
                         call_mensili_list_anno=generaListaPerAnno(int(anno),"")
                         call_mensili_list_anno_path="call_mensili_list_"+str(anno)+".json"
                         if nome in call_mensili_list_anno:
