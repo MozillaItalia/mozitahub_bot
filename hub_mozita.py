@@ -24,7 +24,7 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.4"
+versione = "1.1.5"
 ultimoAggiornamento = "17-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
@@ -96,6 +96,7 @@ def first_friday_of_the_month(year, month):
 
 def risposte(msg):
     localtime = datetime.now()
+    data_salvataggio = localtime.strftime("%Y_%m_%d")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     messaggio = msg
     type_msg = "NM"  # Normal Message
@@ -741,8 +742,14 @@ def risposte(msg):
         print(stampa)
 
     try:
+        if(os.path.exists("./history_mozitabot")==False):
+            os.mkdir("./history_mozitabot")
+    except Exception as e:
+        print("Excep:22 -> "+str(e))
+
+    try:
         # apre il file in scrittura "append" per inserire orario e data -> log di utilizzo del bot (ANONIMO)
-        file = open("history_hub.txt", "a", -1, "UTF-8")
+        file = open("./history_mozitabot/log_"+str(data_salvataggio)+".txt", "a", -1, "UTF-8")
         # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich, Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
         file.write(stampa)
         file.close()
