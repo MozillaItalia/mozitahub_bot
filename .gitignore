@@ -1,4 +1,4 @@
 config.ini
 *.zip
 *pycache*
-history_hub.txt
+history_mozitabot/*
