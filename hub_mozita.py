@@ -24,8 +24,8 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.6"
-ultimoAggiornamento = "17-02-2019"
+versione = "1.1.7"
+ultimoAggiornamento = "19-02-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -43,7 +43,7 @@ AdminList = []
 if Path(call_mensili_list_path).exists():
     call_mensili_list = json.loads(open(call_mensili_list_path).read())
 else:
-    call_mensili_list = []
+    call_mensili_list = {}
 if Path(avvisi_on_list_path).exists():
     avvisi_on_list = json.loads(open(avvisi_on_list_path).read())
 else:
@@ -51,11 +51,11 @@ else:
 if Path(progetti_list_path).exists():
     progetti_list = json.loads(open(progetti_list_path).read())
 else:
-    progetti_list = []
+    progetti_list = {}
 if Path(progetti_mozita_list_path).exists():
     progetti_mozita_list = json.loads(open(progetti_mozita_list_path).read())
 else:
-    progetti_mozita_list = []
+    progetti_mozita_list = {}
 if Path(collaboratori_hub_path).exists():
     collaboratori_hub = json.loads(open(collaboratori_hub_path).read())
 else:
@@ -72,7 +72,7 @@ def generaListaPerAnno(year,type):
     if Path(call_mensili_list_ANNO_path).exists():
         call_mensili_list_ANNO = json.loads(open(call_mensili_list_ANNO_path).read())
     else:
-        call_mensili_list_ANNO = []
+        call_mensili_list_ANNO = {}
     if(str(type)=="button"):
         load_listaCallANNO=[]
         for x in call_mensili_list_ANNO:
@@ -222,8 +222,8 @@ def risposte(msg):
     ])
 
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vademecum Generale', url='https://github.com/MozillaItalia/firefox-vademecum/blob/master/volantino/Vademecum_2.0_VG.pdf'),
-         InlineKeyboardButton(text='Vademecum Tecnico', url='https://github.com/MozillaItalia/firefox-vademecum/blob/master/volantino/Vademecum_2.0_VT.pdf')],
+        [InlineKeyboardButton(text='Vademecum Generale', callback_data='/vademecumgenerale'),
+         InlineKeyboardButton(text='Vademecum Tecnico', callback_data='/vademecumtecnico')],
     ])
 
     collabora = InlineKeyboardMarkup(inline_keyboard=[
@@ -271,8 +271,8 @@ def risposte(msg):
     ])
 
     avvisi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Attiva avvisi ✅', callback_data="/avvisiOn")],
-        [InlineKeyboardButton(text='Disattiva avvisi ❎', callback_data="/avvisiOff")],
+        [InlineKeyboardButton(text='Attiva avvisi 🔔', callback_data="/avvisiOn")],
+        [InlineKeyboardButton(text='Disattiva avvisi 🔕', callback_data="/avvisiOff")],
     ])
 
     '''
@@ -303,9 +303,9 @@ def risposte(msg):
             print("Excep:04 -> "+str(e))
 
     if user_id in avvisi_on_list:
-        stato_avvisi = "ATTIVATO ✅"
+        stato_avvisi = "ATTIVATO 🔔"
     else:
-        stato_avvisi = "DISATTIVATO ❎"
+        stato_avvisi = "DISATTIVATO 🔕"
 
     if text == "/home":
         bot.sendMessage(chat_id, "'Mozilla Italia - Home' è gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di provenienza. Unisciti anche tu e diventa parte di questa grande famiglia!", reply_markup=home, parse_mode="Markdown")
@@ -326,6 +326,10 @@ def risposte(msg):
         bot.sendMessage(chat_id, "Sai già come potresti essere utile e contribuire a Mozilla Italia?", reply_markup=collabora, parse_mode="Markdown")
     elif text == "/vademecum":
         bot.sendMessage(chat_id, "Il vademecum è un volantino che, in foglio A4 fronte-retro, riesce a spiegarti (molto brevemente) che cosa è Mozilla, che cosa è Mozilla Italia, i progetti attivi e altro.\nEsistono 2 tipi di Vademecum: il Generale, adatto a tutti, e il Tecnico, adatto più specificatamente per gli sviluppatori e programmatori (o chi è in questo campo).\nQuindi, di quale versione vuoi prendere visione?", reply_markup=vademecum, parse_mode="Markdown")
+    elif text == "/vademecumgenerale":
+        bot.sendDocument(chat_id, open("VG.pdf","rb"))
+    elif text == "/vademecumtecnico":
+        bot.sendDocument(chat_id, open("VT.pdf","rb"))
     elif text == "/feedback":
         bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla 😄", reply_markup=feedback, parse_mode="Markdown")
     elif text == "/help":
@@ -362,7 +366,7 @@ def risposte(msg):
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai attivato correttamente gli avvisi news di Mozilla Italia.\nOra riceverai notizie sulle novità riguardo il mondo mozilla e mozilla italia periodicamente.\nNel caso volessi disattivarli è sufficiente digitare '/avvisiOff'.", parse_mode="Markdown")
+                bot.sendMessage(chat_id, "Hai attivato 🔔 correttamente gli avvisi news di Mozilla Italia.\nOra riceverai notizie sulle novità riguardo il mondo mozilla e mozilla italia periodicamente.\nNel caso volessi disattivarli è sufficiente digitare '/avvisiOff'.", parse_mode="Markdown")
             except Exception as e:
                 print("Excep:05 -> "+str(e))
                 bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante l'attivazione degli avvisi.", parse_mode="Markdown")
@@ -374,7 +378,7 @@ def risposte(msg):
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai disattivato correttamente gli avvisi news di Mozilla Italia.\nDa ora non ricevere più novità.\nPuoi riattivarli velocemente digitando '/avvisiOn'.\n\nN.B. Potresti, tuttavia, ricevere gli avvisi ritenuti *fondamentali* per la comunità.", parse_mode="Markdown")
+                bot.sendMessage(chat_id, "Hai disattivato 🔕 correttamente gli avvisi news di Mozilla Italia.\nDa ora non ricevere più novità.\nPuoi riattivarli velocemente digitando '/avvisiOn'.\n\nN.B. Potresti, tuttavia, ricevere gli avvisi ritenuti *fondamentali* per la comunità.", parse_mode="Markdown")
             except Exception as e:
                 print("Excep:06 -> "+str(e))
                 bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante la disattivazione degli avvisi.")
