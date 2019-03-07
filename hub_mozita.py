@@ -30,7 +30,7 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.1.8"
+versione = "1.1.9"
 ultimoAggiornamento = "08-03-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
@@ -311,12 +311,12 @@ def risposte(msg):
             print("Excep:04 -> "+str(e))
 
     if user_id in avvisi_on_list:
-        stato_avvisi = "ATTIVATO 🔔"
+        stato_avvisi = frasi["avvisiStatoOn"]
     else:
-        stato_avvisi = "DISATTIVATO 🔕"
+        stato_avvisi = frasi["avvisiStatoOff"]
 
     if text == "/home":
-        bot.sendMessage(chat_id, "'Mozilla Italia - Home' è gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di provenienza. Unisciti anche tu e diventa parte di questa grande famiglia!", reply_markup=home, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["home"], reply_markup=home, parse_mode="Markdown")
     # elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
