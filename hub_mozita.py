@@ -24,8 +24,14 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
-versione = "1.1.7"
-ultimoAggiornamento = "19-02-2019"
+if Path("frasi.json").exists():
+    frasi = json.loads(open("frasi.json",encoding="utf8").read())
+else:
+    print("File frasi non presente.")
+    exit()
+
+versione = "1.1.8"
+ultimoAggiornamento = "08-03-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
@@ -101,6 +107,8 @@ def risposte(msg):
     messaggio = msg
     type_msg = "NM"  # Normal Message
     status_user = "-"
+
+    global frasi
 
     if Path(adminlist_path).exists():
         global AdminList
@@ -312,92 +320,92 @@ def risposte(msg):
     # elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
-        bot.sendMessage(chat_id, "Benvenuto/a in Mozilla Italia 🇮🇹 Bot.\nQui potrai usufruire di funzioni uniche, come ottenere informazioni, richiedere supporto, e molto altro.\nScopri tutto ciò che puoi fare digitando /help ❓.\n\nIn automatico sono state attivate le notifiche per le news. Controlla il tuo stato digitando /avvisi 📢, lì potrai attivarli e disattivarli rapidamente.", parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Dopo questa breve presentazione, che cosa desideri fare? 😄", reply_markup=start, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["start"], parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["start2"], reply_markup=start, parse_mode="Markdown")
         if nousername:
-            bot.sendMessage(chat_id, "‼️ *Attenzione: non hai impostato alcun username.* Per poterti unire ai gruppi Mozilla Italia *è consigliato* averne impostato uno.", parse_mode="Markdown")
+            bot.sendMessage(chat_id, frasi["start_nousername"], parse_mode="Markdown")
     elif text == "/supporto":
-        bot.sendMessage(chat_id, "Puoi aprire un topic sul nostro forum ufficiale dove, il team di volontari del Supporto Mozilla (SuMo), ti assisterà nel migliore modo possibile.\nIn alternativa puoi provare a chiedere nel gruppo 'Home' della comunità direttamente da Telegram.\n\nTi consigliamo, comunque, di leggere prima le FAQ (le risposte a domande frequenti) poichè potresti trovare la soluzione al tuo probema direttamente lì.", parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Scegli tu cosa vuoi fare 😄", reply_markup=supporto, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["supporto"], parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["supporto2"], reply_markup=supporto, parse_mode="Markdown")
     elif text == "/gruppi":
-        bot.sendMessage(chat_id, "Ecco qui la lista di tutti i canali e gruppi ufficiali di Mozilla Italia su Telegram:\n\n'Mozilla Italia - HOME' (/home):\nil gruppo dove vengono trattate varie tematiche come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. In poche parole il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n\n'Mozilla Italia - News' (/news):\nil canale che ti permette di rimanere sempre aggiornato sulle ultime novità da Mozilla Italia.\n\n'Mozilla Italia - Voglio diventare volontario' (/collabora):\nil gruppo adatto per chi vuole entrare a far parte della comunità. Qui potrai avere maggiori informazioni su ciascun gruppo o, se non sai ancora come puoi contribuire alla causa, troverai persone che sono in grado di indirizzarti nel gruppo più adatto alle tue caratteristiche, alle tue abilità e alle tue attitudini.\n\n'Mozilla Italia - Developers' (/developer):\nil gruppo dedicato agli sviluppatori Mozilla Italia, quindi a coloro che si dedicano maggiormente alla programmazione.\n\n'Mozilla Italia - L10N' (privato):\nil gruppo dedicato ai localizzatori (traduttori). Questo gruppo è privato, quindi chiedere nel gruppo Home di essere inserite se si è interessati.\n\n'Mozilla Italia - Design Team' (/design):\nil gruppo dedicato ai 'designer' e a coloro che si dedicano maggiormente alla grafica.\n\n'Mozilla Italia - IoT' (/iot):\nil gruppo dedicato alle tecnologie Internet of Thing di Mozilla.\n\nPuoi appartenere e unirti anche a più gruppi contemporaneamente. Ti consigliamo, comunque, di unirti al gruppo 'Home' che è quello piu' generico 😄", reply_markup=gruppi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["gruppi"], reply_markup=gruppi, parse_mode="Markdown")
     elif text == "/collabora":
-        bot.sendMessage(chat_id, "In Mozilla abbiamo bisogno di tutte le abilità!\nLa comunità di Mozilla Italia, infatti, si occupa di tradurre progetti e documentazione Mozilla, sviluppare progetti interni a Mozilla Italia, ma anche direttamente per Mozilla, prestare supporto tecnico a utenti bisognosi e tanto altro.", parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Sai già come potresti essere utile e contribuire a Mozilla Italia?", reply_markup=collabora, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["collabora"], parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["collabora2"], reply_markup=collabora, parse_mode="Markdown")
     elif text == "/vademecum":
-        bot.sendMessage(chat_id, "Il vademecum è un volantino che, in foglio A4 fronte-retro, riesce a spiegarti (molto brevemente) che cosa è Mozilla, che cosa è Mozilla Italia, i progetti attivi e altro.\nEsistono 2 tipi di Vademecum: il Generale, adatto a tutti, e il Tecnico, adatto più specificatamente per gli sviluppatori e programmatori (o chi è in questo campo).\nQuindi, di quale versione vuoi prendere visione?", reply_markup=vademecum, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["vademecum"], reply_markup=vademecum, parse_mode="Markdown")
     elif text == "/vademecumgenerale":
         bot.sendDocument(chat_id, open("VG.pdf","rb"))
     elif text == "/vademecumtecnico":
         bot.sendDocument(chat_id, open("VT.pdf","rb"))
     elif text == "/feedback":
-        bot.sendMessage(chat_id, "Puoi lasciare quando vuoi un feedback sui servizi offerti da Mozilla Italia, semplicemente recandoti sul gruppo 'Home', quindi riportando il feedback.\nNon preoccuparti, nessuno ti giudicherà o aggredirà, ma anzi, troverai persone pronte a capire i tuoi problemi e i tuoi suggerimenti ed, eventualmente, a segnalarli direttamente a Mozilla 😄", reply_markup=feedback, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["feedbak"], reply_markup=feedback, parse_mode="Markdown")
     elif text == "/help":
-        bot.sendMessage(chat_id, "Ecco cosa puoi fare con MozItaBot:\n/start: visualizzare il messaggio iniziale\n/gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.\n/vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.\n/avvisi: vedere lo stato attuale degli avvisi, per attivarli o per disattivarli.\n/avvisiOn: scorciatoia rapida per attivare gli avvisi.\n/avvisiOff: scorciatoia rapida per disattivare gli avvisi.\n/supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla\n/call: avere informazioni sulle call mensili comunitarie.\n/prossimacall: per sapere rapidamente qual è la prossima call comunitaria.\n/listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.\n/info: avere informazioni riguardo questo bot.\n/progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.\n/regolamento: per leggere il regolamento comunitario.\n/home: per essere reindirizzato al gruppo più attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. È il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.\n/collabora: per unirti ai volontari Mozilla Italia.\n/news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.\n/iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.\n/developer: il gruppo dei volontari sviluppatori di Mozilla Italia.\n/design: il gruppo dei volontari designer di Mozilla Italia.\n/feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)\n*/admin help: (solo per admin) gestire alcune impostazioni del bot.*", parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Allora, che cosa vorresti fare?", reply_markup=help, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["help"], parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["help2"], reply_markup=help, parse_mode="Markdown")
     elif text == "/news":
-        bot.sendMessage(chat_id, "Rimani sempre aggiornato sul mondo Mozilla! Grazie a questo canale ufficiale sarai a conoscenze sempre delle ultime novità da Mozilla Italia.", reply_markup=news, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["news"], reply_markup=news, parse_mode="Markdown")
     elif text == "/info":
-        bot.sendMessage(chat_id, "MozItaBot è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: "+str(versione)+"\nUltimo aggiornamento: "+str(ultimoAggiornamento)+"\n\nCreatore: Saverio Morelli (@Sav22999)\nCollaboratori (ordine alfabetico):"+str(collaboratori_stampa))
+        bot.sendMessage(chat_id, str(((frasi["info"]).replace("{{**versione**}}",str(versione))).replace("{{**ultimoAggiornamento**}}",str(ultimoAggiornamento))).replace("{{**collaboratori_stampa**}}",str(collaboratori_stampa)))
     elif text == "/forum":
-        bot.sendMessage(chat_id, "La comunità di Mozilla Italia presta supporto tramite il forum ufficiale (www.forum.mozillaitalia.org) gratuitamente e quasi in tempo reale. Prima di aprire un topic è necessario leggere il regolamento e accertarsi, ovviamente, che un topic uguale non sia stato già aperto e, magari, anche risolto.", reply_markup=forum, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["forum"], reply_markup=forum, parse_mode="Markdown")
     elif text == "/developer":
-        bot.sendMessage(chat_id, "Entra a far parte del gruppo dedicato agli sviluppatori Mozilla Italia.", reply_markup=developer, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["developer"], reply_markup=developer, parse_mode="Markdown")
     elif text == "/design":
-        bot.sendMessage(chat_id, "Unisciti al gruppo dei designer di Mozilla Italia.", reply_markup=design, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["design"], reply_markup=design, parse_mode="Markdown")
     elif text == "/iot":
-        bot.sendMessage(chat_id, "Unisciti al gruppo ufficiale di Mozilla Italia dedicato allo sviluppo delle IoT.", reply_markup=iot, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["iot"], reply_markup=iot, parse_mode="Markdown")
     elif text == "/call":
-        bot.sendMessage(chat_id, "La comunità di Mozilla Italia organizza, salvo imprevisti, il primo venerdì di ogni mese una call comunitaria, per poter parlare di tutto ciò che è accaduto in quel mese nella comunità, di nuovi progetti, eventi o proposte. Tutti possono partecipare, sia membri di Mozilla Italia sia non membri, ma comunque interessati.\nQueste call vengono registrate e successivamente pubblicate per poterle (ri)vedere liberamente.", reply_markup=call)
+        bot.sendMessage(chat_id, frasi["call"], reply_markup=call)
     elif text == "/listacall":
-        bot.sendMessage(chat_id, "Questo è tutte l'elenco delle call già tenute, con il relativo link per poterle guardare.", reply_markup=listaCall, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["listacall"], reply_markup=listaCall, parse_mode="Markdown")
     elif text == "/prossimacall":
-        bot.sendMessage(chat_id, "La prossima call comunitaria sarà quella del *"+giornoCall+" "+meseCall+" "+annoCall+"*, _(il primo venerdì del mese)_ alle ore *18:30*.\nQuesta è una stima, potrebbero esserci slittamenti o annullamenti. Per maggiore sicurezza chiedi nel gruppo Home di Mozilla Italia.", parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(((frasi["prossima_call"]).replace("{{**giornoCall**}}",str(giornoCall))).replace("{{**meseCall**}}",str(meseCall))).replace("{{**annoCall**}}",str(annoCall)), parse_mode="Markdown")
     elif text == "/progetti":
-        bot.sendMessage(chat_id, "Questi sono i progetti di Mozilla attualmente attivi:", reply_markup=progetti, parse_mode="Markdown")
-        bot.sendMessage(chat_id, "Questi, invece, sono i progetti della comunità di Mozilla Italia:", reply_markup=progettimozita, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["progetti"], reply_markup=progetti, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["progetti2"], reply_markup=progettimozita, parse_mode="Markdown")
     elif text == "/regolamento":
-        bot.sendMessage(chat_id, "Leggi il regolamento vigente nei gruppi comunitari di Mozilla Italia:", reply_markup=regolamento, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["regolamento"], reply_markup=regolamento, parse_mode="Markdown")
     elif text == "/avvisi":
-        bot.sendMessage(chat_id, "Il tuo stato attutale è: *"+stato_avvisi+"*\n\nPuoi attivare o disattivare gli avvisi in qualunque momento, digitando '/avvisiOn' o '/avvisiOff', o premendo i seguenti pulsanti:", reply_markup=avvisi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["avvisi"]).replace("{{**stato_avvisi**}}",str(stato_avvisi)), reply_markup=avvisi, parse_mode="Markdown")
     elif text == "/avvisiOn":
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai attivato 🔔 correttamente gli avvisi news di Mozilla Italia.\nOra riceverai notizie sulle novità riguardo il mondo mozilla e mozilla italia periodicamente.\nNel caso volessi disattivarli è sufficiente digitare '/avvisiOff'.", parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="Markdown")
             except Exception as e:
                 print("Excep:05 -> "+str(e))
-                bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante l'attivazione degli avvisi.", parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="Markdown")
         else:
-            bot.sendMessage(chat_id, "Gli avvisi sono già stati attivati.", parse_mode="Markdown")
+            bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="Markdown")
     elif text == "/avvisiOff":
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, "Hai disattivato 🔕 correttamente gli avvisi news di Mozilla Italia.\nDa ora non ricevere più novità.\nPuoi riattivarli velocemente digitando '/avvisiOn'.\n\nN.B. Potresti, tuttavia, ricevere gli avvisi ritenuti *fondamentali* per la comunità.", parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="Markdown")
             except Exception as e:
                 print("Excep:06 -> "+str(e))
-                bot.sendMessage(chat_id, "Si è verificato un errore imprevisto durante la disattivazione degli avvisi.")
+                bot.sendMessage(chat_id, frasi["avvisiOff2"])
         else:
-            bot.sendMessage(chat_id, "Gli avvisi sono già stati disattivati.")
+            bot.sendMessage(chat_id, frasi["avvisiOff3"])
     elif "/anno2017" in text:
-        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2017*:", reply_markup=listaCall2017, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2017"), reply_markup=listaCall2017, parse_mode="Markdown")
     elif "/anno2018" in text:
-        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2018*:", reply_markup=listaCall2018, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2018"), reply_markup=listaCall2018, parse_mode="Markdown")
     elif "/anno2019" in text:
-        bot.sendMessage(chat_id, "Ecco l'elenco delle registrazioni delle call dell'anno *2019*:", reply_markup=listaCall2019, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2019"), reply_markup=listaCall2019, parse_mode="Markdown")
     elif "/admin" in text:
         if status_user == "A":
             if type_msg == "LK":
                 admin = True
         else:
-            bot.sendMessage(chat_id, "Non sei un admin, pertanto non hai i permessi per utilizzare questa azione.")
+            bot.sendMessage(chat_id, frasi["non_sei_admin"])
     else:
-        bot.sendMessage(chat_id, "Questo comando non è stato riconosciuto.", reply_markup=start)
+        bot.sendMessage(chat_id, frasi["comando_non_riconosciuto"], reply_markup=start)
 
     if admin:
         # CONTROLLO AZIONI ADMIN
