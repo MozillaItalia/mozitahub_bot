@@ -10,6 +10,8 @@ from pathlib import Path
 import os
 from configparser import ConfigParser
 
+import telegram_events
+
 if not os.path.isfile("config.ini"):
     print("Il file di configurazione non è presente. Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci il token.".encode("utf-8"))
     exit()
@@ -24,19 +26,23 @@ if TOKEN == "":
     print("Token non presente.")
     exit()
 
+## CARICAMENTO FRASI DA FILE
+
 if Path("frasi.json").exists():
-    frasi = json.loads(open("frasi.json",encoding="utf8").read())
+    frasi = json.loads(open("frasi.json", encoding="utf8").read())
 else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.1.9"
-ultimoAggiornamento = "08-03-2019"
+versione = "1.2.0"
+ultimoAggiornamento = "09-03-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
 MIN_ANNO=2017 #costante - anno minimo delle call
 MAX_ANNO=2019 #variabile - anno massimo delle call
+
+## CARICAMENTO DELLE VARIE LISTE
 
 adminlist_path = "adminlist_hub.json"
 call_mensili_list_path = "call_mensili_list.json"
@@ -71,8 +77,11 @@ if Path(all_users_path).exists():
 else:
     all_users = []
 
+# array mesi
 listaMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
 
+# genera la lista delle call in base all'anno
+# (year->ANNO, type->{"button"|""}->la prima ritorna un button_inline, la seconda la 'semplice' lista)
 def generaListaPerAnno(year,type):
     call_mensili_list_ANNO_path = "call_mensili_list_"+str(year)+".json"
     if Path(call_mensili_list_ANNO_path).exists():
@@ -83,6 +92,7 @@ def generaListaPerAnno(year,type):
         load_listaCallANNO=[]
         for x in call_mensili_list_ANNO:
             load_listaCallANNO.append([InlineKeyboardButton(text=str(x), url=str(call_mensili_list_ANNO[x]))])
+        load_listaCallANNO.append([InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')])
         return InlineKeyboardMarkup(inline_keyboard=load_listaCallANNO)
     elif str(type)=="":
         load_listaCallANNO={}
@@ -90,8 +100,8 @@ def generaListaPerAnno(year,type):
             load_listaCallANNO[str(x)]=str(call_mensili_list_ANNO[x])
         return load_listaCallANNO
 
+# questa funzione serve per calcolare il primo venerdì del mese
 def first_friday_of_the_month(year, month):
-    # questa funzione serve per calcolare il primo venerdì del mese
     for day, weekday in calendar.Calendar().itermonthdays2(year, month):
         if weekday == 4:
             if(day != 0):
@@ -99,42 +109,33 @@ def first_friday_of_the_month(year, month):
             else:
                 return day+7
 
-
+# il "main"
 def risposte(msg):
     localtime = datetime.now()
     data_salvataggio = localtime.strftime("%Y_%m_%d")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     messaggio = msg
     type_msg = "NM"  # Normal Message
-    status_user = "-"
+    status_user = "-" # inizializzazione dello 'status' dell'utente {"A"|"-"}
+                      # Admin, Other
 
-    global frasi
+    global frasi # frasi è il dictionary globali che contiene tutte le frasi da visualizzare
 
     if Path(adminlist_path).exists():
         global AdminList
         AdminList = json.loads(open(adminlist_path).read())
     else:
-        # nel caso in cui non dovesse esistere alcun file "adminlist.json" imposta staticamente l'userid di Sav22999 -> così da poter confermare anche altri utenti
+        # nel caso in cui non dovesse esistere alcun file "adminlist.json" imposta staticamente l'userid di Sav22999
+        # -> così da poter confermare anche altri utenti anche se ci sono 'malfunzionamenti' (NON DOVREBBERO ESSERCENE!)
         AdminList = [240188083]
 
-    if "text" in msg:
-        # EVENTO MESSAGGIO (SOTTO-EVENTI MESSAGGIO)
-        text = str(msg['text'])
-        if "entities" in msg:
-            # EVENTO LINK
-            type_msg = "LK"  # Link
-        else:
-            # EVENTO MESSAGGIO PURO
-            type_msg = "NM"  # Normal Message
-    elif "data" in msg:
-        # EVENTO PRESS BY INLINE BUTTON
-        text = str(msg['data'])
-        # print("Callback_query")
-        type_msg = "BIC"  # Button Inline Click
-    else:
-        # EVENTO NON CATTURA/GESTITO -> ELIMINARE AUTOMATICAMENTE IL MESSAGGIO
-        text = "--Testo non identificato--"
-        type_msg = "NI"  # Not Identified
+    # caricamento degli eventi gestiti
+    EventiList={}
+    EventiList=telegram_events.events(msg,["LK","NM"])
+    text=EventiList["text"]
+    type_msg=EventiList["type_msg"]
+    modificato=EventiList["modificato"]
+    risposta=EventiList["risposta"]
 
     user_id = msg['from']['id']
     if user_id in AdminList:
@@ -159,8 +160,7 @@ def risposte(msg):
         giornoCall = first_friday_of_the_month(int(annoCall), datetime.now().month)
         if(datetime.now().day >= giornoCall):
             meseCall = datetime.now().month+1
-            giornoCall = str(first_friday_of_the_month(
-                int(annoCall), datetime.now().month+1))
+            giornoCall = str(first_friday_of_the_month(int(annoCall), datetime.now().month+1))
         else:
             meseCall = datetime.now().month
             giornoCall = str(giornoCall)
@@ -168,93 +168,106 @@ def risposte(msg):
         # non è possibile utilizzare la funzione datetime.now().(month+1).strftime("%B") perché lo restituisce in inglese
 
     home = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vai al gruppo Home 🦊', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+        [InlineKeyboardButton(text=frasi["button_vai_a_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     feedback = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Vai in 'Home' e lascia il tuo feedback 💬", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(text="Chiedi di voler contribuire al bot in 'Home' ➡️", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')]
+        [InlineKeyboardButton(text=frasi["button_feedback"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+        [InlineKeyboardButton(text=frasi["button_feedback2"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     start = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Mostrami che cosa posso fare ➡️', callback_data='/help')],
-        [InlineKeyboardButton(text='Ho bisogno di assistenza 🆘', callback_data='/supporto')],
+        [InlineKeyboardButton(text=frasi["button_start"], callback_data='/help')],
+        [InlineKeyboardButton(text=frasi["button_start2"], callback_data='/supporto')],
     ])
 
     supporto = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Supporto via Telegram', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text='Supporto via forum', callback_data='/forum')],
-        [InlineKeyboardButton(text='Leggi le FAQ dal forum di Mozilla Italia', url='https://forum.mozillaitalia.org/index.php?board=9.0')]
+        [InlineKeyboardButton(text=frasi["button_support"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+         InlineKeyboardButton(text=frasi["button_support2"], callback_data='/forum')],
+        [InlineKeyboardButton(text=frasi["button_support3"], url='https://forum.mozillaitalia.org/index.php?board=9.0')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     help = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Gruppi 👥', callback_data='/gruppi'),
-        InlineKeyboardButton(text='Vademecum', callback_data='/vademecum')],
-        [InlineKeyboardButton(text='Avvisi 📢', callback_data='/avvisi'),
-        InlineKeyboardButton(text='Supporto 🆘', callback_data='/supporto')],
-        [InlineKeyboardButton(text='Call', callback_data='/call'),
-        InlineKeyboardButton(text='Prossima call 📆', callback_data='/prossimacall'),
-        InlineKeyboardButton(text='Lista call', callback_data='/listacall')],
-        [InlineKeyboardButton(text='Info ℹ️', callback_data='/info'),
-        InlineKeyboardButton(text='Progetti attivi', callback_data='/progetti'),
-        InlineKeyboardButton(text='Regolamento 📙', callback_data='/regolamento')],
-        [InlineKeyboardButton(text='Home 🦊', callback_data='/home'),
-        InlineKeyboardButton(text='Collabora ✌🏻', callback_data='/collabora')],
-        [InlineKeyboardButton(text='News 🆕', callback_data='/news'),
-        InlineKeyboardButton(text='IoT', callback_data='/iot')],
-        [InlineKeyboardButton(text='Developer 💻', callback_data='/developer'),
-        InlineKeyboardButton(text='Design 📐', callback_data='/design')],
-        [InlineKeyboardButton(text='Feedback 💬', callback_data='/feedback')],
+        [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
+        InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum')],
+        [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
+        InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
+        [InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/call'),
+        InlineKeyboardButton(text=frasi["button_testo_prossima_call"], callback_data='/prossimacall'),
+        InlineKeyboardButton(text=frasi["button_testo_lista_call"], callback_data='/listacall')],
+        [InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info'),
+        InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti'),
+        InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento')],
+        [InlineKeyboardButton(text=frasi["button_testo_home"], callback_data='/home'),
+        InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"], callback_data='/collabora')],
+        [InlineKeyboardButton(text=frasi["button_testo_news"], callback_data='/news'),
+        InlineKeyboardButton(text=frasi["button_testo_iot"], callback_data='/iot')],
+        [InlineKeyboardButton(text=frasi["button_testo_developer"], callback_data='/developer'),
+        InlineKeyboardButton(text=frasi["button_testo_design"], callback_data='/design')],
+        [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
     ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Home 🦊', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text='News 🆕', url='https://t.me/mozItaNews')],
-        [InlineKeyboardButton(text='Voglio diventare volontario ✌🏻', url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
-        [InlineKeyboardButton(text='Developer 💻', url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text='L10N (chiedi in Home) 🗺', url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(text='Design 📐', url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
-         InlineKeyboardButton(text='IoT', url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+        [InlineKeyboardButton(text=frasi["button_testo_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+         InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
+        [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"], url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
+        [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
+         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
+         InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     developer = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vai al gruppo Developer', url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw')],
+        [InlineKeyboardButton(text=frasi["button_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     design = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vai al gruppo Design Team 📐', url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(text=frasi["button_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     iot = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vai al gruppo IoT', url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+        [InlineKeyboardButton(text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vademecum Generale', callback_data='/vademecumgenerale'),
-         InlineKeyboardButton(text='Vademecum Tecnico', callback_data='/vademecumtecnico')],
+        [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumgenerale'),
+         InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumtecnico')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     collabora = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Sì, vai al gruppo 'Home' 🆗", url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text="No, ma vorrei collaborare ✌🏻", url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
+        [InlineKeyboardButton(text=frasi["button_collabora"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+         InlineKeyboardButton(text=frasi["button_collabora2"], url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     news = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Vai al canale ufficiale 'News' 🆕", url='https://t.me/mozItaNews')],
+        [InlineKeyboardButton(text=frasi["button_news"], url='https://t.me/mozItaNews')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     forum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vai al forum di Mozilla Italia 🦊', url='https://forum.mozillaitalia.org/')],
+        [InlineKeyboardButton(text=frasi["button_forum"], url='https://forum.mozillaitalia.org/')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     call = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Vedi tutte le call',  callback_data='/listacall')],
-        [InlineKeyboardButton(text='Scopri quando sarà la prossima call 📆', callback_data='/prossimacall')],
+        [InlineKeyboardButton(text=frasi["button_call"],  callback_data='/listacall')],
+        [InlineKeyboardButton(text=frasi["button_call2"], callback_data='/prossimacall')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     load_listaCall = []
     for x in call_mensili_list:
         load_listaCall.append([InlineKeyboardButton(text=str(x), callback_data=str(call_mensili_list[x]))])
+    load_listaCall.append([InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')])
 
     listaCall = InlineKeyboardMarkup(inline_keyboard=load_listaCall)
 
@@ -265,22 +278,30 @@ def risposte(msg):
     load_progetti = []
     for x in progetti_list:
         load_progetti.append([InlineKeyboardButton(text=str(x), url=str(progetti_list[x]))])
+    load_progetti.append([InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')])
 
     progetti = InlineKeyboardMarkup(inline_keyboard=load_progetti)
 
     load_progettiMozIta = []
     for x in progetti_mozita_list:
         load_progettiMozIta.append([InlineKeyboardButton(text=str(x), url=str(progetti_mozita_list[x]))])
+    load_progettiMozIta.append([InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')])
 
     progettimozita = InlineKeyboardMarkup(inline_keyboard=load_progettiMozIta)
 
     regolamento = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Leggi Regolamento 📙', url='https://github.com/Sav22999/Guide/blob/master/Mozilla%20Italia/Telegram/regolamento.md')],
+        [InlineKeyboardButton(text=frasi["button_regolamento"], url='https://github.com/Sav22999/Guide/blob/master/Mozilla%20Italia/Telegram/regolamento.md')],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     avvisi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Attiva avvisi 🔔', callback_data="/avvisiOn")],
-        [InlineKeyboardButton(text='Disattiva avvisi 🔕', callback_data="/avvisiOff")],
+        [InlineKeyboardButton(text=frasi["button_avvisi"], callback_data="/avvisiOn"),
+        InlineKeyboardButton(text=frasi["button_avvisi2"], callback_data="/avvisiOff")],
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
+    ])
+
+    mostra_menu_principale = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     '''
@@ -316,88 +337,87 @@ def risposte(msg):
         stato_avvisi = frasi["avvisiStatoOff"]
 
     if text == "/home":
-        bot.sendMessage(chat_id, frasi["home"], reply_markup=home, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["home"], reply_markup=home, parse_mode="HTML")
     # elif text=="/stop":
         #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
-        bot.sendMessage(chat_id, frasi["start"], parse_mode="Markdown")
-        bot.sendMessage(chat_id, frasi["start2"], reply_markup=start, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["start"], parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["start2"], reply_markup=start, parse_mode="HTML")
         if nousername:
-            bot.sendMessage(chat_id, frasi["start_nousername"], parse_mode="Markdown")
+            bot.sendMessage(chat_id, frasi["start_nousername"], parse_mode="HTML")
     elif text == "/supporto":
-        bot.sendMessage(chat_id, frasi["supporto"], parse_mode="Markdown")
-        bot.sendMessage(chat_id, frasi["supporto2"], reply_markup=supporto, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["supporto"], reply_markup=supporto, parse_mode="HTML")
     elif text == "/gruppi":
-        bot.sendMessage(chat_id, frasi["gruppi"], reply_markup=gruppi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["gruppi"], reply_markup=gruppi, parse_mode="HTML")
     elif text == "/collabora":
-        bot.sendMessage(chat_id, frasi["collabora"], parse_mode="Markdown")
-        bot.sendMessage(chat_id, frasi["collabora2"], reply_markup=collabora, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["collabora"], parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["collabora2"], reply_markup=collabora, parse_mode="HTML")
     elif text == "/vademecum":
-        bot.sendMessage(chat_id, frasi["vademecum"], reply_markup=vademecum, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["vademecum"], reply_markup=vademecum, parse_mode="HTML")
     elif text == "/vademecumgenerale":
         bot.sendDocument(chat_id, open("VG.pdf","rb"))
     elif text == "/vademecumtecnico":
         bot.sendDocument(chat_id, open("VT.pdf","rb"))
     elif text == "/feedback":
-        bot.sendMessage(chat_id, frasi["feedbak"], reply_markup=feedback, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["feedback"], reply_markup=feedback, parse_mode="HTML")
     elif text == "/help":
-        bot.sendMessage(chat_id, frasi["help"], parse_mode="Markdown")
-        bot.sendMessage(chat_id, frasi["help2"], reply_markup=help, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["help"], parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["help2"], reply_markup=help, parse_mode="HTML")
     elif text == "/news":
-        bot.sendMessage(chat_id, frasi["news"], reply_markup=news, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["news"], reply_markup=news, parse_mode="HTML")
     elif text == "/info":
         bot.sendMessage(chat_id, str(((frasi["info"]).replace("{{**versione**}}",str(versione))).replace("{{**ultimoAggiornamento**}}",str(ultimoAggiornamento))).replace("{{**collaboratori_stampa**}}",str(collaboratori_stampa)))
     elif text == "/forum":
-        bot.sendMessage(chat_id, frasi["forum"], reply_markup=forum, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["forum"], reply_markup=forum, parse_mode="HTML")
     elif text == "/developer":
-        bot.sendMessage(chat_id, frasi["developer"], reply_markup=developer, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["developer"], reply_markup=developer, parse_mode="HTML")
     elif text == "/design":
-        bot.sendMessage(chat_id, frasi["design"], reply_markup=design, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["design"], reply_markup=design, parse_mode="HTML")
     elif text == "/iot":
-        bot.sendMessage(chat_id, frasi["iot"], reply_markup=iot, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["iot"], reply_markup=iot, parse_mode="HTML")
     elif text == "/call":
         bot.sendMessage(chat_id, frasi["call"], reply_markup=call)
     elif text == "/listacall":
-        bot.sendMessage(chat_id, frasi["listacall"], reply_markup=listaCall, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["listacall"], reply_markup=listaCall, parse_mode="HTML")
     elif text == "/prossimacall":
-        bot.sendMessage(chat_id, str(((frasi["prossima_call"]).replace("{{**giornoCall**}}",str(giornoCall))).replace("{{**meseCall**}}",str(meseCall))).replace("{{**annoCall**}}",str(annoCall)), parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(((frasi["prossima_call"]).replace("{{**giornoCall**}}",str(giornoCall))).replace("{{**meseCall**}}",str(meseCall))).replace("{{**annoCall**}}",str(annoCall)), parse_mode="HTML")
     elif text == "/progetti":
-        bot.sendMessage(chat_id, frasi["progetti"], reply_markup=progetti, parse_mode="Markdown")
-        bot.sendMessage(chat_id, frasi["progetti2"], reply_markup=progettimozita, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["progetti"], reply_markup=progetti, parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["progetti2"], reply_markup=progettimozita, parse_mode="HTML")
     elif text == "/regolamento":
-        bot.sendMessage(chat_id, frasi["regolamento"], reply_markup=regolamento, parse_mode="Markdown")
+        bot.sendMessage(chat_id, frasi["regolamento"], reply_markup=regolamento, parse_mode="HTML")
     elif text == "/avvisi":
-        bot.sendMessage(chat_id, str(frasi["avvisi"]).replace("{{**stato_avvisi**}}",str(stato_avvisi)), reply_markup=avvisi, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["avvisi"]).replace("{{**stato_avvisi**}}",str(stato_avvisi)), reply_markup=avvisi, parse_mode="HTML")
     elif text == "/avvisiOn":
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
             except Exception as e:
                 print("Excep:05 -> "+str(e))
-                bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
-            bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="Markdown")
+            bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
     elif text == "/avvisiOff":
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
                 with open(avvisi_on_list_path, "wb") as f:
                     f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="Markdown")
+                bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as e:
                 print("Excep:06 -> "+str(e))
                 bot.sendMessage(chat_id, frasi["avvisiOff2"])
         else:
             bot.sendMessage(chat_id, frasi["avvisiOff3"])
     elif "/anno2017" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2017"), reply_markup=listaCall2017, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2017"), reply_markup=listaCall2017, parse_mode="HTML")
     elif "/anno2018" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2018"), reply_markup=listaCall2018, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2018"), reply_markup=listaCall2018, parse_mode="HTML")
     elif "/anno2019" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2019"), reply_markup=listaCall2019, parse_mode="Markdown")
+        bot.sendMessage(chat_id, str(frasi["anno"]).replace("{{**anno**}}","2019"), reply_markup=listaCall2019, parse_mode="HTML")
     elif "/admin" in text:
         if status_user == "A":
             if type_msg == "LK":
@@ -423,16 +443,16 @@ def risposte(msg):
                 error08=False
                 for x in avvisi_on_list:
                     try:
-                        bot.sendMessage(x, messaggio + "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.", parse_mode="Markdown")
+                        bot.sendMessage(x, messaggio + "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.", parse_mode="HTML")
                         bot.sendMessage(chat_id, "✔️ Messaggio inviato alla chat: "+str(x))
                     except Exception as e:
                         print("Excep:08 -> "+str(e))
                         bot.sendMessage(chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: "+str(x))
                         error08=True
                 if(not error08):
-                    bot.sendMessage(chat_id, "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="Markdown")
+                    bot.sendMessage(chat_id, "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="HTML")
                 else:
-                    bot.sendMessage(chat_id, "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="Markdown")
+                    bot.sendMessage(chat_id, "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n"+messaggio, parse_mode="HTML")
 
             elif(azione[1] == "all" and azione[2] == "users" and len(azione) >= 4):
                 # Azioni sugli avvisi importanti (tutti gli utenti)
