@@ -34,13 +34,15 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.0"
-ultimoAggiornamento = "09-03-2019"
+versione = "1.2.2"
+ultimoAggiornamento = "17-03-2019"
 
 print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
 MIN_ANNO=2017 #costante - anno minimo delle call
 MAX_ANNO=2019 #variabile - anno massimo delle call
+
+response=""
 
 ## CARICAMENTO DELLE VARIE LISTE
 
@@ -121,8 +123,13 @@ def risposte(msg):
 
     global frasi # frasi è il dictionary globali che contiene tutte le frasi da visualizzare
 
+    global response
+    response = bot.getUpdates()
+    #print(response)
+
+    global AdminList
+
     if Path(adminlist_path).exists():
-        global AdminList
         AdminList = json.loads(open(adminlist_path).read())
     else:
         # nel caso in cui non dovesse esistere alcun file "adminlist.json" imposta staticamente l'userid di Sav22999
@@ -131,7 +138,7 @@ def risposte(msg):
 
     # caricamento degli eventi gestiti
     EventiList={}
-    EventiList=telegram_events.events(msg,["LK","NM"])
+    EventiList=telegram_events.events(msg,["LK","NM"],response)
     text=EventiList["text"]
     type_msg=EventiList["type_msg"]
     modificato=EventiList["modificato"]
@@ -355,8 +362,10 @@ def risposte(msg):
     elif text == "/vademecum":
         bot.sendMessage(chat_id, frasi["vademecum"], reply_markup=vademecum, parse_mode="HTML")
     elif text == "/vademecumgenerale":
+        bot.sendMessage(chat_id, "Invio del file <i>VG.pdf</i> in corso...", parse_mode="HTML")
         bot.sendDocument(chat_id, open("VG.pdf","rb"))
     elif text == "/vademecumtecnico":
+        bot.sendMessage(chat_id, "Invio del file <i>VT.pdf</i> in corso...", parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf","rb"))
     elif text == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"], reply_markup=feedback, parse_mode="HTML")
@@ -366,7 +375,7 @@ def risposte(msg):
     elif text == "/news":
         bot.sendMessage(chat_id, frasi["news"], reply_markup=news, parse_mode="HTML")
     elif text == "/info":
-        bot.sendMessage(chat_id, str(((frasi["info"]).replace("{{**versione**}}",str(versione))).replace("{{**ultimoAggiornamento**}}",str(ultimoAggiornamento))).replace("{{**collaboratori_stampa**}}",str(collaboratori_stampa)))
+        bot.sendMessage(chat_id, str(((frasi["info"]).replace("{{**versione**}}",str(versione))).replace("{{**ultimoAggiornamento**}}",str(ultimoAggiornamento))).replace("{{**collaboratori_stampa**}}",str(collaboratori_stampa)), parse_mode="HTML")
     elif text == "/forum":
         bot.sendMessage(chat_id, frasi["forum"], reply_markup=forum, parse_mode="HTML")
     elif text == "/developer":
@@ -425,7 +434,7 @@ def risposte(msg):
         else:
             bot.sendMessage(chat_id, frasi["non_sei_admin"])
     else:
-        bot.sendMessage(chat_id, frasi["comando_non_riconosciuto"], reply_markup=start)
+        bot.sendMessage(chat_id, frasi["comando_non_riconosciuto"], reply_markup=start, parse_mode="HTML")
 
     if admin:
         # CONTROLLO AZIONI ADMIN
