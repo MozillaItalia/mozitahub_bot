@@ -34,10 +34,10 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.2"
-ultimoAggiornamento = "17-03-2019"
+versione = "1.2.3"
+ultimoAggiornamento = "18-03-2019"
 
-print("Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
+print("(MozItaBot) Versione: "+versione+" - Aggiornamento: "+ultimoAggiornamento)
 
 MIN_ANNO=2017 #costante - anno minimo delle call
 MAX_ANNO=2019 #variabile - anno massimo delle call
@@ -345,8 +345,6 @@ def risposte(msg):
 
     if text == "/home":
         bot.sendMessage(chat_id, frasi["home"], reply_markup=home, parse_mode="HTML")
-    # elif text=="/stop":
-        #bot.sendMessage(chat_id, "Stai per disattivare MozIta Hub. Per attivarlo nuovamente sara' sufficiente premere il pulsante sottostante 'Avvia' o digitare /start. Se lo desideri puoi anche lasciarci un feedback sulla tua esperienza d'utilizzo del bot e la motivazione dell'abbandono. Grazie.", reply_markup=stop)
     elif text == "/start":
         bot.sendMessage(chat_id, frasi["start"], parse_mode="HTML")
         bot.sendMessage(chat_id, frasi["start2"], reply_markup=start, parse_mode="HTML")
@@ -362,10 +360,10 @@ def risposte(msg):
     elif text == "/vademecum":
         bot.sendMessage(chat_id, frasi["vademecum"], reply_markup=vademecum, parse_mode="HTML")
     elif text == "/vademecumgenerale":
-        bot.sendMessage(chat_id, "Invio del file <i>VG.pdf</i> in corso...", parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["invio_vg_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VG.pdf","rb"))
     elif text == "/vademecumtecnico":
-        bot.sendMessage(chat_id, "Invio del file <i>VT.pdf</i> in corso...", parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf","rb"))
     elif text == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"], reply_markup=feedback, parse_mode="HTML")
@@ -385,7 +383,7 @@ def risposte(msg):
     elif text == "/iot":
         bot.sendMessage(chat_id, frasi["iot"], reply_markup=iot, parse_mode="HTML")
     elif text == "/call":
-        bot.sendMessage(chat_id, frasi["call"], reply_markup=call)
+        bot.sendMessage(chat_id, frasi["call"], reply_markup=call, parse_mode="HTML")
     elif text == "/listacall":
         bot.sendMessage(chat_id, frasi["listacall"], reply_markup=listaCall, parse_mode="HTML")
     elif text == "/prossimacall":
@@ -418,7 +416,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as e:
                 print("Excep:06 -> "+str(e))
-                bot.sendMessage(chat_id, frasi["avvisiOff2"])
+                bot.sendMessage(chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOff3"])
     elif "/anno2017" in text:
@@ -432,7 +430,7 @@ def risposte(msg):
             if type_msg == "LK":
                 admin = True
         else:
-            bot.sendMessage(chat_id, frasi["non_sei_admin"])
+            bot.sendMessage(chat_id, frasi["non_sei_admin"], parse_mode="HTML")
     else:
         bot.sendMessage(chat_id, frasi["comando_non_riconosciuto"], reply_markup=start, parse_mode="HTML")
 
