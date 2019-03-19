@@ -36,7 +36,7 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.5"
+versione = "1.2.6"
 ultimo_aggiornamento = "19-03-2019"
 
 print("(MozItaBot) Versione: " + versione +
@@ -111,16 +111,16 @@ def genera_lista_per_anno(year, type):
         call_mensili_list_ANNO = {}
     if str(type) == "button":
         load_lista_call_anno = []
-        for x in call_mensili_list_ANNO:
+        for value_for in call_mensili_list_ANNO:
             load_lista_call_anno.append([InlineKeyboardButton(
-                text=str(x), url=str(call_mensili_list_ANNO[x]))])
+                text=str(value_for), url=str(call_mensili_list_ANNO[value_for]))])
         load_lista_call_anno.append([InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')])
         return InlineKeyboardMarkup(inline_keyboard=load_lista_call_anno)
     elif str(type) == "":
         load_lista_call_anno = {}
-        for x in call_mensili_list_ANNO:
-            load_lista_call_anno[str(x)] = str(call_mensili_list_ANNO[x])
+        for value_for in call_mensili_list_ANNO:
+            load_lista_call_anno[str(value_for)] = str(call_mensili_list_ANNO[value_for])
         return load_lista_call_anno
 
 # questa funzione serve per calcolare il primo venerdì del mese
@@ -338,9 +338,9 @@ def risposte(msg):
     ])
 
     load_lista_call = []
-    for x in call_mensili_list:
+    for value_for in call_mensili_list:
         load_lista_call.append([InlineKeyboardButton(
-            text=str(x), callback_data=str(call_mensili_list[x]))])
+            text=str(value_for), callback_data=str(call_mensili_list[value_for]))])
     load_lista_call.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
@@ -351,18 +351,18 @@ def risposte(msg):
     lista_call_2019 = genera_lista_per_anno(2019, "button")
 
     load_progetti = []
-    for x in progetti_list:
+    for value_for in progetti_list:
         load_progetti.append([InlineKeyboardButton(
-            text=str(x), url=str(progetti_list[x]))])
+            text=str(value_for), url=str(progetti_list[value_for]))])
     load_progetti.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
     progetti = InlineKeyboardMarkup(inline_keyboard=load_progetti)
 
     load_progettimozita = []
-    for x in progetti_mozita_list:
+    for value_for in progetti_mozita_list:
         load_progettimozita.append([InlineKeyboardButton(
-            text=str(x), url=str(progetti_mozita_list[x]))])
+            text=str(value_for), url=str(progetti_mozita_list[value_for]))])
     load_progettimozita.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
@@ -398,22 +398,22 @@ def risposte(msg):
 
     admin = False
     collaboratori_stampa = ""
-    for x in sorted(collaboratori_hub):
-        collaboratori_stampa += "\n - " + x
+    for value_for in sorted(collaboratori_hub):
+        collaboratori_stampa += "\n - " + value_for
 
     if chat_id not in all_users:
         all_users.append(chat_id)
         avvisi_on_list.append(user_id)
         try:
-            with open(all_users_path, "wb") as f:
-                f.write(json.dumps(all_users).encode("utf-8"))
-        except Exception as e:
-            print("Excep:03 -> " + str(e))
+            with open(all_users_path, "wb") as file_with:
+                file_with.write(json.dumps(all_users).encode("utf-8"))
+        except Exception as exception_value:
+            print("Excep:03 -> " + str(exception_value))
         try:
-            with open(avvisi_on_list_path, "wb") as f:
-                f.write(json.dumps(avvisi_on_list).encode("utf-8"))
-        except Exception as e:
-            print("Excep:04 -> " + str(e))
+            with open(avvisi_on_list_path, "wb") as file_with:
+                file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
+        except Exception as exception_value:
+            print("Excep:04 -> " + str(exception_value))
 
     if user_id in avvisi_on_list:
         stato_avvisi = frasi["avvisiStatoOn"]
@@ -519,11 +519,11 @@ def risposte(msg):
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
-                with open(avvisi_on_list_path, "wb") as f:
-                    f.write(json.dumps(avvisi_on_list).encode("utf-8"))
+                with open(avvisi_on_list_path, "wb") as file_with:
+                    file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
                 bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
-            except Exception as e:
-                print("Excep:05 -> " + str(e))
+            except Exception as exception_value:
+                print("Excep:05 -> " + str(exception_value))
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
@@ -531,11 +531,11 @@ def risposte(msg):
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
-                with open(avvisi_on_list_path, "wb") as f:
-                    f.write(json.dumps(avvisi_on_list).encode("utf-8"))
+                with open(avvisi_on_list_path, "wb") as file_with:
+                    file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
                 bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
-            except Exception as e:
-                print("Excep:06 -> " + str(e))
+            except Exception as exception_value:
+                print("Excep:06 -> " + str(exception_value))
                 bot.sendMessage(
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
@@ -576,19 +576,19 @@ def risposte(msg):
                 del azione[0]
                 messaggio = ' '.join(azione)
                 error08 = False
-                for x in avvisi_on_list:
+                for value_for in avvisi_on_list:
                     try:
                         bot.sendMessage(
-                            x,
+                            value_for,
                             messaggio +
                             "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.",
                             parse_mode="HTML")
                         bot.sendMessage(
-                            chat_id, "✔️ Messaggio inviato alla chat: " + str(x))
-                    except Exception as e:
-                        print("Excep:08 -> " + str(e))
+                            chat_id, "✔️ Messaggio inviato alla chat: " + str(value_for))
+                    except Exception as exception_value:
+                        print("Excep:08 -> " + str(exception_value))
                         bot.sendMessage(
-                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: " + str(x))
+                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: " + str(value_for))
                         error08 = True
                 if(not error08):
                     bot.sendMessage(
@@ -609,15 +609,15 @@ def risposte(msg):
                 del azione[0]
                 del azione[0]
                 messaggio = ' '.join(azione)
-                for x in all_users:
+                for value_for in all_users:
                     try:
-                        bot.sendMessage(x, messaggio)
+                        bot.sendMessage(value_for, messaggio)
                         bot.sendMessage(
-                            chat_id, "Messaggio inviato alla chat: " + str(x))
-                    except Exception as e:
-                        print("Excep:07 -> " + str(e))
+                            chat_id, "Messaggio inviato alla chat: " + str(value_for))
+                    except Exception as exception_value:
+                        print("Excep:07 -> " + str(exception_value))
                         bot.sendMessage(
-                            chat_id, "Non è stato possibile inviare il messaggio alla chat: " + str(x))
+                            chat_id, "Non è stato possibile inviare il messaggio alla chat: " + str(value_for))
                 bot.sendMessage(
                     chat_id, "Messaggio inviato correttamente a tutti gli utenti.")
             elif azione[1] == "call" and len(azione) >= 6:
@@ -639,8 +639,8 @@ def risposte(msg):
                         if not (nome in call_mensili_list_anno.keys()):
                             call_mensili_list_anno[str(nome)] = str(link)
                             try:
-                                with open(call_mensili_list_anno_path, "wb") as f:
-                                    f.write(
+                                with open(call_mensili_list_anno_path, "wb") as file_with:
+                                    file_with.write(
                                         json.dumps(call_mensili_list_anno).encode("utf-8"))
                                 bot.sendMessage(
                                     chat_id,
@@ -651,8 +651,8 @@ def risposte(msg):
                                     ") inserita correttamente nel '" +
                                     str(anno) +
                                     "'.")
-                            except Exception as e:
-                                print("Excep:09 -> " + str(e))
+                            except Exception as exception_value:
+                                print("Excep:09 -> " + str(exception_value))
                                 bot.sendMessage(
                                     chat_id,
                                     "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list" +
@@ -689,8 +689,8 @@ def risposte(msg):
                         if nome in call_mensili_list_anno.keys():
                             call_mensili_list_anno[str(nome)] = str(link)
                             try:
-                                with open(call_mensili_list_anno_path, "wb") as f:
-                                    f.write(
+                                with open(call_mensili_list_anno_path, "wb") as file_with:
+                                    file_with.write(
                                         json.dumps(call_mensili_list_anno).encode("utf-8"))
                                 bot.sendMessage(
                                     chat_id,
@@ -701,8 +701,8 @@ def risposte(msg):
                                     ") del '" +
                                     str(anno) +
                                     "' modificata correttamente.")
-                            except Exception as e:
-                                print("Excep:10 -> " + str(e))
+                            except Exception as exception_value:
+                                print("Excep:10 -> " + str(exception_value))
                                 bot.sendMessage(
                                     chat_id,
                                     "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list_" +
@@ -737,8 +737,8 @@ def risposte(msg):
                         if nome in call_mensili_list_anno:
                             del call_mensili_list_anno[str(nome)]
                             try:
-                                with open(call_mensili_list_anno_path, "wb") as f:
-                                    f.write(
+                                with open(call_mensili_list_anno_path, "wb") as file_with:
+                                    file_with.write(
                                         json.dumps(call_mensili_list_anno).encode("utf-8"))
                                 bot.sendMessage(
                                     chat_id,
@@ -747,8 +747,8 @@ def risposte(msg):
                                     "' del '" +
                                     str(anno) +
                                     "' eliminata correttamente.")
-                            except Exception as e:
-                                print("Excep:11 -> " + str(e))
+                            except Exception as exception_value:
+                                print("Excep:11 -> " + str(exception_value))
                                 bot.sendMessage(
                                     chat_id,
                                     "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list" +
@@ -781,16 +781,16 @@ def risposte(msg):
                     if temp_chat_id not in avvisi_on_list:
                         avvisi_on_list.append(temp_chat_id)
                         try:
-                            with open(avvisi_on_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(avvisi_on_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     avvisi_on_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
                                 "La chat_id '" +
                                 str(temp_chat_id) +
                                 "' è stata inserita correttamente.")
-                        except Exception as e:
-                            print("Excep:12 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:12 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -809,16 +809,16 @@ def risposte(msg):
                     if temp_chat_id in avvisi_on_list:
                         avvisi_on_list.remove(temp_chat_id)
                         try:
-                            with open(avvisi_on_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(avvisi_on_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     avvisi_on_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
                                 "La chat_id '" +
                                 str(temp_chat_id) +
                                 "' è stata eliminata correttamente.")
-                        except Exception as e:
-                            print("Excep:13 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:13 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -843,8 +843,8 @@ def risposte(msg):
                     if nome not in progetti_mozita_list:
                         progetti_mozita_list[str(nome)] = str(link)
                         try:
-                            with open(progetti_mozita_list, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_mozita_list, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
@@ -853,8 +853,8 @@ def risposte(msg):
                                 "' (" +
                                 str(link) +
                                 ") inserito correttamente.")
-                        except Exception as e:
-                            print("Excep:14 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:14 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -875,8 +875,8 @@ def risposte(msg):
                     if nome in progetti_mozita_list:
                         progetti_mozita_list[str(nome)] = str(link)
                         try:
-                            with open(progetti_mozita_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_mozita_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
@@ -885,8 +885,8 @@ def risposte(msg):
                                 "' (" +
                                 str(link) +
                                 ") modificato correttamente.")
-                        except Exception as e:
-                            print("Excep:15 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:15 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -905,16 +905,16 @@ def risposte(msg):
                     if nome in progetti_mozita_list:
                         del progetti_mozita_list[str(nome)]
                         try:
-                            with open(progetti_mozita_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_mozita_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
                                 "Progetto comunitario '" +
                                 str(nome) +
                                 "' eliminato correttamente.")
-                        except Exception as e:
-                            print("Excep:16 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:16 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -938,8 +938,8 @@ def risposte(msg):
                     if not (nome in progetti_list):
                         progetti_list[str(nome)] = str(link)
                         try:
-                            with open(progetti_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
@@ -948,8 +948,8 @@ def risposte(msg):
                                 "' (" +
                                 str(link) +
                                 ") inserito correttamente.")
-                        except Exception as e:
-                            print("Excep:17 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:17 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -966,8 +966,8 @@ def risposte(msg):
                     if nome in progetti_list:
                         progetti_list[str(nome)] = str(link)
                         try:
-                            with open(progetti_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
@@ -976,8 +976,8 @@ def risposte(msg):
                                 "' (" +
                                 str(link) +
                                 ") modificato correttamente.")
-                        except Exception as e:
-                            print("Excep:18 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:18 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -992,13 +992,13 @@ def risposte(msg):
                     if nome in progetti_list:
                         del progetti_list[str(nome)]
                         try:
-                            with open(progetti_list_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(progetti_list_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     progetti_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
-                        except Exception as e:
-                            print("Excep:19 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:19 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -1017,13 +1017,13 @@ def risposte(msg):
                     if nome not in collaboratori_hub:
                         collaboratori_hub.append(str(nome))
                         try:
-                            with open(collaboratori_hub_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(collaboratori_hub_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     sorted(collaboratori_hub)).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
-                        except Exception as e:
-                            print("Excep:20 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:20 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -1041,13 +1041,13 @@ def risposte(msg):
                     if nome in collaboratori_hub:
                         collaboratori_hub.remove(str(nome))
                         try:
-                            with open(collaboratori_hub_path, "wb") as f:
-                                f.write(json.dumps(
+                            with open(collaboratori_hub_path, "wb") as file_with:
+                                file_with.write(json.dumps(
                                     collaboratori_hub).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
-                        except Exception as e:
-                            print("Excep:21 -> " + str(e))
+                        except Exception as exception_value:
+                            print("Excep:21 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -1075,15 +1075,15 @@ def risposte(msg):
         stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
             chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(text) + "\n--------------------\n"
         print(stampa)
-    except Exception as e:
-        stampa = "Excep:01 -> " + str(e) + "\n--------------------\n"
+    except Exception as exception_value:
+        stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
         print(stampa)
 
     try:
         if os.path.exists("./history_mozitabot") == False:
             os.mkdir("./history_mozitabot")
-    except Exception as e:
-        print("Excep:22 -> " + str(e))
+    except Exception as exception_value:
+        print("Excep:22 -> " + str(exception_value))
 
     try:
         # apre il file in scrittura "append" per inserire orario e data -> log
@@ -1094,16 +1094,16 @@ def risposte(msg):
         # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
         file.write(stampa)
         file.close()
-    except Exception as e:
-        print("Excep:02 -> " + str(e))
+    except Exception as exception_value:
+        print("Excep:02 -> " + str(exception_value))
 
 
 try:
     bot = telepot.Bot(TOKEN)
     MessageLoop(
         bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
-except Exception as e:
-    print("ERRORE GENERALE.\n\nError: " + str(e) + "\n--------------------\n")
+except Exception as exception_value:
+    print("ERRORE GENERALE.\n\nError: " + str(exception_value) + "\n--------------------\n")
 
 while True:
     time.sleep(10)
