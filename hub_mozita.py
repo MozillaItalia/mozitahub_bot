@@ -36,8 +36,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.6"
-ultimo_aggiornamento = "19-03-2019"
+versione = "1.2.7"
+ultimo_aggiornamento = "05-04-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -141,7 +141,6 @@ def risposte(msg):
     localtime = datetime.now()
     data_salvataggio = localtime.strftime("%Y_%m_%d")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
-    messaggio = msg
     type_msg = "NM"  # Normal Message
     status_user = "-"  # inizializzazione dello 'status' dell'utente {"A"|"-"}
     # Admin, Other
@@ -603,6 +602,24 @@ def risposte(msg):
                         messaggio,
                         parse_mode="HTML")
 
+            elif azione[1] == "preview" and len(azione) >= 3:
+                del azione[0]
+                del azione[0]
+                messaggio = ' '.join(azione)
+                try:
+                    bot.sendMessage(
+                            chat_id,
+                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
+                            messaggio +
+                            "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.",
+                            parse_mode="HTML")
+                except Exception as exception_value:
+                        print("Excep:23 -> " + str(exception_value))
+                        bot.sendMessage(
+                            chat_id, "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
+                                "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                            parse_mode="HTML")
+
             elif azione[1] == "all" and azione[2] == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
@@ -770,9 +787,11 @@ def risposte(msg):
                             "' non è valido.")
                 else:
                     admin_err1 = True
-            elif azione[1] == "avvisi" and azione[2] == "list" and len(azione) == 5:
+            elif azione[1] == "avvisi" and azione[2] == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
-                if azione[3] == "aggiungi":
+                if azione[3] == "mostra":
+                    bot.sendMessage(chat_id,"Ecco la 'avvisi_on_list':\n\n"+str(avvisi_on_list))
+                elif azione[3] == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -832,7 +851,7 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1] == "progetto" and azione[2] == "mozita" and len(azione) >= 5:
                 # Azioni sui progetti comunitari (mozilla italia)
-                if(azione[3] == "aggiungi"):
+                if azione[3] == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -840,10 +859,10 @@ def risposte(msg):
                     link = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if nome not in progetti_mozita_list:
+                    if not (nome in progetti_mozita_list):
                         progetti_mozita_list[str(nome)] = str(link)
                         try:
-                            with open(progetti_mozita_list, "wb") as file_with:
+                            with open(progetti_mozita_list_path, "wb") as file_with:
                                 file_with.write(json.dumps(
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
@@ -854,16 +873,13 @@ def risposte(msg):
                                 str(link) +
                                 ") inserito correttamente.")
                         except Exception as exception_value:
-                            print("Excep:14 -> " + str(exception_value))
+                            print("Excep:17 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
                     else:
-                        bot.sendMessage(
-                            chat_id,
-                            "Il progetto comunitario '" +
-                            str(nome) +
-                            "' è già presente.")
+                        bot.sendMessage(chat_id, "Il progetto comunitario '" +
+                                        str(nome) + "' è già presente.")
                 elif azione[3] == "modifica":
                     del azione[0]
                     del azione[0]
@@ -880,22 +896,19 @@ def risposte(msg):
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
                                 chat_id,
-                                "Progetto comunitario '" +
+                                "Progetto '" +
                                 str(nome) +
                                 "' (" +
                                 str(link) +
                                 ") modificato correttamente.")
                         except Exception as exception_value:
-                            print("Excep:15 -> " + str(exception_value))
+                            print("Excep:18 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
                     else:
-                        bot.sendMessage(
-                            chat_id,
-                            "Il progetto comunitario '" +
-                            str(nome) +
-                            "' non è stato trovato.")
+                        bot.sendMessage(chat_id, "Il progetto comunitario '" +
+                                        str(nome) + "' non è stato trovato.")
                 elif azione[3] == "elimina":
                     del azione[0]
                     del azione[0]
@@ -909,21 +922,15 @@ def risposte(msg):
                                 file_with.write(json.dumps(
                                     progetti_mozita_list).encode("utf-8"))
                             bot.sendMessage(
-                                chat_id,
-                                "Progetto comunitario '" +
-                                str(nome) +
-                                "' eliminato correttamente.")
+                                chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
-                            print("Excep:16 -> " + str(exception_value))
+                            print("Excep:19 -> " + str(exception_value))
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
                     else:
-                        bot.sendMessage(
-                            chat_id,
-                            "Il progetto comunitario '" +
-                            str(nome) +
-                            "' non è stato trovato.")
+                        bot.sendMessage(chat_id, "Il progetto '" +
+                                        str(nome) + "' non è stato trovato.")
                 else:
                     admin_err1 = True
             elif azione[1] == "progetto" and len(azione) >= 4:
