@@ -36,8 +36,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.7"
-ultimo_aggiornamento = "05-04-2019"
+versione = "1.2.8"
+ultimo_aggiornamento = "12-04-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -565,10 +565,45 @@ def risposte(msg):
         # CONTROLLO AZIONI ADMIN
         azione = list(text.split(" "))
         admin_err1 = False
-        if azione[0] == "/admin" and len(azione) >= 2:
-            if(azione[1] == "help" and len(azione) == 2):
+        if azione[0] == "/admin" and len(azione) >= 1:
+            if len(azione) == 1 or (azione[1] == "help" and len(azione) == 2):
                 # Elenco azioni
-                bot.sendMessage(chat_id, "Ecco l'elenco delle azione che puoi eseguire:\n/admin\n>> avviso *Messaggio da inviare*\n>> all users *Messaggio da inviare* (solo messaggi 'fondamentali')\n>> call\n>> >> aggiungi *Mese (eventuale parte)* *Anno* *LinkCall*\n>> >> modifica *Mese (eventuale parte)* *Anno* *LinkCallModificato*\n>> >> elimina *Mese (eventuale parte)* *Anno*\n>> avvisi list\n>> >> aggiungi *Chat_id*\n>> >> elimina *Chat_id*\n>> progetto\n>> >> aggiungi *Nome progetto da aggiungere* *LinkProgetto*\n>> >> modifica *Nome progetto da modificare* *LinkProgettoModificato*\n>> >> elimina *Nome progetto da eliminare*\n>> progetto mozita\n>> >> aggiungi *Nome progetto comunitario da aggiungere* *LinkProgetto*\n>> >> modifica *Nome progetto comunitario da modificare* *LinkProgettoModificato*\n>> >> elimina *Nome progetto comunitario da eliminare*\n>> collaboratore\n>> >> aggiungi *Nome Cognome (@usernameTelegram)*\n>> >> elimina *Nome Cognome (@usernameTelegram)*\n\nEsempi:\n/admin avviso Messaggio di prova\n/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it")
+                bot.sendMessage(chat_id,
+                    "Questo è l'elenco dei comandi che puoi eseguire:\n" +
+                    "\n\n" +
+                    "<b>Generali</b>:\n"
+                    "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
+                    "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                    "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                    "\n" +
+                    "<b>Gestione meeting/call</b>:\n" +
+                    "- <code>/admin call aggiungi |Mese (eventuale parte)| |Anno| |LinkCall|</code>\n" +
+                    "- <code>/admin call modifica |Mese (eventuale parte)| |Anno| |LinkCallModificato|</code>\n" +
+                    "- <code>/admin call elimina |Mese (eventuale parte)| |Anno|</code>\n" +
+                    "\n" +
+                    "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
+                    "- <code>/admin avvisi list mostra</code>\n" +
+                    "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
+                    "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
+                    "\n" +
+                    "<b>Gestione progetti (Mozilla)</b>:\n" +
+                    "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
+                    "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
+                    "- <code>/admin progetto elimina |Nome progetto da eliminare|</code>\n" +
+                    "\n" +
+                    "<b>Gestione progetti Mozilla Italia</b>:\n" +
+                    "- <code>/admin progetto mozita aggiungi |Nome progetto comunitario da aggiungere| |LinkProgetto|</code>\n" +
+                    "- <code>/admin progetto mozita modifica |Nome progetto comunitario da modificare| |LinkProgettoModificato|</code>\n" +
+                    "- <code>/admin progetto mozita elimina |Nome progetto comunitario da eliminare|</code>\n" +
+                    "\n" +
+                    "<b>Gestione collaboratori di MozItaBot</b>:\n" +
+                    "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
+                    "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
+                    "\n" +
+                    "<b>Esempi:</b>\n" +
+                    "- <code>/admin avviso Messaggio di prova</code>\n" +
+                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>",
+                    parse_mode="HTML")
             elif azione[1] == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
                 del azione[0]
@@ -580,14 +615,19 @@ def risposte(msg):
                         bot.sendMessage(
                             value_for,
                             messaggio +
-                            "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.",
+                            "\n\n--------------------\n" +
+                                frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
                         bot.sendMessage(
-                            chat_id, "✔️ Messaggio inviato alla chat: " + str(value_for))
+                            chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                str(value_for) + "</a>",
+                                parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         bot.sendMessage(
-                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: " + str(value_for))
+                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                paser_mode="HTML")
                         error08 = True
                 if(not error08):
                     bot.sendMessage(
@@ -611,7 +651,7 @@ def risposte(msg):
                             chat_id,
                             "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
                             messaggio +
-                            "\n\n--------------------\nRicevi questo messaggio perché hai attivato le notifiche per le novità in Mozilla Italia. Puoi controllare il tuo stato attuale, attivandole o disattivandole, rapidamente digitando /avvisi.",
+                            "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
                 except Exception as exception_value:
                         print("Excep:23 -> " + str(exception_value))
@@ -630,11 +670,15 @@ def risposte(msg):
                     try:
                         bot.sendMessage(value_for, messaggio)
                         bot.sendMessage(
-                            chat_id, "Messaggio inviato alla chat: " + str(value_for))
+                            chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                str(value_for) + "</a>",
+                                parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
                         bot.sendMessage(
-                            chat_id, "Non è stato possibile inviare il messaggio alla chat: " + str(value_for))
+                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                parse_mode="HTML")
                 bot.sendMessage(
                     chat_id, "Messaggio inviato correttamente a tutti gli utenti.")
             elif azione[1] == "call" and len(azione) >= 6:
@@ -1071,12 +1115,12 @@ def risposte(msg):
         else:
             bot.sendMessage(
                 chat_id,
-                "Errore: Comando non riconosciuto.\nRicorda che se vuoi ottenere aiuto su ciò che puoi fare nella sezione ADMIN devi digitare anche la parola 'help'. In questo modo:\n'/admin help'.")
+                "Errore: Comando non riconosciuto.\nRicorda che se vuoi ottenere aiuto su ciò che puoi fare nella sezione ADMIN devi digitare anche la parola 'help'. In questo modo: <code>/admin help</code>", parse_mode="HTML")
 
         if admin_err1:
             bot.sendMessage(
                 chat_id,
-                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita '/admin help'")
+                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita <code>/admin help</code>", parse_mode="HTML")
 
     try:
         stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(

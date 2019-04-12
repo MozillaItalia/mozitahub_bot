@@ -76,12 +76,19 @@ Inoltre ogni singolo messaggio viene salvato in un file *.txt* per soli scopi di
 ### Privilegi amministratori
 Ecco ciò che si può fare se si è admin.
  - Inviare un messaggio agli utenti:
-  - Agli utenti che hanno attivato il servizio "Avvisi news": `/admin avviso *MESSAGGIO DA INVIARE*`
 
-    > /admin avviso *Testo messaggio di esempio*
-  - A tutti gli utenti (NO SPAM, solo messaggi importanti -> usare con parsimonia): `/admin all users *MESSAGGIO DA INVIARE*`
+     - **ANTEPRIMA DELL’INVIO**: prima di usare ‘avviso’ o ‘all users’ è bene accertarsi che il messaggio scritto sia corretto, anche di sintassi, perciò utilizzare prima questo comando: `/admin preview *MESSAGGIO DA INVIARE*`
 
-    > /admin all users *Testo messaggio di esempio*
+        > /admin preview Testo messaggio di esempio
+
+      - Agli utenti che hanno attivato il servizio "Avvisi news": `/admin avviso *MESSAGGIO DA INVIARE*`
+
+        > /admin avviso *Testo messaggio di esempio*
+
+      - A tutti gli utenti (NO SPAM, solo messaggi importanti -> usare con parsimonia): `/admin all users *MESSAGGIO DA INVIARE*`
+
+        > /admin all users *Testo messaggio di esempio*
+
  - Gestire call mensili (elenco):
     - Inserire una call mensile: `/admin call aggiungi *MESE* *ANNO* *LINK*`
 
@@ -92,13 +99,21 @@ Ecco ciò che si può fare se si è admin.
     - Eliminare una call mensile: `/admin call elimina *MESE* *ANNO*`
 
       > /admin call elimina *Gennaio* *2019*
+
  - Gestire utenti (iscritti a "Avvisi news"):
+
+     - Mostrare la lista degli utenti: `/admin avvisi list mostra`
+
+        > /admin avvisi list mostra
+
     - Aggiungere forzatamente un utente alla lista: `/admin avvisi list aggiungi *CHAT_ID*`
 
       > /admin avvisi list aggiungi *123456789*
+
     - Rimuovere forzatamente un utente dalla lista: `/admin avvisi list elimina *CHAT_ID*`
 
       > /admin avvisi list elimina *123456789*
+
  - Gestire progetti (mozilla):
     - Inserire un nuovo progetto: `/admin progetto aggiungi *NOME PROGETTO* *LINK*`
 
@@ -109,6 +124,7 @@ Ecco ciò che si può fare se si è admin.
     - Eliminare un nuovo progetto: `/admin progetto elimina *NOME PROGETTO*`
 
       > /admin progetto elimina *Esempio nome di progetto*
+
  - Gestire progetti comunitari (mozilla italia):
     - Inserire un nuovo progetto: `/admin progetto mozita aggiungi *NOME PROGETTO* *LINK*`
 
@@ -119,10 +135,13 @@ Ecco ciò che si può fare se si è admin.
     - Eliminare un nuovo progetto: `/admin progetto mozita elimina *NOME PROGETTO*`
 
       > /admin progetto mozita elimina *Esempio nome di progetto*
+
  - Gestire collaboratori:
+
   - Aggiungere un collaboratore: `/admin collaboratore aggiungi *NOME COGNOME (@USERNAME)*`
 
     > /admin collaboratore aggiungi *Mario Rossi (@marioRossiTelegram)* 
+
   - Rimuovere un collaboratore: `/admin collaboratore elimina *NOME COGNOME (@USERNAME)*`
 
     > /admin collaboratore elimina *Mario Rossi (@marioRossiTelegram)*
