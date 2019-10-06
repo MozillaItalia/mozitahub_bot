@@ -50,6 +50,8 @@ Sono disponibili svariate funzionalità:
  - /supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla
  - /collabora: per unirti ai volontari Mozilla Italia.
  - /vademecum: ottieni il vademecum, il volantino che in poche e semplici parole ti illustra che cosa è Mozilla e i vari progetti attivi.
+ - /vademecumGenerale: ottieni subito il file Vademecum versione generale (VG)
+ - /vademecumTecnico: ottieni subito il file Vademecum versione tecnica (VT)
  - /news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.
  - /iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.
  - /developer: il gruppo dei volontari sviluppatori di Mozilla Italia.
@@ -57,14 +59,13 @@ Sono disponibili svariate funzionalità:
  - /feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)
  - /progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.
  - /info: avere informazioni riguardo questo bot.
- - /call: avere informazioni sulle call mensili comunitarie.
- - /listacall: per vedere la lista completa delle call comutarie di Mozilla Italia con il link diretto al video, per poterlo vedere facilmente.
- - /prossimacall: per sapere rapidamente qual è la prossima call comunitaria.
+ - /meeting: avere informazioni sui meeting video mensili comunitari.
+ - /prossimoMeeting: per sapere rapidamente qual è la prossima data del meeting (video) comunitario.
  - /regolamento: per leggere il regolamento comunitario.
  - /avvisi: vedere lo stato attuale degli avvisi, per attivarli o per disattivarli.
  - /avvisiOn: scorciatoia rapida per attivare gli avvisi.
  - /avvisiOff: scorciatoia rapida per disattivare gli avvisi.
- - /admin help: (solo per admin) gestire alcune impostazioni del bot.
+ - /admin: (solo per admin) gestire alcune impostazioni del bot.
 
 Le funzionalità elencate sono tutte intuitive e molto facili da utilizzare. La funzionalità "/admin" è disponibile solo per i moderatori, e permette di gestire alcune impostazioni del bot in maniera rapida. Vedi sezione **Privilegi amministratori*.
 
@@ -88,17 +89,6 @@ Ecco ciò che si può fare se si è admin.
       - A tutti gli utenti (NO SPAM, solo messaggi importanti -> usare con parsimonia): `/admin all users *MESSAGGIO DA INVIARE*`
 
         > /admin all users *Testo messaggio di esempio*
-
- - Gestire call mensili (elenco):
-    - Inserire una call mensile: `/admin call aggiungi *MESE* *ANNO* *LINK*`
-
-      > /admin call aggiungi *Gennaio* *2019* *https://mozillaitalia.org/*
-    - Modificare una call mensile (modificare il link): `/admin call modifica *MESE* *ANNO* *LINK*`
-
-      > /admin call modifica *Gennaio* *2019* *https://mozillaitalia.org/nuovaURL*
-    - Eliminare una call mensile: `/admin call elimina *MESE* *ANNO*`
-
-      > /admin call elimina *Gennaio* *2019*
 
  - Gestire utenti (iscritti a "Avvisi news"):
 
