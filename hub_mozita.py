@@ -9,6 +9,7 @@ import time
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+import sys
 
 import telegram_events
 
@@ -36,8 +37,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.2.8"
-ultimo_aggiornamento = "12-04-2019"
+versione = "1.3"
+ultimo_aggiornamento = "06-10-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -236,25 +237,14 @@ def risposte(msg):
 
     help = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
+         InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto'),
+         InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi')],
+        [InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
+         InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti'),
          InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum')],
-        [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
-         InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
-        [InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/call'),
-         InlineKeyboardButton(
-             text=frasi["button_testo_prossima_call"], callback_data='/prossimacall'),
-         InlineKeyboardButton(text=frasi["button_testo_lista_call"], callback_data='/listacall')],
-        [InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info'),
-         InlineKeyboardButton(
-             text=frasi["button_testo_progetti_attivi"], callback_data='/progetti'),
-         InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento')],
-        [InlineKeyboardButton(text=frasi["button_testo_home"], callback_data='/home'),
-         InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"], callback_data='/collabora')],
-        [InlineKeyboardButton(text=frasi["button_testo_news"], callback_data='/news'),
-         InlineKeyboardButton(text=frasi["button_testo_iot"], callback_data='/iot')],
-        [InlineKeyboardButton(text=frasi["button_testo_developer"], callback_data='/developer'),
-         InlineKeyboardButton(text=frasi["button_testo_design"], callback_data='/design')],
-        [InlineKeyboardButton(text=frasi["button_feedback"],
-                              callback_data='/feedback')],
+        [InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
+         InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
+        [InlineKeyboardButton(text=frasi["button_feedback"],callback_data='/feedback')],
     ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -292,8 +282,8 @@ def risposte(msg):
     ])
 
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumgenerale'),
-         InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumtecnico')],
+        [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
+         InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -328,10 +318,12 @@ def risposte(msg):
     ])
 
     call = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_call"],
-                              callback_data='/listacall')],
+        # [InlineKeyboardButton(text=frasi["button_call"],
+                              # callback_data='/listacall')],
+        [InlineKeyboardButton(text=frasi["button_vai_a_canale_youtube"],
+                              url='https://www.youtube.com/channel/UCsTquqVS0AJxCf4D3n9hQ1w')],
         [InlineKeyboardButton(text=frasi["button_call2"],
-                              callback_data='/prossimacall')],
+                              callback_data='/prossimoMeeting')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -419,46 +411,46 @@ def risposte(msg):
     else:
         stato_avvisi = frasi["avvisiStatoOff"]
 
-    if text == "/home":
+    if text.lower() == "/home":
         bot.sendMessage(chat_id, frasi["home"],
                         reply_markup=home, parse_mode="HTML")
-    elif text == "/start":
+    elif text.lower() == "/start":
         bot.sendMessage(chat_id, frasi["start"], parse_mode="HTML")
         bot.sendMessage(chat_id, frasi["start2"],
                         reply_markup=start, parse_mode="HTML")
         if nousername:
             bot.sendMessage(
                 chat_id, frasi["start_nousername"], parse_mode="HTML")
-    elif text == "/supporto":
+    elif text.lower() == "/supporto":
         bot.sendMessage(chat_id, frasi["supporto"],
                         reply_markup=supporto, parse_mode="HTML")
-    elif text == "/gruppi":
+    elif text.lower() == "/gruppi":
         bot.sendMessage(chat_id, frasi["gruppi"],
                         reply_markup=gruppi, parse_mode="HTML")
-    elif text == "/collabora":
+    elif text.lower() == "/collabora":
         bot.sendMessage(chat_id, frasi["collabora"], parse_mode="HTML")
         bot.sendMessage(chat_id, frasi["collabora2"],
                         reply_markup=collabora, parse_mode="HTML")
-    elif text == "/vademecum":
+    elif text.lower() == "/vademecum":
         bot.sendMessage(chat_id, frasi["vademecum"],
                         reply_markup=vademecum, parse_mode="HTML")
-    elif text == "/vademecumgenerale":
+    elif text.lower() == "/vademecumGenerale":
         bot.sendMessage(chat_id, frasi["invio_vg_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VG.pdf", "rb"))
-    elif text == "/vademecumtecnico":
+    elif text.lower() == "/vademecumTecnico":
         bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf", "rb"))
-    elif text == "/feedback":
+    elif text.lower() == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"],
                         reply_markup=feedback, parse_mode="HTML")
-    elif text == "/help":
+    elif text.lower() == "/help" or text == "/aiuto":
         bot.sendMessage(chat_id, frasi["help"], parse_mode="HTML")
         bot.sendMessage(chat_id, frasi["help2"],
                         reply_markup=help, parse_mode="HTML")
-    elif text == "/news":
+    elif text.lower() == "/news":
         bot.sendMessage(chat_id, frasi["news"],
                         reply_markup=news, parse_mode="HTML")
-    elif text == "/info":
+    elif text.lower() == "/info":
         bot.sendMessage(
             chat_id,
             str(
@@ -470,25 +462,28 @@ def risposte(msg):
                 "{{**collaboratori_stampa**}}",
                 str(collaboratori_stampa)),
             parse_mode="HTML")
-    elif text == "/forum":
+    elif text.lower() == "/forum":
         bot.sendMessage(chat_id, frasi["forum"],
                         reply_markup=forum, parse_mode="HTML")
-    elif text == "/developer":
+    elif text.lower() == "/developer":
         bot.sendMessage(chat_id, frasi["developer"],
                         reply_markup=developer, parse_mode="HTML")
-    elif text == "/design":
+    elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
-    elif text == "/iot":
+    elif text.lower() == "/iot":
         bot.sendMessage(chat_id, frasi["iot"],
                         reply_markup=iot, parse_mode="HTML")
-    elif text == "/call":
+    elif text.lower() == "/call" or text.lower() == "/meeting":
         bot.sendMessage(chat_id, frasi["call"],
                         reply_markup=call, parse_mode="HTML")
-    elif text == "/listacall":
-        bot.sendMessage(chat_id, frasi["listacall"],
-                        reply_markup=lista_call, parse_mode="HTML")
-    elif text == "/prossimacall":
+    # elif text.lower() == "/listacall" or text.lower() == "/listaMeeting":
+        # Momentaneamente sospeso -> fino a (forse) realizzazione di sistema redirect su mozillaitalia.org
+        # Frase del file 'frasi.json' rimossa (e da reinserire una volta riattivato il comando):
+        # \n/listaMeeting: visualizza la lista completa dei meeting video comunitari con collegamento diretto al file video.
+        # bot.sendMessage(chat_id, frasi["listacall"],
+                        # reply_markup=lista_call, parse_mode="HTML")
+    elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting":
         bot.sendMessage(
             chat_id,
             str(
@@ -500,7 +495,7 @@ def risposte(msg):
                 "{{**anno_call**}}",
                 str(anno_call)),
             parse_mode="HTML")
-    elif text == "/progetti":
+    elif text.lower() == "/progetti":
         bot.sendMessage(chat_id, frasi["progetti"],
                         reply_markup=progetti, parse_mode="HTML")
         bot.sendMessage(
@@ -508,13 +503,13 @@ def risposte(msg):
             frasi["progetti2"],
             reply_markup=progettimozita,
             parse_mode="HTML")
-    elif text == "/regolamento":
+    elif text.lower() == "/regolamento":
         bot.sendMessage(chat_id, frasi["regolamento"],
                         reply_markup=regolamento, parse_mode="HTML")
-    elif text == "/avvisi":
+    elif text.lower() == "/avvisi":
         bot.sendMessage(chat_id, str(frasi["avvisi"]).replace(
             "{{**stato_avvisi**}}", str(stato_avvisi)), reply_markup=avvisi, parse_mode="HTML")
-    elif text == "/avvisiOn":
+    elif text.lower() == "/avvisiOn":
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
@@ -526,7 +521,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
-    elif text == "/avvisiOff":
+    elif text.lower() == "/avvisiOff":
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
@@ -539,16 +534,16 @@ def risposte(msg):
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOff3"])
-    elif "/anno2017" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            "{{**anno**}}", "2017"), reply_markup=lista_call_2017, parse_mode="HTML")
-    elif "/anno2018" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            "{{**anno**}}", "2018"), reply_markup=lista_call_2018, parse_mode="HTML")
-    elif "/anno2019" in text:
-        bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            "{{**anno**}}", "2019"), reply_markup=lista_call_2019, parse_mode="HTML")
-    elif "/admin" in text:
+    # elif "/anno2017" in text:
+        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
+            # "{{**anno**}}", "2017"), reply_markup=lista_call_2017, parse_mode="HTML")
+    # elif "/anno2018" in text:
+        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
+            # "{{**anno**}}", "2018"), reply_markup=lista_call_2018, parse_mode="HTML")
+    # elif "/anno2019" in text:
+        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
+            # "{{**anno**}}", "2019"), reply_markup=lista_call_2019, parse_mode="HTML")
+    elif "/admin" in text.lower():
         if status_user == "A":
             if type_msg == "LK":
                 admin = True
@@ -565,8 +560,8 @@ def risposte(msg):
         # CONTROLLO AZIONI ADMIN
         azione = list(text.split(" "))
         admin_err1 = False
-        if azione[0] == "/admin" and len(azione) >= 1:
-            if len(azione) == 1 or (azione[1] == "help" and len(azione) == 2):
+        if azione[0].lower() == "/admin" and len(azione) >= 1:
+            if len(azione) == 1 or (azione[1].lower() == "help" and len(azione) == 2):
                 # Elenco azioni
                 bot.sendMessage(chat_id,
                     "Questo è l'elenco dei comandi che puoi eseguire:\n" +
@@ -576,11 +571,11 @@ def risposte(msg):
                     "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
                     "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
                     "\n" +
-                    "<b>Gestione meeting/call</b>:\n" +
-                    "- <code>/admin call aggiungi |Mese (eventuale parte)| |Anno| |LinkCall|</code>\n" +
-                    "- <code>/admin call modifica |Mese (eventuale parte)| |Anno| |LinkCallModificato|</code>\n" +
-                    "- <code>/admin call elimina |Mese (eventuale parte)| |Anno|</code>\n" +
-                    "\n" +
+                    # "<b>Gestione meeting/call</b>:\n" +
+                    # "- <code>/admin call aggiungi |Mese (eventuale parte)| |Anno| |LinkCall|</code>\n" +
+                    # "- <code>/admin call modifica |Mese (eventuale parte)| |Anno| |LinkCallModificato|</code>\n" +
+                    # "- <code>/admin call elimina |Mese (eventuale parte)| |Anno|</code>\n" +
+                    # "\n" +
                     "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                     "- <code>/admin avvisi list mostra</code>\n" +
                     "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
@@ -604,7 +599,7 @@ def risposte(msg):
                     "- <code>/admin avviso Messaggio di prova</code>\n" +
                     "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>",
                     parse_mode="HTML")
-            elif azione[1] == "avviso" and len(azione) >= 3:
+            elif azione[1].lower() == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
                 del azione[0]
                 del azione[0]
@@ -624,10 +619,16 @@ def risposte(msg):
                                 parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
-                        bot.sendMessage(
-                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                paser_mode="HTML")
+                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                            bot.sendMessage(
+                                chat_id, "‼️❌ Chat non trovata: <a href='tg://user?id=" +
+                                    str(value_for) + "'>" + str(value_for) + "</a>",
+                                    parse_mode="HTML")
+                        else:
+                            bot.sendMessage(
+                                chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                    str(value_for) + "'>" + str(value_for) + "</a>",
+                                    parse_mode="HTML")
                         error08 = True
                 if(not error08):
                     bot.sendMessage(
@@ -642,7 +643,7 @@ def risposte(msg):
                         messaggio,
                         parse_mode="HTML")
 
-            elif azione[1] == "preview" and len(azione) >= 3:
+            elif azione[1].lower() == "preview" and len(azione) >= 3:
                 del azione[0]
                 del azione[0]
                 messaggio = ' '.join(azione)
@@ -660,7 +661,7 @@ def risposte(msg):
                                 "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                             parse_mode="HTML")
 
-            elif azione[1] == "all" and azione[2] == "users" and len(azione) >= 4:
+            elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
                 del azione[0]
@@ -681,7 +682,7 @@ def risposte(msg):
                                 parse_mode="HTML")
                 bot.sendMessage(
                     chat_id, "Messaggio inviato correttamente a tutti gli utenti.")
-            elif azione[1] == "call" and len(azione) >= 6:
+            elif azione[1].lower() == "call" and len(azione) >= 6:
                 # Azioni sulle call mensili
                 if(azione[2] == "aggiungi"):
                     del azione[0]
@@ -733,7 +734,7 @@ def risposte(msg):
                             "L'anno selezionato '" +
                             str(anno) +
                             "' non è valido.")
-                elif azione[2] == "modifica":
+                elif azione[2].lower() == "modifica":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -783,7 +784,7 @@ def risposte(msg):
                             "L'anno selezionato '" +
                             str(anno) +
                             "' non è valido.")
-                elif azione[2] == "elimina":
+                elif azione[2].lower() == "elimina":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -831,7 +832,7 @@ def risposte(msg):
                             "' non è valido.")
                 else:
                     admin_err1 = True
-            elif azione[1] == "avvisi" and azione[2] == "list" and len(azione) >= 4:
+            elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if azione[3] == "mostra":
                     bot.sendMessage(chat_id,"Ecco la 'avvisi_on_list':\n\n"+str(avvisi_on_list))
@@ -863,7 +864,7 @@ def risposte(msg):
                             "La chat_id '" +
                             str(temp_chat_id) +
                             "' è già presente.")
-                elif azione[3] == "elimina":
+                elif azione[3].lower() == "elimina":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -893,9 +894,9 @@ def risposte(msg):
                             "' non è stata trovata.")
                 else:
                     admin_err1 = True
-            elif azione[1] == "progetto" and azione[2] == "mozita" and len(azione) >= 5:
+            elif azione[1].lower() == "progetto" and azione[2].lower() == "mozita" and len(azione) >= 5:
                 # Azioni sui progetti comunitari (mozilla italia)
-                if azione[3] == "aggiungi":
+                if azione[3].lower() == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -924,7 +925,7 @@ def risposte(msg):
                     else:
                         bot.sendMessage(chat_id, "Il progetto comunitario '" +
                                         str(nome) + "' è già presente.")
-                elif azione[3] == "modifica":
+                elif azione[3].lower() == "modifica":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -953,7 +954,7 @@ def risposte(msg):
                     else:
                         bot.sendMessage(chat_id, "Il progetto comunitario '" +
                                         str(nome) + "' non è stato trovato.")
-                elif azione[3] == "elimina":
+                elif azione[3].lower() == "elimina":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -977,7 +978,7 @@ def risposte(msg):
                                         str(nome) + "' non è stato trovato.")
                 else:
                     admin_err1 = True
-            elif azione[1] == "progetto" and len(azione) >= 4:
+            elif azione[1].lower() == "progetto" and len(azione) >= 4:
                 # Azione sui progetti (mozilla)
                 if azione[2] == "aggiungi":
                     del azione[0]
@@ -1007,7 +1008,7 @@ def risposte(msg):
                     else:
                         bot.sendMessage(chat_id, "Il progetto '" +
                                         str(nome) + "' è già presente.")
-                elif azione[2] == "modifica":
+                elif azione[2].lower() == "modifica":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -1035,7 +1036,7 @@ def risposte(msg):
                     else:
                         bot.sendMessage(chat_id, "Il progetto '" +
                                         str(nome) + "' non è stato trovato.")
-                elif azione[2] == "elimina":
+                elif azione[2].lower() == "elimina":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -1058,7 +1059,7 @@ def risposte(msg):
                                         str(nome) + "' non è stato trovato.")
                 else:
                     admin_err1 = True
-            elif azione[1] == "collaboratore" and len(azione) >= 4:
+            elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
                 # Azione sui collaboratori
                 if azione[2] == "aggiungi":
                     del azione[0]
@@ -1084,7 +1085,7 @@ def risposte(msg):
                             "'" +
                             str(nome) +
                             "' è già presente nella lista dei collaboratori.")
-                elif azione[2] == "elimina":
+                elif azione[2].lower() == "elimina":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -1115,12 +1116,12 @@ def risposte(msg):
         else:
             bot.sendMessage(
                 chat_id,
-                "Errore: Comando non riconosciuto.\nRicorda che se vuoi ottenere aiuto su ciò che puoi fare nella sezione ADMIN devi digitare anche la parola 'help'. In questo modo: <code>/admin help</code>", parse_mode="HTML")
+                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
 
         if admin_err1:
             bot.sendMessage(
                 chat_id,
-                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita <code>/admin help</code>", parse_mode="HTML")
+                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
 
     try:
         stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
