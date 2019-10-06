@@ -9,7 +9,6 @@ import time
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-import sys
 
 import telegram_events
 
@@ -37,14 +36,11 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3"
+versione = "1.3.1"
 ultimo_aggiornamento = "06-10-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
-
-MIN_ANNO = 2017  # costante - anno minimo delle call
-MAX_ANNO = 2019  # variabile - anno massimo delle call
 
 response = ""
 
@@ -58,10 +54,6 @@ progetti_mozita_list_path = "progetti_mozita_list.json"
 collaboratori_hub_path = "collaboratori_hub.json"
 all_users_path = "all_users.json"
 adminlist = []
-if Path(call_mensili_list_path).exists():
-    call_mensili_list = json.loads(open(call_mensili_list_path).read())
-else:
-    call_mensili_list = {}
 if Path(avvisi_on_list_path).exists():
     avvisi_on_list = json.loads(open(avvisi_on_list_path).read())
 else:
@@ -98,34 +90,8 @@ listaMesi = [
     "Novembre",
     "Dicembre"]
 
-# genera la lista delle call in base all'anno
-# year->ANNO, type->{"button"|""}->la prima ritorna un button_inline, la
-# seconda una lista
-
-
-def genera_lista_per_anno(year, type):
-    call_mensili_list_ANNO_path = "call_mensili_list_" + str(year) + ".json"
-    if Path(call_mensili_list_ANNO_path).exists():
-        call_mensili_list_ANNO = json.loads(
-            open(call_mensili_list_ANNO_path).read())
-    else:
-        call_mensili_list_ANNO = {}
-    if str(type) == "button":
-        load_lista_call_anno = []
-        for value_for in call_mensili_list_ANNO:
-            load_lista_call_anno.append([InlineKeyboardButton(
-                text=str(value_for), url=str(call_mensili_list_ANNO[value_for]))])
-        load_lista_call_anno.append([InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')])
-        return InlineKeyboardMarkup(inline_keyboard=load_lista_call_anno)
-    elif str(type) == "":
-        load_lista_call_anno = {}
-        for value_for in call_mensili_list_ANNO:
-            load_lista_call_anno[str(value_for)] = str(call_mensili_list_ANNO[value_for])
-        return load_lista_call_anno
 
 # questa funzione serve per calcolare il primo venerdì del mese
-
 
 def first_friday_of_the_month(year, month):
     for day, weekday in calendar.Calendar().itermonthdays2(year, month):
@@ -136,7 +102,6 @@ def first_friday_of_the_month(year, month):
                 return day + 7
 
 # il "main"
-
 
 def risposte(msg):
     localtime = datetime.now()
@@ -168,6 +133,8 @@ def risposte(msg):
     type_msg = eventi_list["type_msg"]
     # modificato=eventi_list["modificato"]
     # risposta=eventi_list["risposta"]
+
+    link_regolamento = "https://github.com/MozillaItalia/mozitaantispam_bot/wiki/Regolamento"
 
     user_id = msg['from']['id']
     if user_id in adminlist:
@@ -328,19 +295,6 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    load_lista_call = []
-    for value_for in call_mensili_list:
-        load_lista_call.append([InlineKeyboardButton(
-            text=str(value_for), callback_data=str(call_mensili_list[value_for]))])
-    load_lista_call.append([InlineKeyboardButton(
-        text=frasi["button_mostra_help"], callback_data='/help')])
-
-    lista_call = InlineKeyboardMarkup(inline_keyboard=load_lista_call)
-
-    lista_call_2017 = genera_lista_per_anno(2017, "button")
-    lista_call_2018 = genera_lista_per_anno(2018, "button")
-    lista_call_2019 = genera_lista_per_anno(2019, "button")
-
     load_progetti = []
     for value_for in progetti_list:
         load_progetti.append([InlineKeyboardButton(
@@ -361,7 +315,7 @@ def risposte(msg):
 
     regolamento = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_regolamento"],
-                              url='https://github.com/Sav22999/Guide/blob/master/Mozilla%20Italia/Telegram/regolamento.md')],
+                              url=link_regolamento)],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -477,13 +431,7 @@ def risposte(msg):
     elif text.lower() == "/call" or text.lower() == "/meeting":
         bot.sendMessage(chat_id, frasi["call"],
                         reply_markup=call, parse_mode="HTML")
-    # elif text.lower() == "/listacall" or text.lower() == "/listaMeeting":
-        # Momentaneamente sospeso -> fino a (forse) realizzazione di sistema redirect su mozillaitalia.org
-        # Frase del file 'frasi.json' rimossa (e da reinserire una volta riattivato il comando):
-        # \n/listaMeeting: visualizza la lista completa dei meeting video comunitari con collegamento diretto al file video.
-        # bot.sendMessage(chat_id, frasi["listacall"],
-                        # reply_markup=lista_call, parse_mode="HTML")
-    elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting":
+    elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting".lower():
         bot.sendMessage(
             chat_id,
             str(
@@ -509,7 +457,7 @@ def risposte(msg):
     elif text.lower() == "/avvisi":
         bot.sendMessage(chat_id, str(frasi["avvisi"]).replace(
             "{{**stato_avvisi**}}", str(stato_avvisi)), reply_markup=avvisi, parse_mode="HTML")
-    elif text.lower() == "/avvisiOn":
+    elif text.lower() == "/avvisiOn".lower():
         if not (user_id in avvisi_on_list):
             avvisi_on_list.append(user_id)
             try:
@@ -521,7 +469,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
-    elif text.lower() == "/avvisiOff":
+    elif text.lower() == "/avvisiOff".lower():
         if user_id in avvisi_on_list:
             avvisi_on_list.remove(user_id)
             try:
@@ -534,15 +482,6 @@ def risposte(msg):
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOff3"])
-    # elif "/anno2017" in text:
-        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            # "{{**anno**}}", "2017"), reply_markup=lista_call_2017, parse_mode="HTML")
-    # elif "/anno2018" in text:
-        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            # "{{**anno**}}", "2018"), reply_markup=lista_call_2018, parse_mode="HTML")
-    # elif "/anno2019" in text:
-        # bot.sendMessage(chat_id, str(frasi["anno"]).replace(
-            # "{{**anno**}}", "2019"), reply_markup=lista_call_2019, parse_mode="HTML")
     elif "/admin" in text.lower():
         if status_user == "A":
             if type_msg == "LK":
@@ -571,11 +510,6 @@ def risposte(msg):
                     "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
                     "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
                     "\n" +
-                    # "<b>Gestione meeting/call</b>:\n" +
-                    # "- <code>/admin call aggiungi |Mese (eventuale parte)| |Anno| |LinkCall|</code>\n" +
-                    # "- <code>/admin call modifica |Mese (eventuale parte)| |Anno| |LinkCallModificato|</code>\n" +
-                    # "- <code>/admin call elimina |Mese (eventuale parte)| |Anno|</code>\n" +
-                    # "\n" +
                     "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                     "- <code>/admin avvisi list mostra</code>\n" +
                     "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
@@ -612,36 +546,39 @@ def risposte(msg):
                             messaggio +
                             "\n\n--------------------\n" +
                                 frasi["footer_messaggio_avviso"],
-                            parse_mode="HTML")
+                                parse_mode="HTML")
                         bot.sendMessage(
-                            chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                            chat_id,
+                                "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                                 str(value_for) + "</a>",
                                 parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
-                                chat_id, "‼️❌ Chat non trovata: <a href='tg://user?id=" +
+                                chat_id,
+                                    "‼️❌ Chat non trovata: <a href='tg://user?id=" +
                                     str(value_for) + "'>" + str(value_for) + "</a>",
                                     parse_mode="HTML")
                         else:
                             bot.sendMessage(
-                                chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                chat_id,
+                                    "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
                                     str(value_for) + "'>" + str(value_for) + "</a>",
                                     parse_mode="HTML")
                         error08 = True
                 if(not error08):
                     bot.sendMessage(
                         chat_id,
-                        "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
+                            "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
                 else:
                     bot.sendMessage(
                         chat_id,
-                        "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
+                            "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
 
             elif azione[1].lower() == "preview" and len(azione) >= 3:
                 del azione[0]
@@ -650,14 +587,15 @@ def risposte(msg):
                 try:
                     bot.sendMessage(
                             chat_id,
-                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
-                            messaggio +
-                            "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
-                            parse_mode="HTML")
+                                "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
+                                messaggio +
+                                "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
+                                parse_mode="HTML")
                 except Exception as exception_value:
                         print("Excep:23 -> " + str(exception_value))
                         bot.sendMessage(
-                            chat_id, "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
+                            chat_id,
+                                "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
                                 "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                             parse_mode="HTML")
 
@@ -669,169 +607,33 @@ def risposte(msg):
                 messaggio = ' '.join(azione)
                 for value_for in all_users:
                     try:
-                        bot.sendMessage(value_for, messaggio)
+                        bot.sendMessage(
+                            value_for,
+                            "<b>Messaggio importante</b>\n" + messaggio,
+                            parse_mode="HTML")
                         bot.sendMessage(
                             chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                                 str(value_for) + "</a>",
                                 parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
-                        bot.sendMessage(
-                            chat_id, "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                parse_mode="HTML")
+                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                            bot.sendMessage(
+                                chat_id,
+                                    "‼️❌ Chat non trovata: <a href='tg://user?id=" +
+                                    str(value_for) + "'>" + str(value_for) + "</a>",
+                                    parse_mode="HTML")
+                        else:
+                            bot.sendMessage(
+                                chat_id,
+                                    "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                    str(value_for) + "'>" + str(value_for) + "</a>",
+                                    parse_mode="HTML")
                 bot.sendMessage(
-                    chat_id, "Messaggio inviato correttamente a tutti gli utenti.")
-            elif azione[1].lower() == "call" and len(azione) >= 6:
-                # Azioni sulle call mensili
-                if(azione[2] == "aggiungi"):
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    anno = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if anno.isdigit() and int(anno) <= MAX_ANNO and int(anno) >= MIN_ANNO:
-                        call_mensili_list_anno = genera_lista_per_anno(
-                            int(anno), "")
-                        call_mensili_list_anno_path = "call_mensili_list_" + \
-                            str(anno) + ".json"
-                        if not (nome in call_mensili_list_anno.keys()):
-                            call_mensili_list_anno[str(nome)] = str(link)
-                            try:
-                                with open(call_mensili_list_anno_path, "wb") as file_with:
-                                    file_with.write(
-                                        json.dumps(call_mensili_list_anno).encode("utf-8"))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Call mensile '" +
-                                    str(nome) +
-                                    "' (" +
-                                    str(link) +
-                                    ") inserita correttamente nel '" +
-                                    str(anno) +
-                                    "'.")
-                            except Exception as exception_value:
-                                print("Excep:09 -> " + str(exception_value))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list" +
-                                    str(anno) +
-                                    ".json'.")
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "La call mensile '" +
-                                str(nome) +
-                                "' è già presente nel '" +
-                                str(anno) +
-                                "'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "L'anno selezionato '" +
-                            str(anno) +
-                            "' non è valido.")
-                elif azione[2].lower() == "modifica":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    anno = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if anno.isdigit() and int(anno) <= MAX_ANNO and int(anno) >= MIN_ANNO:
-                        call_mensili_list_anno = genera_lista_per_anno(
-                            int(anno), "")
-                        call_mensili_list_anno_path = "call_mensili_list_" + \
-                            str(anno) + ".json"
-                        if nome in call_mensili_list_anno.keys():
-                            call_mensili_list_anno[str(nome)] = str(link)
-                            try:
-                                with open(call_mensili_list_anno_path, "wb") as file_with:
-                                    file_with.write(
-                                        json.dumps(call_mensili_list_anno).encode("utf-8"))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Call mensile '" +
-                                    str(nome) +
-                                    "' (" +
-                                    str(link) +
-                                    ") del '" +
-                                    str(anno) +
-                                    "' modificata correttamente.")
-                            except Exception as exception_value:
-                                print("Excep:10 -> " + str(exception_value))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list_" +
-                                    str(anno) +
-                                    ".json'.")
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "La call mensile '" +
-                                str(nome) +
-                                "' non è stata trovata nel '" +
-                                str(anno) +
-                                "'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "L'anno selezionato '" +
-                            str(anno) +
-                            "' non è valido.")
-                elif azione[2].lower() == "elimina":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    anno = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if anno.isdigit() and int(anno) <= MAX_ANNO and int(anno) >= MIN_ANNO:
-                        call_mensili_list_anno = genera_lista_per_anno(
-                            int(anno), "")
-                        call_mensili_list_anno_path = "call_mensili_list_" + \
-                            str(anno) + ".json"
-                        if nome in call_mensili_list_anno:
-                            del call_mensili_list_anno[str(nome)]
-                            try:
-                                with open(call_mensili_list_anno_path, "wb") as file_with:
-                                    file_with.write(
-                                        json.dumps(call_mensili_list_anno).encode("utf-8"))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Call mensile '" +
-                                    str(nome) +
-                                    "' del '" +
-                                    str(anno) +
-                                    "' eliminata correttamente.")
-                            except Exception as exception_value:
-                                print("Excep:11 -> " + str(exception_value))
-                                bot.sendMessage(
-                                    chat_id,
-                                    "Si è verificato un errore inaspettato e non è possibile salvare 'call_mensili_list" +
-                                    str(anno) +
-                                    ".json'.")
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "La call mensile '" +
-                                str(nome) +
-                                "' non è stata trovata nel '" +
-                                str(anno) +
-                                "'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "L'anno selezionato '" +
-                            str(anno) +
-                            "' non è valido.")
-                else:
-                    admin_err1 = True
+                    chat_id,
+                        "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
+                        messaggio,
+                        parse_mode="HTML")
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if azione[3] == "mostra":
@@ -1124,6 +926,7 @@ def risposte(msg):
                 "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
 
     try:
+        # stringa stampata a terminale, per ogni operazione effettuata
         stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
             chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(text) + "\n--------------------\n"
         print(stampa)
@@ -1132,6 +935,7 @@ def risposte(msg):
         print(stampa)
 
     try:
+        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
         if os.path.exists("./history_mozitabot") == False:
             os.mkdir("./history_mozitabot")
     except Exception as exception_value:
