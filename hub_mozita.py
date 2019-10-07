@@ -36,8 +36,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.1"
-ultimo_aggiornamento = "06-10-2019"
+versione = "1.3.2"
+ultimo_aggiornamento = "07-10-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -388,10 +388,10 @@ def risposte(msg):
     elif text.lower() == "/vademecum":
         bot.sendMessage(chat_id, frasi["vademecum"],
                         reply_markup=vademecum, parse_mode="HTML")
-    elif text.lower() == "/vademecumGenerale":
+    elif text.lower() == "/vademecumGenerale".lower():
         bot.sendMessage(chat_id, frasi["invio_vg_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VG.pdf", "rb"))
-    elif text.lower() == "/vademecumTecnico":
+    elif text.lower() == "/vademecumTecnico".lower():
         bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf", "rb"))
     elif text.lower() == "/feedback":
