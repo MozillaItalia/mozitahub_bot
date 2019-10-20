@@ -534,7 +534,7 @@ def risposte(msg):
                     "\n" +
                     "<b>Esempi:</b>\n" +
                     "- <code>/admin avviso Messaggio di prova</code>\n" +
-                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>" +
+                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
                     "- <code>/admin scarica 2019 10 09</code>",
                     parse_mode="HTML")
             elif azione[1].lower() == "avviso" and len(azione) >= 3:
