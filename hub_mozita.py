@@ -36,8 +36,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.2"
-ultimo_aggiornamento = "07-10-2019"
+versione = "1.3.3"
+ultimo_aggiornamento = "20-10-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -529,9 +529,13 @@ def risposte(msg):
                     "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
                     "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
                     "\n" +
+                    "<b>Scaricare file log di MozItaBot</b>:\n" +
+                    "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
+                    "\n" +
                     "<b>Esempi:</b>\n" +
                     "- <code>/admin avviso Messaggio di prova</code>\n" +
-                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>",
+                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>" +
+                    "- <code>/admin scarica 2019 10 09</code>",
                     parse_mode="HTML")
             elif azione[1].lower() == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
@@ -913,6 +917,14 @@ def risposte(msg):
                             "' non è presente nella lista dei collaboratori.")
                 else:
                     admin_err1 = True
+            elif azione[1].lower() == "scarica" and len(azione) == 5:
+                # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
+                nome_file = "log_"+azione[2]+"_"+azione[3]+"_"+azione[4]+".txt"
+                if os.path.exists("./history_mozitabot/"+nome_file):
+                    bot.sendMessage(chat_id, "<i>Invio del file "+nome_file+" in corso</i>", parse_mode="HTML")
+                    bot.sendDocument(chat_id, open("./history_mozitabot/"+nome_file, "rb"))
+                else:
+                    bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
             else:
                 admin_err1 = True
         else:
