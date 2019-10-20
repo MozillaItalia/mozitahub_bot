@@ -286,7 +286,7 @@ def risposte(msg):
 
     call = InlineKeyboardMarkup(inline_keyboard=[
         # [InlineKeyboardButton(text=frasi["button_call"],
-                              # callback_data='/listacall')],
+        # callback_data='/listacall')],
         [InlineKeyboardButton(text=frasi["button_vai_a_canale_youtube"],
                               url='https://www.youtube.com/channel/UCsTquqVS0AJxCf4D3n9hQ1w')],
         [InlineKeyboardButton(text=frasi["button_call2"],
@@ -503,40 +503,40 @@ def risposte(msg):
             if len(azione) == 1 or (azione[1].lower() == "help" and len(azione) == 2):
                 # Elenco azioni
                 bot.sendMessage(chat_id,
-                    "Questo è l'elenco dei comandi che puoi eseguire:\n" +
-                    "\n\n" +
-                    "<b>Generali</b>:\n"
-                    "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
-                    "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
-                    "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
-                    "\n" +
-                    "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
-                    "- <code>/admin avvisi list mostra</code>\n" +
-                    "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
-                    "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
-                    "\n" +
-                    "<b>Gestione progetti (Mozilla)</b>:\n" +
-                    "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
-                    "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
-                    "- <code>/admin progetto elimina |Nome progetto da eliminare|</code>\n" +
-                    "\n" +
-                    "<b>Gestione progetti Mozilla Italia</b>:\n" +
-                    "- <code>/admin progetto mozita aggiungi |Nome progetto comunitario da aggiungere| |LinkProgetto|</code>\n" +
-                    "- <code>/admin progetto mozita modifica |Nome progetto comunitario da modificare| |LinkProgettoModificato|</code>\n" +
-                    "- <code>/admin progetto mozita elimina |Nome progetto comunitario da eliminare|</code>\n" +
-                    "\n" +
-                    "<b>Gestione collaboratori di MozItaBot</b>:\n" +
-                    "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
-                    "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
-                    "\n" +
-                    "<b>Scaricare file log di MozItaBot</b>:\n" +
-                    "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
-                    "\n" +
-                    "<b>Esempi:</b>\n" +
-                    "- <code>/admin avviso Messaggio di prova</code>\n" +
-                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
-                    "- <code>/admin scarica 2019 10 09</code>",
-                    parse_mode="HTML")
+                                "Questo è l'elenco dei comandi che puoi eseguire:\n" +
+                                "\n\n" +
+                                "<b>Generali</b>:\n"
+                                "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
+                                "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                                "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                                "\n" +
+                                "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
+                                "- <code>/admin avvisi list mostra</code>\n" +
+                                "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
+                                "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
+                                "\n" +
+                                "<b>Gestione progetti (Mozilla)</b>:\n" +
+                                "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
+                                "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
+                                "- <code>/admin progetto elimina |Nome progetto da eliminare|</code>\n" +
+                                "\n" +
+                                "<b>Gestione progetti Mozilla Italia</b>:\n" +
+                                "- <code>/admin progetto mozita aggiungi |Nome progetto comunitario da aggiungere| |LinkProgetto|</code>\n" +
+                                "- <code>/admin progetto mozita modifica |Nome progetto comunitario da modificare| |LinkProgettoModificato|</code>\n" +
+                                "- <code>/admin progetto mozita elimina |Nome progetto comunitario da eliminare|</code>\n" +
+                                "\n" +
+                                "<b>Gestione collaboratori di MozItaBot</b>:\n" +
+                                "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
+                                "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
+                                "\n" +
+                                "<b>Scaricare file log di MozItaBot</b>:\n" +
+                                "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
+                                "\n" +
+                                "<b>Esempi:</b>\n" +
+                                "- <code>/admin avviso Messaggio di prova</code>\n" +
+                                "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
+                                "- <code>/admin scarica 2019 10 09</code>",
+                                parse_mode="HTML")
             elif azione[1].lower() == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
                 del azione[0]
@@ -549,40 +549,40 @@ def risposte(msg):
                             value_for,
                             messaggio +
                             "\n\n--------------------\n" +
-                                frasi["footer_messaggio_avviso"],
-                                parse_mode="HTML")
+                            frasi["footer_messaggio_avviso"],
+                            parse_mode="HTML")
                         bot.sendMessage(
                             chat_id,
-                                "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                                str(value_for) + "</a>",
-                                parse_mode="HTML")
+                            "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                            str(value_for) + "</a>",
+                            parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
-                                    "‼️❌ Chat non trovata: <a href='tg://user?id=" +
-                                    str(value_for) + "'>" + str(value_for) + "</a>",
-                                    parse_mode="HTML")
+                                "‼️❌ Chat non trovata: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                parse_mode="HTML")
                         else:
                             bot.sendMessage(
                                 chat_id,
-                                    "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                    str(value_for) + "'>" + str(value_for) + "</a>",
-                                    parse_mode="HTML")
+                                "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                parse_mode="HTML")
                         error08 = True
                 if(not error08):
                     bot.sendMessage(
                         chat_id,
-                            "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
-                            messaggio,
-                            parse_mode="HTML")
+                        "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
+                        messaggio,
+                        parse_mode="HTML")
                 else:
                     bot.sendMessage(
                         chat_id,
-                            "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
-                            messaggio,
-                            parse_mode="HTML")
+                        "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
+                        messaggio,
+                        parse_mode="HTML")
 
             elif azione[1].lower() == "preview" and len(azione) >= 3:
                 del azione[0]
@@ -590,18 +590,18 @@ def risposte(msg):
                 messaggio = ' '.join(azione)
                 try:
                     bot.sendMessage(
-                            chat_id,
-                                "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
-                                messaggio +
-                                "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
-                                parse_mode="HTML")
+                        chat_id,
+                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
+                        messaggio +
+                        "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
+                        parse_mode="HTML")
                 except Exception as exception_value:
-                        print("Excep:23 -> " + str(exception_value))
-                        bot.sendMessage(
-                            chat_id,
-                                "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
-                                "Verificare di avere <b>chiuso</b> tutti i tag usati.",
-                            parse_mode="HTML")
+                    print("Excep:23 -> " + str(exception_value))
+                    bot.sendMessage(
+                        chat_id,
+                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
+                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                        parse_mode="HTML")
 
             elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
@@ -617,27 +617,27 @@ def risposte(msg):
                             parse_mode="HTML")
                         bot.sendMessage(
                             chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                                str(value_for) + "</a>",
-                                parse_mode="HTML")
+                                     str(value_for) + "</a>",
+                            parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
                         if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
-                                    "‼️❌ Chat non trovata: <a href='tg://user?id=" +
-                                    str(value_for) + "'>" + str(value_for) + "</a>",
-                                    parse_mode="HTML")
+                                "‼️❌ Chat non trovata: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                parse_mode="HTML")
                         else:
                             bot.sendMessage(
                                 chat_id,
-                                    "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                    str(value_for) + "'>" + str(value_for) + "</a>",
-                                    parse_mode="HTML")
+                                "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
+                                str(value_for) + "'>" + str(value_for) + "</a>",
+                                parse_mode="HTML")
                 bot.sendMessage(
                     chat_id,
-                        "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
+                    "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
+                    messaggio,
+                    parse_mode="HTML")
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if azione[3] == "mostra":

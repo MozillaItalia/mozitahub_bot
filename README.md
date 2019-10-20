@@ -44,7 +44,8 @@ I tag HTML supportati da Telegram sono:
 Il funzionamento del bot è molto basilare. Si prefigge l'obiettivo di rendere più dinamico l'approccio di chi vuole avere informazioni su Mozilla e, magari, di chi vuole unirsi nella nostra grande famiglia.
 
 Sono disponibili svariate funzionalità:
- - /start: messaggio iniziale
+ - /start: messaggio iniziale.
+ - /help o /aiuto: mostra le azioni che è possibile fare nel bot.
  - /home: per essere reindirizzati al gruppo più attivo di tutti! Dove vengono trattate varie tematiche, anche di ordine generale, come aggiornamenti, novità, richiesta di informazione o supporto, e altro ancora. È il gruppo che accomuna tutti i volontari Mozilla Italia, a prescindere dal gruppo di appartenenza.
  - /gruppi: ottenere la lista di tutti i gruppi e canali ufficiali di Mozilla Italia.
  - /supporto: richiedere e ricevere assistenza, da parte dei nostri volontari, su prodotti e progetti di Mozilla
@@ -72,7 +73,7 @@ Le funzionalità elencate sono tutte intuitive e molto facili da utilizzare. La 
  
 
 Inoltre ogni singolo messaggio viene salvato in un file *.txt* per soli scopi di debug in caso di malfunzionamenti del bot:
- - history_hub.txt
+ - log_AAAA_MM_GG.txt
 
 ### Privilegi amministratori
 Ecco ciò che si può fare se si è admin.
@@ -135,6 +136,9 @@ Ecco ciò che si può fare se si è admin.
   - Rimuovere un collaboratore: `/admin collaboratore elimina *NOME COGNOME (@USERNAME)*`
 
     > /admin collaboratore elimina *Mario Rossi (@marioRossiTelegram)*
+  - Scaricare file di log: `/admin scarica *AAAA* *MM* *GG*`
+  
+    > /admin scarica 2019 02 10 
 
 # Librerie utilizzate
 Elenco delle librerie utilizzate nel codice (Python):
