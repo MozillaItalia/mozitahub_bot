@@ -70,9 +70,7 @@ Sono disponibili svariate funzionalità:
 
 Le funzionalità elencate sono tutte intuitive e molto facili da utilizzare. La funzionalità "/admin" è disponibile solo per i moderatori, e permette di gestire alcune impostazioni del bot in maniera rapida. Vedi sezione **Privilegi amministratori*.
 
- 
-
-Inoltre ogni singolo messaggio viene salvato in un file *.txt* per soli scopi di debug in caso di malfunzionamenti del bot:
+Inoltre ogni singolo messaggio viene salvato in un file *.txt* (dentro la cartella `history_mozitabot`) per debug in caso di malfunzionamenti del bot:
  - log_AAAA_MM_GG.txt
 
 ### Privilegi amministratori
