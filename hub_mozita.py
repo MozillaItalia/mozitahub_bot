@@ -36,8 +36,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.3"
-ultimo_aggiornamento = "20-10-2019"
+versione = "1.3.4"
+ultimo_aggiornamento = "26-11-2019"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -133,6 +133,10 @@ def risposte(msg):
     type_msg = eventi_list["type_msg"]
     # modificato=eventi_list["modificato"]
     # risposta=eventi_list["risposta"]
+
+    query_id = "-"
+    if type_msg == "BIC" and "id" in msg:
+        query_id = msg["id"]
 
     link_regolamento = "https://github.com/MozillaItalia/mozitaantispam_bot/wiki/Regolamento"
 
@@ -494,6 +498,9 @@ def risposte(msg):
             frasi["comando_non_riconosciuto"],
             reply_markup=start,
             parse_mode="HTML")
+
+    if type_msg == "BIC" and query_id != "-":
+        bot.answerCallbackQuery(query_id, cache_time=0) #se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
 
     if admin:
         # CONTROLLO AZIONI ADMIN
