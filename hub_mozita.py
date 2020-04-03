@@ -128,7 +128,7 @@ def risposte(msg):
     else:
         # nel caso in cui non dovesse esistere alcun file "adminlist.json" imposta staticamente l'userid di Sav22999
         # -> così da poter confermare anche altri utenti anche se ci sono 'malfunzionamenti' (NON DOVREBBERO ESSERCENE!)
-        adminlist = [464306644]
+        adminlist = [240188083]
 
     # caricamento degli eventi gestiti
     eventi_list = {}
