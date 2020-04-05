@@ -1,4 +1,13 @@
 #!/usr/bin/python3
+
+"""
+    Lista degli admin:
+    240188083 -> @Sav22999
+    69903837 -> @Mte90
+    75870906 -> @mone27
+    295348075 -> @dag7d
+"""
+
 import os
 from configparser import ConfigParser
 import json
@@ -9,8 +18,8 @@ import time
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-
 import telegram_events
+
 
 if not os.path.isfile("config.ini"):
     print(
@@ -36,8 +45,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.4"
-ultimo_aggiornamento = "26-11-2019"
+versione = "1.3.5"
+ultimo_aggiornamento = "05-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
