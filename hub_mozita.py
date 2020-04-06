@@ -1,12 +1,5 @@
 #!/usr/bin/python3
 
-"""
-    Lista degli admin:
-    240188083 -> @Sav22999
-    69903837 -> @Mte90
-    75870906 -> @mone27
-    295348075 -> @dag7d
-"""
 
 import os
 from configparser import ConfigParser
@@ -131,7 +124,13 @@ def risposte(msg):
     # print(response)
 
     global adminlist
-
+    """
+        Lista degli admin:
+        240188083 -> @Sav22999
+        69903837 -> @Mte90
+        75870906 -> @mone27
+        295348075 -> @dag7d
+    """
     if Path(adminlist_path).exists():
         adminlist = json.loads(open(adminlist_path).read())
     else:
