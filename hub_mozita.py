@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+
+
 import os
 from configparser import ConfigParser
 import json
@@ -9,8 +11,8 @@ import time
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-
 import telegram_events
+
 
 if not os.path.isfile("config.ini"):
     print(
@@ -36,8 +38,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.4"
-ultimo_aggiornamento = "26-11-2019"
+versione = "1.3.5"
+ultimo_aggiornamento = "05-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -53,6 +55,7 @@ progetti_list_path = "progetti_list.json"
 progetti_mozita_list_path = "progetti_mozita_list.json"
 collaboratori_hub_path = "collaboratori_hub.json"
 all_users_path = "all_users.json"
+social_list_path = "social_list.json"
 adminlist = []
 if Path(avvisi_on_list_path).exists():
     avvisi_on_list = json.loads(open(avvisi_on_list_path).read())
@@ -74,7 +77,10 @@ if Path(all_users_path).exists():
     all_users = json.loads(open(all_users_path).read())
 else:
     all_users = []
-
+if Path(social_list_path).exists():
+    social_list = json.loads(open(social_list_path).read())
+else:
+    social_list = []
 # array mesi
 listaMesi = [
     "Gennaio",
@@ -118,7 +124,13 @@ def risposte(msg):
     # print(response)
 
     global adminlist
-
+    """
+        Lista degli admin:
+        240188083 -> @Sav22999
+        69903837 -> @Mte90
+        75870906 -> @mone27
+        295348075 -> @dag7d
+    """
     if Path(adminlist_path).exists():
         adminlist = json.loads(open(adminlist_path).read())
     else:
@@ -208,12 +220,15 @@ def risposte(msg):
 
     help = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
-         InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto'),
-         InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi')],
-        [InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
-         InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti'),
-         InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum')],
-        [InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
+         InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
+         InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
+         
+        [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
+         InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
+         InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
+         
+        [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
+         InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
          InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
         [InlineKeyboardButton(text=frasi["button_feedback"],callback_data='/feedback')],
     ])
@@ -330,6 +345,16 @@ def risposte(msg):
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
+
+    #aggiungere instagram in futuro
+    load_social = []
+    for value_for in social_list:
+        load_social.append([InlineKeyboardButton(
+            text=str(value_for), url=str(social_list[value_for]))])
+    load_social.append([InlineKeyboardButton(
+        text=frasi["button_mostra_help"], callback_data='/help')])
+
+    social = InlineKeyboardMarkup(inline_keyboard=load_social)
 
     '''
     mostra_menu_principale = InlineKeyboardMarkup(inline_keyboard=[
@@ -486,6 +511,9 @@ def risposte(msg):
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOff3"])
+    elif text.lower() == "/social".lower():
+        bot.sendMessage(chat_id, frasi["social"],
+                        reply_markup=social, parse_mode="HTML")
     elif "/admin" in text.lower():
         if status_user == "A":
             if type_msg == "LK":
