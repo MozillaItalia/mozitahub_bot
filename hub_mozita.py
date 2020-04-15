@@ -38,8 +38,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.5"
-ultimo_aggiornamento = "05-04-2020"
+versione = "1.3.6"
+ultimo_aggiornamento = "15-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -108,9 +108,35 @@ def first_friday_of_the_month(year, month):
                 return day + 7
 
 # il "main"
+def stampa_su_file(stampa, err):
+    global response, data_salvataggio
+    if err:
+        stampa = str(response) + "\n\n" + str(stampa)
+    stampa = stampa + "\n--------------------\n"
+    try:
+        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
+        if os.path.exists("./history_mozitabot") == False:
+            os.mkdir("./history_mozitabot")
+    except Exception as exception_value:
+        print("Excep:22 -> " + str(exception_value))
+        stampa_su_file("Except:22 ->" + str(exception_value), True)
+
+    try:
+        # apre il file in scrittura "append" per inserire orario e data -> log
+        # di utilizzo del bot (ANONIMO)
+        file = open("./history_mozitabot/log_" +
+                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
+        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
+        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
+        file.write(stampa)
+        file.close()
+    except Exception as exception_value:
+        print("Excep:02 -> " + str(exception_value))
+        stampa_su_file("Except:02 ->" + str(exception_value), True)
 
 def risposte(msg):
     localtime = datetime.now()
+    global data_salvataggio
     data_salvataggio = localtime.strftime("%Y_%m_%d")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     type_msg = "NM"  # Normal Message
@@ -383,11 +409,13 @@ def risposte(msg):
                 file_with.write(json.dumps(all_users).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:03 -> " + str(exception_value))
+            stampa_su_file("Except:03 ->" + str(exception_value), True)
         try:
             with open(avvisi_on_list_path, "wb") as file_with:
                 file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:04 -> " + str(exception_value))
+            stampa_su_file("Except:04 ->" + str(exception_value), True)
 
     if user_id in avvisi_on_list:
         stato_avvisi = frasi["avvisiStatoOn"]
@@ -495,6 +523,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:05 -> " + str(exception_value))
+                stampa_su_file("Except:05 ->" + str(exception_value), True)
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
@@ -507,6 +536,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:06 -> " + str(exception_value))
+                stampa_su_file("Except:06 ->" + str(exception_value), True)
                 bot.sendMessage(
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
@@ -593,6 +623,7 @@ def risposte(msg):
                             parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
+                        stampa_su_file("Except:08 ->" + str(exception_value), True)
                         if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
@@ -632,6 +663,7 @@ def risposte(msg):
                         parse_mode="HTML")
                 except Exception as exception_value:
                     print("Excep:23 -> " + str(exception_value))
+                    stampa_su_file("Except:23 ->" + str(exception_value), True)
                     bot.sendMessage(
                         chat_id,
                         "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
@@ -656,6 +688,7 @@ def risposte(msg):
                             parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
+                        stampa_su_file("Except:07 ->" + str(exception_value), True)
                         if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
@@ -696,6 +729,7 @@ def risposte(msg):
                                 "' è stata inserita correttamente.")
                         except Exception as exception_value:
                             print("Excep:12 -> " + str(exception_value))
+                            stampa_su_file("Except:12 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -724,6 +758,7 @@ def risposte(msg):
                                 "' è stata eliminata correttamente.")
                         except Exception as exception_value:
                             print("Excep:13 -> " + str(exception_value))
+                            stampa_su_file("Except:13 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -760,6 +795,7 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
+                            stampa_su_file("Except:17 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -789,6 +825,7 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
+                            stampa_su_file("Except:18 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -811,6 +848,7 @@ def risposte(msg):
                                 chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
+                            stampa_su_file("Except:19 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -843,6 +881,7 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
+                            stampa_su_file("Except:17 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -871,6 +910,7 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
+                            stampa_su_file("Except:18 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -892,6 +932,7 @@ def risposte(msg):
                                 chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
+                            stampa_su_file("Except:19 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -917,6 +958,7 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:20 -> " + str(exception_value))
+                            stampa_su_file("Except:20 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -941,6 +983,7 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:21 -> " + str(exception_value))
+                            stampa_su_file("Except:21 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -977,29 +1020,12 @@ def risposte(msg):
         stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
             chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(text) + "\n--------------------\n"
         print(stampa)
+        stampa_su_file(stampa, False)
     except Exception as exception_value:
         stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
         print(stampa)
-
-    try:
-        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
-        if os.path.exists("./history_mozitabot") == False:
-            os.mkdir("./history_mozitabot")
-    except Exception as exception_value:
-        print("Excep:22 -> " + str(exception_value))
-
-    try:
-        # apre il file in scrittura "append" per inserire orario e data -> log
-        # di utilizzo del bot (ANONIMO)
-        file = open("./history_mozitabot/log_" +
-                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
-        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
-        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
-        file.write(stampa)
-        file.close()
-    except Exception as exception_value:
-        print("Excep:02 -> " + str(exception_value))
-
+        stampa_su_file("Except:01 ->" + str(exception_value), True)
+    
 
 try:
     bot = telepot.Bot(TOKEN)
@@ -1007,6 +1033,7 @@ try:
         bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
 except Exception as exception_value:
     print("ERRORE GENERALE.\n\nError: " + str(exception_value) + "\n--------------------\n")
+    stampa_su_file("ERRORE GENERALE.\n\nError: " + str(exception_value), True)
 
 while True:
     time.sleep(10)
