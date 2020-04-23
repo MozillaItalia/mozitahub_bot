@@ -13,7 +13,6 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 import telegram_events
 
-
 if not os.path.isfile("config.ini"):
     print(
         "Il file di configurazione non è presente.\n" +
@@ -39,7 +38,7 @@ else:
     exit()
 
 versione = "1.3.6"
-ultimo_aggiornamento = "15-04-2020"
+ultimo_aggiornamento = "23-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -49,7 +48,6 @@ response = ""
 # CARICAMENTO DELLE VARIE LISTE
 
 adminlist_path = "adminlist_hub.json"
-call_mensili_list_path = "call_mensili_list.json"
 avvisi_on_list_path = "avvisi_on_list.json"
 progetti_list_path = "progetti_list.json"
 progetti_mozita_list_path = "progetti_mozita_list.json"
@@ -102,10 +100,11 @@ listaMesi = [
 def first_friday_of_the_month(year, month):
     for day, weekday in calendar.Calendar().itermonthdays2(year, month):
         if weekday == 4:
-            if(day != 0):
+            if (day != 0):
                 return day
             else:
                 return day + 7
+
 
 # il "main"
 def stampa_su_file(stampa, err):
@@ -133,6 +132,7 @@ def stampa_su_file(stampa, err):
     except Exception as exception_value:
         print("Excep:02 -> " + str(exception_value))
         stampa_su_file("Except:02 ->" + str(exception_value), True)
+
 
 def risposte(msg):
     localtime = datetime.now()
@@ -248,15 +248,15 @@ def risposte(msg):
         [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
          InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
          InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
-         
+
         [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
          InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
          InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
-         
+
         [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
          InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
          InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
-        [InlineKeyboardButton(text=frasi["button_feedback"],callback_data='/feedback')],
+        [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
     ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -372,7 +372,7 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    #aggiungere instagram in futuro
+    # aggiungere instagram in futuro
     load_social = []
     for value_for in social_list:
         load_social.append([InlineKeyboardButton(
@@ -558,7 +558,8 @@ def risposte(msg):
             parse_mode="HTML")
 
     if type_msg == "BIC" and query_id != "-":
-        bot.answerCallbackQuery(query_id, cache_time=0) #se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
+        bot.answerCallbackQuery(query_id,
+                                cache_time=0)  # se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
 
     if admin:
         # CONTROLLO AZIONI ADMIN
@@ -624,7 +625,8 @@ def risposte(msg):
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         stampa_su_file("Except:08 ->" + str(exception_value), True)
-                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                        if (str(
+                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
                                 "‼️❌ Chat non trovata: <a href='tg://user?id=" +
@@ -637,7 +639,7 @@ def risposte(msg):
                                 str(value_for) + "'>" + str(value_for) + "</a>",
                                 parse_mode="HTML")
                         error08 = True
-                if(not error08):
+                if (not error08):
                     bot.sendMessage(
                         chat_id,
                         "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
@@ -657,7 +659,7 @@ def risposte(msg):
                 try:
                     bot.sendMessage(
                         chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
+                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n" +
                         messaggio +
                         "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
                         parse_mode="HTML")
@@ -666,7 +668,7 @@ def risposte(msg):
                     stampa_su_file("Except:23 ->" + str(exception_value), True)
                     bot.sendMessage(
                         chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
+                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
                         "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                         parse_mode="HTML")
 
@@ -689,7 +691,8 @@ def risposte(msg):
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
                         stampa_su_file("Except:07 ->" + str(exception_value), True)
-                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                        if (str(
+                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
                                 "‼️❌ Chat non trovata: <a href='tg://user?id=" +
@@ -709,7 +712,7 @@ def risposte(msg):
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if azione[3] == "mostra":
-                    bot.sendMessage(chat_id,"Ecco la 'avvisi_on_list':\n\n"+str(avvisi_on_list))
+                    bot.sendMessage(chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
                 elif azione[3] == "aggiungi":
                     del azione[0]
                     del azione[0]
@@ -997,10 +1000,10 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1].lower() == "scarica" and len(azione) == 5:
                 # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
-                nome_file = "log_"+azione[2]+"_"+azione[3]+"_"+azione[4]+".txt"
-                if os.path.exists("./history_mozitabot/"+nome_file):
-                    bot.sendMessage(chat_id, "<i>Invio del file "+nome_file+" in corso</i>", parse_mode="HTML")
-                    bot.sendDocument(chat_id, open("./history_mozitabot/"+nome_file, "rb"))
+                nome_file = "log_" + azione[2] + "_" + azione[3] + "_" + azione[4] + ".txt"
+                if os.path.exists("./history_mozitabot/" + nome_file):
+                    bot.sendMessage(chat_id, "<i>Invio del file " + nome_file + " in corso</i>", parse_mode="HTML")
+                    bot.sendDocument(chat_id, open("./history_mozitabot/" + nome_file, "rb"))
                 else:
                     bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
             else:
@@ -1008,24 +1011,28 @@ def risposte(msg):
         else:
             bot.sendMessage(
                 chat_id,
-                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
+                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                parse_mode="HTML")
 
         if admin_err1:
             bot.sendMessage(
                 chat_id,
-                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
+                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                parse_mode="HTML")
 
     try:
         # stringa stampata a terminale, per ogni operazione effettuata
-        stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
-            chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(text) + "\n--------------------\n"
-        print(stampa)
+        stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(
+            status_user) + "]  --  Chat: " + str(
+            chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(
+            text)
+        print(stampa + "\n--------------------\n")
         stampa_su_file(stampa, False)
     except Exception as exception_value:
         stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
         print(stampa)
         stampa_su_file("Except:01 ->" + str(exception_value), True)
-    
+
 
 try:
     bot = telepot.Bot(TOKEN)
