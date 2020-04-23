@@ -659,7 +659,7 @@ def risposte(msg):
                 try:
                     bot.sendMessage(
                         chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n" +
+                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
                         messaggio +
                         "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
                         parse_mode="HTML")
