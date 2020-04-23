@@ -13,7 +13,6 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 import telegram_events
 
-
 if not os.path.isfile("config.ini"):
     print(
         "Il file di configurazione non è presente.\n" +
@@ -38,8 +37,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.5"
-ultimo_aggiornamento = "05-04-2020"
+versione = "1.3.6"
+ultimo_aggiornamento = "23-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -49,7 +48,6 @@ response = ""
 # CARICAMENTO DELLE VARIE LISTE
 
 adminlist_path = "adminlist_hub.json"
-call_mensili_list_path = "call_mensili_list.json"
 avvisi_on_list_path = "avvisi_on_list.json"
 progetti_list_path = "progetti_list.json"
 progetti_mozita_list_path = "progetti_mozita_list.json"
@@ -102,15 +100,43 @@ listaMesi = [
 def first_friday_of_the_month(year, month):
     for day, weekday in calendar.Calendar().itermonthdays2(year, month):
         if weekday == 4:
-            if(day != 0):
+            if (day != 0):
                 return day
             else:
                 return day + 7
 
+
 # il "main"
+def stampa_su_file(stampa, err):
+    global response, data_salvataggio
+    if err:
+        stampa = str(response) + "\n\n" + str(stampa)
+    stampa = stampa + "\n--------------------\n"
+    try:
+        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
+        if os.path.exists("./history_mozitabot") == False:
+            os.mkdir("./history_mozitabot")
+    except Exception as exception_value:
+        print("Excep:22 -> " + str(exception_value))
+        stampa_su_file("Except:22 ->" + str(exception_value), True)
+
+    try:
+        # apre il file in scrittura "append" per inserire orario e data -> log
+        # di utilizzo del bot (ANONIMO)
+        file = open("./history_mozitabot/log_" +
+                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
+        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
+        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
+        file.write(stampa)
+        file.close()
+    except Exception as exception_value:
+        print("Excep:02 -> " + str(exception_value))
+        stampa_su_file("Except:02 ->" + str(exception_value), True)
+
 
 def risposte(msg):
     localtime = datetime.now()
+    global data_salvataggio
     data_salvataggio = localtime.strftime("%Y_%m_%d")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     type_msg = "NM"  # Normal Message
@@ -222,15 +248,15 @@ def risposte(msg):
         [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
          InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
          InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
-         
+
         [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
          InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
          InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
-         
+
         [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
          InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
          InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
-        [InlineKeyboardButton(text=frasi["button_feedback"],callback_data='/feedback')],
+        [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
     ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -346,7 +372,7 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    #aggiungere instagram in futuro
+    # aggiungere instagram in futuro
     load_social = []
     for value_for in social_list:
         load_social.append([InlineKeyboardButton(
@@ -383,11 +409,13 @@ def risposte(msg):
                 file_with.write(json.dumps(all_users).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:03 -> " + str(exception_value))
+            stampa_su_file("Except:03 ->" + str(exception_value), True)
         try:
             with open(avvisi_on_list_path, "wb") as file_with:
                 file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:04 -> " + str(exception_value))
+            stampa_su_file("Except:04 ->" + str(exception_value), True)
 
     if user_id in avvisi_on_list:
         stato_avvisi = frasi["avvisiStatoOn"]
@@ -495,6 +523,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:05 -> " + str(exception_value))
+                stampa_su_file("Except:05 ->" + str(exception_value), True)
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
@@ -507,6 +536,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:06 -> " + str(exception_value))
+                stampa_su_file("Except:06 ->" + str(exception_value), True)
                 bot.sendMessage(
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
@@ -528,7 +558,8 @@ def risposte(msg):
             parse_mode="HTML")
 
     if type_msg == "BIC" and query_id != "-":
-        bot.answerCallbackQuery(query_id, cache_time=0) #se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
+        bot.answerCallbackQuery(query_id,
+                                cache_time=0)  # se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
 
     if admin:
         # CONTROLLO AZIONI ADMIN
@@ -593,7 +624,9 @@ def risposte(msg):
                             parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
-                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                        stampa_su_file("Except:08 ->" + str(exception_value), True)
+                        if (str(
+                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
                                 "‼️❌ Chat non trovata: <a href='tg://user?id=" +
@@ -606,7 +639,7 @@ def risposte(msg):
                                 str(value_for) + "'>" + str(value_for) + "</a>",
                                 parse_mode="HTML")
                         error08 = True
-                if(not error08):
+                if (not error08):
                     bot.sendMessage(
                         chat_id,
                         "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
@@ -626,15 +659,16 @@ def risposte(msg):
                 try:
                     bot.sendMessage(
                         chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO||</b>‼️‼️\n\n"+
+                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
                         messaggio +
                         "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
                         parse_mode="HTML")
                 except Exception as exception_value:
                     print("Excep:23 -> " + str(exception_value))
+                    stampa_su_file("Except:23 ->" + str(exception_value), True)
                     bot.sendMessage(
                         chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n"+
+                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
                         "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                         parse_mode="HTML")
 
@@ -656,7 +690,9 @@ def risposte(msg):
                             parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
-                        if (str(exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
+                        stampa_su_file("Except:07 ->" + str(exception_value), True)
+                        if (str(
+                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
                             bot.sendMessage(
                                 chat_id,
                                 "‼️❌ Chat non trovata: <a href='tg://user?id=" +
@@ -676,7 +712,7 @@ def risposte(msg):
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
                 if azione[3] == "mostra":
-                    bot.sendMessage(chat_id,"Ecco la 'avvisi_on_list':\n\n"+str(avvisi_on_list))
+                    bot.sendMessage(chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
                 elif azione[3] == "aggiungi":
                     del azione[0]
                     del azione[0]
@@ -696,6 +732,7 @@ def risposte(msg):
                                 "' è stata inserita correttamente.")
                         except Exception as exception_value:
                             print("Excep:12 -> " + str(exception_value))
+                            stampa_su_file("Except:12 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -724,6 +761,7 @@ def risposte(msg):
                                 "' è stata eliminata correttamente.")
                         except Exception as exception_value:
                             print("Excep:13 -> " + str(exception_value))
+                            stampa_su_file("Except:13 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -760,6 +798,7 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
+                            stampa_su_file("Except:17 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -789,6 +828,7 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
+                            stampa_su_file("Except:18 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -811,6 +851,7 @@ def risposte(msg):
                                 chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
+                            stampa_su_file("Except:19 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -843,6 +884,7 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
+                            stampa_su_file("Except:17 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -871,6 +913,7 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
+                            stampa_su_file("Except:18 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -892,6 +935,7 @@ def risposte(msg):
                                 chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
+                            stampa_su_file("Except:19 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -917,6 +961,7 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:20 -> " + str(exception_value))
+                            stampa_su_file("Except:20 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -941,6 +986,7 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:21 -> " + str(exception_value))
+                            stampa_su_file("Except:21 ->" + str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -954,10 +1000,10 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1].lower() == "scarica" and len(azione) == 5:
                 # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
-                nome_file = "log_"+azione[2]+"_"+azione[3]+"_"+azione[4]+".txt"
-                if os.path.exists("./history_mozitabot/"+nome_file):
-                    bot.sendMessage(chat_id, "<i>Invio del file "+nome_file+" in corso</i>", parse_mode="HTML")
-                    bot.sendDocument(chat_id, open("./history_mozitabot/"+nome_file, "rb"))
+                nome_file = "log_" + azione[2] + "_" + azione[3] + "_" + azione[4] + ".txt"
+                if os.path.exists("./history_mozitabot/" + nome_file):
+                    bot.sendMessage(chat_id, "<i>Invio del file " + nome_file + " in corso</i>", parse_mode="HTML")
+                    bot.sendDocument(chat_id, open("./history_mozitabot/" + nome_file, "rb"))
                 else:
                     bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
             else:
@@ -965,40 +1011,27 @@ def risposte(msg):
         else:
             bot.sendMessage(
                 chat_id,
-                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
+                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                parse_mode="HTML")
 
         if admin_err1:
             bot.sendMessage(
                 chat_id,
-                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin", parse_mode="HTML")
+                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                parse_mode="HTML")
 
     try:
         # stringa stampata a terminale, per ogni operazione effettuata
-        stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(status_user) + "]  --  Chat: " + str(
-            chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(text) + "\n--------------------\n"
-        print(stampa)
+        stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(
+            status_user) + "]  --  Chat: " + str(
+            chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(
+            text)
+        print(stampa + "\n--------------------\n")
+        stampa_su_file(stampa, False)
     except Exception as exception_value:
         stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
         print(stampa)
-
-    try:
-        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
-        if os.path.exists("./history_mozitabot") == False:
-            os.mkdir("./history_mozitabot")
-    except Exception as exception_value:
-        print("Excep:22 -> " + str(exception_value))
-
-    try:
-        # apre il file in scrittura "append" per inserire orario e data -> log
-        # di utilizzo del bot (ANONIMO)
-        file = open("./history_mozitabot/log_" +
-                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
-        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
-        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
-        file.write(stampa)
-        file.close()
-    except Exception as exception_value:
-        print("Excep:02 -> " + str(exception_value))
+        stampa_su_file("Except:01 ->" + str(exception_value), True)
 
 
 try:
@@ -1007,6 +1040,7 @@ try:
         bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
 except Exception as exception_value:
     print("ERRORE GENERALE.\n\nError: " + str(exception_value) + "\n--------------------\n")
+    stampa_su_file("ERRORE GENERALE.\n\nError: " + str(exception_value), True)
 
 while True:
     time.sleep(10)
