@@ -622,6 +622,7 @@ def risposte(msg):
                             "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                             str(value_for) + "</a>",
                             parse_mode="HTML")
+                            time.sleep(.4)  # crepi l'avarizia
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         stampa_su_file("Except:08 ->" + str(exception_value), True)
