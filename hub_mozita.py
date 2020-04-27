@@ -37,8 +37,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.6"
-ultimo_aggiornamento = "23-04-2020"
+versione = "1.4"
+ultimo_aggiornamento = "27-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -609,7 +609,12 @@ def risposte(msg):
                 del azione[0]
                 messaggio = ' '.join(azione)
                 error08 = False
+                bot.sendMessage(
+                    chat_id,
+                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                    parse_mode="HTML")
                 for value_for in avvisi_on_list:
+                    time.sleep(.3)
                     try:
                         bot.sendMessage(
                             value_for,
@@ -617,11 +622,14 @@ def risposte(msg):
                             "\n\n--------------------\n" +
                             frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
+                        print(" >> Messaggio inviato alla chat: "+ str(value_for))
+                        '''
                         bot.sendMessage(
                             chat_id,
                             "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                             str(value_for) + "</a>",
                             parse_mode="HTML")
+                        '''
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         stampa_su_file("Except:08 ->" + str(exception_value), True)
@@ -678,16 +686,22 @@ def risposte(msg):
                 del azione[0]
                 del azione[0]
                 messaggio = ' '.join(azione)
+                bot.sendMessage(
+                    chat_id,
+                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                    parse_mode="HTML")
                 for value_for in all_users:
+                    time.sleep(.3)
                     try:
                         bot.sendMessage(
                             value_for,
                             "<b>Messaggio importante</b>\n" + messaggio,
                             parse_mode="HTML")
-                        bot.sendMessage(
+                        print(" >> Messaggio inviato alla chat: "+ str(value_for))
+                        '''bot.sendMessage(
                             chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                                      str(value_for) + "</a>",
-                            parse_mode="HTML")
+                            parse_mode="HTML")'''
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
                         stampa_su_file("Except:07 ->" + str(exception_value), True)
