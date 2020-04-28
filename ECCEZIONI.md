@@ -23,3 +23,4 @@ Questo è l'elenco delle eccezioni gestite nel bot, con la relativa descrizione:
  - 21: Errore salvataggio file "collaboratori_hub.json"
  - 22: Errore creazione cartella "history_mozitabot"
  - 23: Errore “preview”
+ - 24
