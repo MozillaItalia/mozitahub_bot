@@ -23,7 +23,7 @@
     "progetti": "Questi sono i progetti di Mozilla attualmente attivi:",
     "progetti2": "Questi sono i progetti della comunità di Mozilla Italia attualmente attivi:",
     "regolamento": "Leggi il regolamento vigente nei gruppi comunitari di Mozilla Italia:",
-    "avvisi": "Il tuo stato attutale è: <i>{{**stato_avvisi**}}</i>\n\nPuoi attivare o disattivare gli avvisi in qualunque momento digitando rispettivamente '/avvisiOn' o '/avvisiOff', o facendo clic sui seguenti pulsanti:",
+    "avvisi": "Il tuo stato attuale è: <i>{{**stato_avvisi**}}</i>\n\nPuoi attivare o disattivare gli avvisi in qualunque momento digitando rispettivamente '/avvisiOn' o '/avvisiOff', o facendo clic sui seguenti pulsanti:",
     "avvisiOn": "Hai attivato 🔔 gli avvisi di Mozilla Italia.\nRiceverai ora notizie sulle ultime novità riguardo il mondo Mozilla e la relativa comunità italiana.\nNel caso volessi disattivare gli avvisi è sufficiente digitare '/avvisiOff'.",
     "avvisiOn2": "Si è verificato un errore imprevisto durante l'attivazione degli avvisi.",
     "avvisiOn3": "Gli avvisi sono già stati attivati.",

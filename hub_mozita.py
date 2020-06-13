@@ -25,6 +25,8 @@ config_parser.read(os.path.join(script_path, "config.ini"))
 
 TOKEN = config_parser.get("access", "token")
 
+CHANNEL_NAME = config_parser.get("channels", "news_channel")
+
 if TOKEN == "":
     print("Token non presente.")
     exit()
@@ -602,6 +604,8 @@ def risposte(msg):
                                 "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
                                 "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
                                 "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                                "- <code>/admin mozitanews |Messaggio da inviare|</code>\n"
+                                "- <code>/admin mozitanews preview |Messaggio da inviare|</code>\n"                                
                                 "\n" +
                                 "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                                 "- <code>/admin avvisi list mostra</code>\n" +
@@ -697,6 +701,63 @@ def risposte(msg):
                         "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
                         "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                         parse_mode="HTML")
+
+            elif azione[1].lower() == "mozitanews" and azione[2].lower() == "preview" and len(azione) >= 5:
+                del azione[0]
+                del azione[0]
+                messaggio = ' '.join(azione)
+                try:
+                    bot.sendMessage(
+                        chat_id,
+                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
+                        messaggio +
+                        "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
+                        parse_mode="HTML")
+                except Exception as exception_value:
+                    print("Excep:26 -> " + str(exception_value))
+                    stampa_su_file("Except:26 ->" + str(exception_value), True)
+                    bot.sendMessage(
+                        chat_id,
+                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                        parse_mode="HTML")
+
+
+
+
+            elif azione[1].lower() == "mozitanews" and len(azione) >= 3:
+                # Azioni sugli
+                del azione[0]
+                del azione[0]
+                messaggio = ' '.join(azione)
+                error25 = False
+                bot.sendMessage(
+                    chat_id,
+                    "<i>Invio del messaggio sul canale in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                    parse_mode="HTML")
+
+                try:
+                    bot.sendMessage(CHANNEL_NAME,
+                                    messaggio,
+                                    parse_mode="HTML")
+
+                except Exception as exception_value:
+                    print("Excep:25 -> " + str(exception_value))
+                    stampa_su_file("Except:25 ->" + str(exception_value), True)
+
+
+                if (not error25):
+                    bot.sendMessage(
+                        chat_id,
+                        "Messaggio inviato correttamente sul canale.\n\nIl messaggio inviato è:\n" +
+                        messaggio,
+                        parse_mode="HTML")
+                else:
+                    bot.sendMessage(
+                        chat_id,
+                        "Invio messagio sul canale fallito.\n",
+                        parse_mode="HTML")
+
 
             elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
