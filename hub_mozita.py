@@ -25,7 +25,7 @@ config_parser.read(os.path.join(script_path, "config.ini"))
 
 TOKEN = config_parser.get("access", "token")
 
-CHANNEL_NAME = config_parser.get("channels", "news_channel")
+#CHANNEL_NAME = config_parser.get("channels", "news_channel")
 
 if TOKEN == "":
     print("Token non presente.")
@@ -39,8 +39,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.4.1"
-ultimo_aggiornamento = "28-04-2020"
+versione = "1.4.2"
+ultimo_aggiornamento = "14-06-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -107,8 +107,6 @@ def first_friday_of_the_month(year, month):
             else:
                 return day + 7
 
-
-# il "main"
 def stampa_su_file(stampa, err):
     global response, data_salvataggio
     if err:
@@ -134,7 +132,6 @@ def stampa_su_file(stampa, err):
     except Exception as exception_value:
         print("Excep:02 -> " + str(exception_value))
         stampa_su_file("Except:02 ->" + str(exception_value), True)
-
 
 def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
     '''
@@ -162,7 +159,7 @@ def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
         print("Excep:24 -> " + str(exception_value))
         stampa_su_file("Except:24 ->" + str(exception_value), True)
 
-
+#il "main"
 def risposte(msg):
     localtime = datetime.now()
     global data_salvataggio
@@ -176,7 +173,7 @@ def risposte(msg):
 
     global response
     response = bot.getUpdates()
-    # print(response)
+    #print(response)
 
     global adminlist
     """
@@ -193,929 +190,942 @@ def risposte(msg):
         # -> così da poter confermare anche altri utenti anche se ci sono 'malfunzionamenti' (NON DOVREBBERO ESSERCENE!)
         adminlist = [240188083]
 
-    # caricamento degli eventi gestiti
-    eventi_list = {}
-    eventi_list = telegram_events.events(msg, ["LK", "NM"], response)
-    text = eventi_list["text"]
-    type_msg = eventi_list["type_msg"]
-    # modificato=eventi_list["modificato"]
-    # risposta=eventi_list["risposta"]
+    msg_saved = msg
 
-    query_id = "-"
-    if type_msg == "BIC" and "id" in msg:
-        query_id = msg["id"]
-
-    link_regolamento = "https://github.com/MozillaItalia/mozitaantispam_bot/wiki/Regolamento"
-
-    user_id = msg['from']['id']
-    if user_id in adminlist:
-        status_user = "A"
-    nousername = False
-    if "username" in msg['from']:
-        user_name = msg['from']['username']
-    else:
-        user_name = "[*NessunUsername*]"
-        nousername = True
-
-    if "chat" not in msg:
+    if "chat" not in msg and "channel_post" in msg:
         msg = msg["message"]
+    elif "channel_post" in msg:
+        msg = msg["channel_post"]
     chat_id = msg['chat']['id']
 
-    if datetime.now().month == 12:
-        anno_call = str(datetime.now().year + 1)
-        mese_call = listaMesi[0]
-        giorno_call = str(first_friday_of_the_month(int(anno_call), 1))
-    else:
-        anno_call = str(datetime.now().year)
-        giorno_call = first_friday_of_the_month(
-            int(anno_call), datetime.now().month)
-        if datetime.now().day >= giorno_call:
-            mese_call = datetime.now().month + 1
-            giorno_call = str(first_friday_of_the_month(
-                int(anno_call), datetime.now().month + 1))
+    msg_saved2 = msg
+    msg = msg_saved
+
+    if msg_saved2['chat']['type'] == "private":
+        # caricamento degli eventi gestiti
+        eventi_list = {}
+        eventi_list = telegram_events.events(msg, ["LK", "NM"], response)
+        text = eventi_list["text"]
+        type_msg = eventi_list["type_msg"]
+        # modificato=eventi_list["modificato"]
+        # risposta=eventi_list["risposta"]
+
+        query_id = "-"
+        if type_msg == "BIC" and "id" in msg:
+            query_id = msg["id"]
+
+        link_regolamento = "https://github.com/MozillaItalia/mozitaantispam_bot/wiki/Regolamento"
+
+        user_id = msg['from']['id']
+        if user_id in adminlist:
+            status_user = "A"
+        nousername = False
+        if "username" in msg['from']:
+            user_name = msg['from']['username']
         else:
-            mese_call = datetime.now().month
-            giorno_call = str(giorno_call)
-        mese_call = listaMesi[mese_call - 1]
-        # non è possibile utilizzare la funzione
-        # datetime.now().(month+1).strftime("%B") perché lo restituisce in
-        # inglese
+            user_name = "[*NessunUsername*]"
+            nousername = True
 
-    home = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_vai_a_home"],
-                              url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        msg = msg_saved2
 
-    feedback = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_feedback"],
-                              url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(text=frasi["button_feedback2"],
-                              url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        if datetime.now().month == 12:
+            anno_call = str(datetime.now().year + 1)
+            mese_call = listaMesi[0]
+            giorno_call = str(first_friday_of_the_month(int(anno_call), 1))
+        else:
+            anno_call = str(datetime.now().year)
+            giorno_call = first_friday_of_the_month(
+                int(anno_call), datetime.now().month)
+            if datetime.now().day >= giorno_call:
+                mese_call = datetime.now().month + 1
+                giorno_call = str(first_friday_of_the_month(
+                    int(anno_call), datetime.now().month + 1))
+            else:
+                mese_call = datetime.now().month
+                giorno_call = str(giorno_call)
+            mese_call = listaMesi[mese_call - 1]
+            # non è possibile utilizzare la funzione
+            # datetime.now().(month+1).strftime("%B") perché lo restituisce in
+            # inglese
 
-    start = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_start"],
-                              callback_data='/help')],
-        [InlineKeyboardButton(text=frasi["button_start2"],
-                              callback_data='/supporto')],
-    ])
-
-    supporto = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_support"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text=frasi["button_support2"], callback_data='/forum')],
-        [InlineKeyboardButton(text=frasi["button_support3"],
-                              url='https://forum.mozillaitalia.org/index.php?board=9.0')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    help = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
-         InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
-         InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
-
-        [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
-         InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
-         InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
-
-        [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
-         InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
-         InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
-        [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
-    ])
-
-    gruppi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_testo_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
-        [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
-                              url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
-        [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
-        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
-         InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    developer = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_developer"],
-                              url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    design = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_design"],
-                              url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    iot = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(
-            text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    vademecum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
-         InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    collabora = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=frasi["button_collabora"],
-                    url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-                InlineKeyboardButton(
-                    text=frasi["button_collabora2"],
-                    url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
-            [
-                InlineKeyboardButton(
-                    text=frasi["button_mostra_help"],
-                    callback_data='/help')],
+        home = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_vai_a_home"],
+                                url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
         ])
 
-    news = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_news"],
-                              url='https://t.me/mozItaNews')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        feedback = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_feedback"],
+                                url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+            [InlineKeyboardButton(text=frasi["button_feedback2"],
+                                url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
 
-    forum = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_forum"],
-                              url='https://forum.mozillaitalia.org/')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        start = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_start"],
+                                callback_data='/help')],
+            [InlineKeyboardButton(text=frasi["button_start2"],
+                                callback_data='/supporto')],
+        ])
 
-    call = InlineKeyboardMarkup(inline_keyboard=[
-        # [InlineKeyboardButton(text=frasi["button_call"],
-        # callback_data='/listacall')],
-        [InlineKeyboardButton(text=frasi["button_vai_a_canale_youtube"],
-                              url='https://www.youtube.com/channel/UCsTquqVS0AJxCf4D3n9hQ1w')],
-        [InlineKeyboardButton(text=frasi["button_call2"],
-                              callback_data='/prossimoMeeting')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        supporto = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_support"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+            InlineKeyboardButton(text=frasi["button_support2"], callback_data='/forum')],
+            [InlineKeyboardButton(text=frasi["button_support3"],
+                                url='https://forum.mozillaitalia.org/index.php?board=9.0')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
 
-    load_progetti = []
-    for value_for in progetti_list:
+        help = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
+            InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
+            InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
+
+            [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
+            InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
+            InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
+
+            [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
+            InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
+            InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
+            [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
+        ])
+
+        gruppi = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_testo_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+            InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
+            [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
+                                url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
+            [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
+            InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+            [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
+            InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        developer = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_developer"],
+                                url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        design = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_design"],
+                                url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        iot = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(
+                text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        vademecum = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
+            InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        collabora = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=frasi["button_collabora"],
+                        url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
+                    InlineKeyboardButton(
+                        text=frasi["button_collabora2"],
+                        url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
+                [
+                    InlineKeyboardButton(
+                        text=frasi["button_mostra_help"],
+                        callback_data='/help')],
+            ])
+
+        news = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_news"],
+                                url='https://t.me/mozItaNews')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        forum = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_forum"],
+                                url='https://forum.mozillaitalia.org/')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        call = InlineKeyboardMarkup(inline_keyboard=[
+            # [InlineKeyboardButton(text=frasi["button_call"],
+            # callback_data='/listacall')],
+            [InlineKeyboardButton(text=frasi["button_vai_a_canale_youtube"],
+                                url='https://www.youtube.com/channel/UCsTquqVS0AJxCf4D3n9hQ1w')],
+            [InlineKeyboardButton(text=frasi["button_call2"],
+                                callback_data='/prossimoMeeting')],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+
+        load_progetti = []
+        for value_for in progetti_list:
+            load_progetti.append([InlineKeyboardButton(
+                text=str(value_for), url=str(progetti_list[value_for]))])
         load_progetti.append([InlineKeyboardButton(
-            text=str(value_for), url=str(progetti_list[value_for]))])
-    load_progetti.append([InlineKeyboardButton(
-        text=frasi["button_mostra_help"], callback_data='/help')])
+            text=frasi["button_mostra_help"], callback_data='/help')])
 
-    progetti = InlineKeyboardMarkup(inline_keyboard=load_progetti)
+        progetti = InlineKeyboardMarkup(inline_keyboard=load_progetti)
 
-    load_progettimozita = []
-    for value_for in progetti_mozita_list:
+        load_progettimozita = []
+        for value_for in progetti_mozita_list:
+            load_progettimozita.append([InlineKeyboardButton(
+                text=str(value_for), url=str(progetti_mozita_list[value_for]))])
         load_progettimozita.append([InlineKeyboardButton(
-            text=str(value_for), url=str(progetti_mozita_list[value_for]))])
-    load_progettimozita.append([InlineKeyboardButton(
-        text=frasi["button_mostra_help"], callback_data='/help')])
+            text=frasi["button_mostra_help"], callback_data='/help')])
 
-    progettimozita = InlineKeyboardMarkup(inline_keyboard=load_progettimozita)
+        progettimozita = InlineKeyboardMarkup(inline_keyboard=load_progettimozita)
 
-    regolamento = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_regolamento"],
-                              url=link_regolamento)],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        regolamento = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_regolamento"],
+                                url=link_regolamento)],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
 
-    avvisi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_avvisi"], callback_data="/avvisiOn"),
-         InlineKeyboardButton(text=frasi["button_avvisi2"], callback_data="/avvisiOff")],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
+        avvisi = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_avvisi"], callback_data="/avvisiOn"),
+            InlineKeyboardButton(text=frasi["button_avvisi2"], callback_data="/avvisiOff")],
+            [InlineKeyboardButton(
+                text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
 
-    # aggiungere instagram in futuro
-    load_social = []
-    for value_for in social_list:
+        # aggiungere instagram in futuro
+        load_social = []
+        for value_for in social_list:
+            load_social.append([InlineKeyboardButton(
+                text=str(value_for), url=str(social_list[value_for]))])
         load_social.append([InlineKeyboardButton(
-            text=str(value_for), url=str(social_list[value_for]))])
-    load_social.append([InlineKeyboardButton(
-        text=frasi["button_mostra_help"], callback_data='/help')])
+            text=frasi["button_mostra_help"], callback_data='/help')])
 
-    social = InlineKeyboardMarkup(inline_keyboard=load_social)
+        social = InlineKeyboardMarkup(inline_keyboard=load_social)
 
-    '''
-    mostra_menu_principale = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-    '''
+        '''
+        mostra_menu_principale = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
+        ])
+        '''
 
-    '''
-    nome_nome = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
-                    InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='/comando2')],
-                    [InlineKeyboardButton(text='Testo bottone 3 (riga 2, col 1-2)', url='https://t.me/')],
-                ])
-    '''
+        '''
+        nome_nome = InlineKeyboardMarkup(inline_keyboard=[
+                        [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
+                        InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='/comando2')],
+                        [InlineKeyboardButton(text='Testo bottone 3 (riga 2, col 1-2)', url='https://t.me/')],
+                    ])
+        '''
 
-    admin = False
-    collaboratori_stampa = ""
-    for value_for in sorted(collaboratori_hub):
-        collaboratori_stampa += "\n - " + value_for
+        admin = False
+        collaboratori_stampa = ""
+        for value_for in sorted(collaboratori_hub):
+            collaboratori_stampa += "\n - " + value_for
 
-    if chat_id not in all_users:
-        all_users.append(chat_id)
-        avvisi_on_list.append(user_id)
-        try:
-            with open(all_users_path, "wb") as file_with:
-                file_with.write(json.dumps(all_users).encode("utf-8"))
-        except Exception as exception_value:
-            print("Excep:03 -> " + str(exception_value))
-            stampa_su_file("Except:03 ->" + str(exception_value), True)
-        try:
-            with open(avvisi_on_list_path, "wb") as file_with:
-                file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
-        except Exception as exception_value:
-            print("Excep:04 -> " + str(exception_value))
-            stampa_su_file("Except:04 ->" + str(exception_value), True)
-
-    if user_id in avvisi_on_list:
-        stato_avvisi = frasi["avvisiStatoOn"]
-    else:
-        stato_avvisi = frasi["avvisiStatoOff"]
-
-    if text.lower() == "/home":
-        bot.sendMessage(chat_id, frasi["home"],
-                        reply_markup=home, parse_mode="HTML")
-    elif text.lower() == "/start":
-        bot.sendMessage(chat_id, frasi["start"], parse_mode="HTML")
-        bot.sendMessage(chat_id, frasi["start2"],
-                        reply_markup=start, parse_mode="HTML")
-        if nousername:
-            bot.sendMessage(
-                chat_id, frasi["start_nousername"], parse_mode="HTML")
-    elif text.lower() == "/supporto":
-        bot.sendMessage(chat_id, frasi["supporto"],
-                        reply_markup=supporto, parse_mode="HTML")
-    elif text.lower() == "/gruppi":
-        bot.sendMessage(chat_id, frasi["gruppi"],
-                        reply_markup=gruppi, parse_mode="HTML")
-    elif text.lower() == "/collabora":
-        bot.sendMessage(chat_id, frasi["collabora"], parse_mode="HTML")
-        bot.sendMessage(chat_id, frasi["collabora2"],
-                        reply_markup=collabora, parse_mode="HTML")
-    elif text.lower() == "/vademecum":
-        bot.sendMessage(chat_id, frasi["vademecum"],
-                        reply_markup=vademecum, parse_mode="HTML")
-    elif text.lower() == "/vademecumGenerale".lower():
-        bot.sendMessage(chat_id, frasi["invio_vg_in_corso"], parse_mode="HTML")
-        bot.sendDocument(chat_id, open("VG.pdf", "rb"))
-    elif text.lower() == "/vademecumTecnico".lower():
-        bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
-        bot.sendDocument(chat_id, open("VT.pdf", "rb"))
-    elif text.lower() == "/feedback":
-        bot.sendMessage(chat_id, frasi["feedback"],
-                        reply_markup=feedback, parse_mode="HTML")
-    elif text.lower() == "/help" or text == "/aiuto":
-        bot.sendMessage(chat_id, frasi["help"], parse_mode="HTML")
-        bot.sendMessage(chat_id, frasi["help2"],
-                        reply_markup=help, parse_mode="HTML")
-    elif text.lower() == "/news":
-        bot.sendMessage(chat_id, frasi["news"],
-                        reply_markup=news, parse_mode="HTML")
-    elif text.lower() == "/info":
-        bot.sendMessage(
-            chat_id,
-            str(
-                ((frasi["info"]).replace(
-                    "{{**versione**}}",
-                    str(versione))).replace(
-                    "{{**ultimo_aggiornamento**}}",
-                    str(ultimo_aggiornamento))).replace(
-                "{{**collaboratori_stampa**}}",
-                str(collaboratori_stampa)),
-            parse_mode="HTML")
-    elif text.lower() == "/forum":
-        bot.sendMessage(chat_id, frasi["forum"],
-                        reply_markup=forum, parse_mode="HTML")
-    elif text.lower() == "/developer":
-        bot.sendMessage(chat_id, frasi["developer"],
-                        reply_markup=developer, parse_mode="HTML")
-    elif text.lower() == "/design":
-        bot.sendMessage(chat_id, frasi["design"],
-                        reply_markup=design, parse_mode="HTML")
-    elif text.lower() == "/iot":
-        bot.sendMessage(chat_id, frasi["iot"],
-                        reply_markup=iot, parse_mode="HTML")
-    elif text.lower() == "/call" or text.lower() == "/meeting":
-        bot.sendMessage(chat_id, frasi["call"],
-                        reply_markup=call, parse_mode="HTML")
-    elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting".lower():
-        bot.sendMessage(
-            chat_id,
-            str(
-                ((frasi["prossima_call"]).replace(
-                    "{{**giorno_call**}}",
-                    str(giorno_call))).replace(
-                    "{{**mese_call**}}",
-                    str(mese_call))).replace(
-                "{{**anno_call**}}",
-                str(anno_call)),
-            parse_mode="HTML")
-    elif text.lower() == "/progetti":
-        bot.sendMessage(chat_id, frasi["progetti"],
-                        reply_markup=progetti, parse_mode="HTML")
-        bot.sendMessage(
-            chat_id,
-            frasi["progetti2"],
-            reply_markup=progettimozita,
-            parse_mode="HTML")
-    elif text.lower() == "/regolamento":
-        bot.sendMessage(chat_id, frasi["regolamento"],
-                        reply_markup=regolamento, parse_mode="HTML")
-    elif text.lower() == "/avvisi":
-        bot.sendMessage(chat_id, str(frasi["avvisi"]).replace(
-            "{{**stato_avvisi**}}", str(stato_avvisi)), reply_markup=avvisi, parse_mode="HTML")
-    elif text.lower() == "/avvisiOn".lower():
-        if not (user_id in avvisi_on_list):
+        if chat_id not in all_users:
+            all_users.append(chat_id)
             avvisi_on_list.append(user_id)
             try:
-                with open(avvisi_on_list_path, "wb") as file_with:
-                    file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
+                with open(all_users_path, "wb") as file_with:
+                    file_with.write(json.dumps(all_users).encode("utf-8"))
             except Exception as exception_value:
-                print("Excep:05 -> " + str(exception_value))
-                stampa_su_file("Except:05 ->" + str(exception_value), True)
-                bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
-        else:
-            bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
-    elif text.lower() == "/avvisiOff".lower():
-        if user_id in avvisi_on_list:
-            avvisi_on_list.remove(user_id)
+                print("Excep:03 -> " + str(exception_value))
+                stampa_su_file("Except:03 ->" + str(exception_value), True)
             try:
                 with open(avvisi_on_list_path, "wb") as file_with:
                     file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
-                bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as exception_value:
-                print("Excep:06 -> " + str(exception_value))
-                stampa_su_file("Except:06 ->" + str(exception_value), True)
-                bot.sendMessage(
-                    chat_id, frasi["avvisiOff2"], parse_mode="HTML")
+                print("Excep:04 -> " + str(exception_value))
+                stampa_su_file("Except:04 ->" + str(exception_value), True)
+
+        if user_id in avvisi_on_list:
+            stato_avvisi = frasi["avvisiStatoOn"]
         else:
-            bot.sendMessage(chat_id, frasi["avvisiOff3"])
-    elif text.lower() == "/social".lower():
-        bot.sendMessage(chat_id, frasi["social"],
-                        reply_markup=social, parse_mode="HTML")
-    elif "/admin" in text.lower():
-        if status_user == "A":
-            if type_msg == "LK":
-                admin = True
-        else:
-            bot.sendMessage(chat_id, frasi["non_sei_admin"], parse_mode="HTML")
-    else:
-        bot.sendMessage(
-            chat_id,
-            frasi["comando_non_riconosciuto"],
-            reply_markup=start,
-            parse_mode="HTML")
+            stato_avvisi = frasi["avvisiStatoOff"]
 
-    if type_msg == "BIC" and query_id != "-":
-        bot.answerCallbackQuery(query_id,
-                                cache_time=0)  # se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
-
-    if admin:
-        # CONTROLLO AZIONI ADMIN
-        azione = list(text.split(" "))
-        admin_err1 = False
-        if azione[0].lower() == "/admin" and len(azione) >= 1:
-            if len(azione) == 1 or (azione[1].lower() == "help" and len(azione) == 2):
-                # Elenco azioni
-                bot.sendMessage(chat_id,
-                                "Questo è l'elenco dei comandi che puoi eseguire:\n" +
-                                "\n\n" +
-                                "<b>Generali</b>:\n"
-                                "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
-                                "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
-                                "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
-                                "- <code>/admin mozitanews |Messaggio da inviare|</code>\n"
-                                "- <code>/admin mozitanews preview |Messaggio da inviare|</code>\n"                                
-                                "\n" +
-                                "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
-                                "- <code>/admin avvisi list mostra</code>\n" +
-                                "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
-                                "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
-                                "\n" +
-                                "<b>Gestione progetti (Mozilla)</b>:\n" +
-                                "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
-                                "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
-                                "- <code>/admin progetto elimina |Nome progetto da eliminare|</code>\n" +
-                                "\n" +
-                                "<b>Gestione progetti Mozilla Italia</b>:\n" +
-                                "- <code>/admin progetto mozita aggiungi |Nome progetto comunitario da aggiungere| |LinkProgetto|</code>\n" +
-                                "- <code>/admin progetto mozita modifica |Nome progetto comunitario da modificare| |LinkProgettoModificato|</code>\n" +
-                                "- <code>/admin progetto mozita elimina |Nome progetto comunitario da eliminare|</code>\n" +
-                                "\n" +
-                                "<b>Gestione collaboratori di MozItaBot</b>:\n" +
-                                "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
-                                "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
-                                "\n" +
-                                "<b>Scaricare file log di MozItaBot</b>:\n" +
-                                "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
-                                "\n" +
-                                "<b>Esempi:</b>\n" +
-                                "- <code>/admin avviso Messaggio di prova</code>\n" +
-                                "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
-                                "- <code>/admin scarica 2019 10 09</code>",
-                                parse_mode="HTML")
-            elif azione[1].lower() == "avviso" and len(azione) >= 3:
-                # Azioni sugli avvisi
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
-                error08 = False
+        if text.lower() == "/home":
+            bot.sendMessage(chat_id, frasi["home"],
+                            reply_markup=home, parse_mode="HTML")
+        elif text.lower() == "/start":
+            bot.sendMessage(chat_id, frasi["start"], parse_mode="HTML")
+            bot.sendMessage(chat_id, frasi["start2"],
+                            reply_markup=start, parse_mode="HTML")
+            if nousername:
                 bot.sendMessage(
-                    chat_id,
-                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
-                    parse_mode="HTML")
-                remove_these_users = []
-                for value_for in avvisi_on_list:
-                    time.sleep(.3)
-                    try:
-                        bot.sendMessage(
-                            value_for,
-                            messaggio +
-                            "\n\n--------------------\n" +
-                            frasi["footer_messaggio_avviso"],
-                            parse_mode="HTML")
-                        print(" >> Messaggio inviato alla chat: " + str(value_for))
-                        '''
-                        bot.sendMessage(
-                            chat_id,
-                            "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                            str(value_for) + "</a>",
-                            parse_mode="HTML")
-                        '''
-                    except Exception as exception_value:
-                        print("Excep:08 -> " + str(exception_value))
-                        stampa_su_file("Except:08 ->" + str(exception_value), True)
-                        remove_these_users.append(value_for)
-                        error08 = True
-                for value_to_remove in remove_these_users:
-                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
-                if (not error08):
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
-                else:
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
-
-            elif azione[1].lower() == "preview" and len(azione) >= 3:
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
+                    chat_id, frasi["start_nousername"], parse_mode="HTML")
+        elif text.lower() == "/supporto":
+            bot.sendMessage(chat_id, frasi["supporto"],
+                            reply_markup=supporto, parse_mode="HTML")
+        elif text.lower() == "/gruppi":
+            bot.sendMessage(chat_id, frasi["gruppi"],
+                            reply_markup=gruppi, parse_mode="HTML")
+        elif text.lower() == "/collabora":
+            bot.sendMessage(chat_id, frasi["collabora"], parse_mode="HTML")
+            bot.sendMessage(chat_id, frasi["collabora2"],
+                            reply_markup=collabora, parse_mode="HTML")
+        elif text.lower() == "/vademecum":
+            bot.sendMessage(chat_id, frasi["vademecum"],
+                            reply_markup=vademecum, parse_mode="HTML")
+        elif text.lower() == "/vademecumGenerale".lower():
+            bot.sendMessage(chat_id, frasi["invio_vg_in_corso"], parse_mode="HTML")
+            bot.sendDocument(chat_id, open("VG.pdf", "rb"))
+        elif text.lower() == "/vademecumTecnico".lower():
+            bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
+            bot.sendDocument(chat_id, open("VT.pdf", "rb"))
+        elif text.lower() == "/feedback":
+            bot.sendMessage(chat_id, frasi["feedback"],
+                            reply_markup=feedback, parse_mode="HTML")
+        elif text.lower() == "/help" or text == "/aiuto":
+            bot.sendMessage(chat_id, frasi["help"], parse_mode="HTML")
+            bot.sendMessage(chat_id, frasi["help2"],
+                            reply_markup=help, parse_mode="HTML")
+        elif text.lower() == "/news":
+            bot.sendMessage(chat_id, frasi["news"],
+                            reply_markup=news, parse_mode="HTML")
+        elif text.lower() == "/info":
+            bot.sendMessage(
+                chat_id,
+                str(
+                    ((frasi["info"]).replace(
+                        "{{**versione**}}",
+                        str(versione))).replace(
+                        "{{**ultimo_aggiornamento**}}",
+                        str(ultimo_aggiornamento))).replace(
+                    "{{**collaboratori_stampa**}}",
+                    str(collaboratori_stampa)),
+                parse_mode="HTML")
+        elif text.lower() == "/forum":
+            bot.sendMessage(chat_id, frasi["forum"],
+                            reply_markup=forum, parse_mode="HTML")
+        elif text.lower() == "/developer":
+            bot.sendMessage(chat_id, frasi["developer"],
+                            reply_markup=developer, parse_mode="HTML")
+        elif text.lower() == "/design":
+            bot.sendMessage(chat_id, frasi["design"],
+                            reply_markup=design, parse_mode="HTML")
+        elif text.lower() == "/iot":
+            bot.sendMessage(chat_id, frasi["iot"],
+                            reply_markup=iot, parse_mode="HTML")
+        elif text.lower() == "/call" or text.lower() == "/meeting":
+            bot.sendMessage(chat_id, frasi["call"],
+                            reply_markup=call, parse_mode="HTML")
+        elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting".lower():
+            bot.sendMessage(
+                chat_id,
+                str(
+                    ((frasi["prossima_call"]).replace(
+                        "{{**giorno_call**}}",
+                        str(giorno_call))).replace(
+                        "{{**mese_call**}}",
+                        str(mese_call))).replace(
+                    "{{**anno_call**}}",
+                    str(anno_call)),
+                parse_mode="HTML")
+        elif text.lower() == "/progetti":
+            bot.sendMessage(chat_id, frasi["progetti"],
+                            reply_markup=progetti, parse_mode="HTML")
+            bot.sendMessage(
+                chat_id,
+                frasi["progetti2"],
+                reply_markup=progettimozita,
+                parse_mode="HTML")
+        elif text.lower() == "/regolamento":
+            bot.sendMessage(chat_id, frasi["regolamento"],
+                            reply_markup=regolamento, parse_mode="HTML")
+        elif text.lower() == "/avvisi":
+            bot.sendMessage(chat_id, str(frasi["avvisi"]).replace(
+                "{{**stato_avvisi**}}", str(stato_avvisi)), reply_markup=avvisi, parse_mode="HTML")
+        elif text.lower() == "/avvisiOn".lower():
+            if not (user_id in avvisi_on_list):
+                avvisi_on_list.append(user_id)
                 try:
-                    bot.sendMessage(
-                        chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
-                        messaggio +
-                        "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
-                        parse_mode="HTML")
+                    with open(avvisi_on_list_path, "wb") as file_with:
+                        file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
+                    bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
                 except Exception as exception_value:
-                    print("Excep:23 -> " + str(exception_value))
-                    stampa_su_file("Except:23 ->" + str(exception_value), True)
-                    bot.sendMessage(
-                        chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
-                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
-                        parse_mode="HTML")
-
-            elif azione[1].lower() == "mozitanews" and azione[2].lower() == "preview" and len(azione) >= 5:
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
-                try:
-                    bot.sendMessage(
-                        chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
-                        messaggio +
-                        "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
-                        parse_mode="HTML")
-                except Exception as exception_value:
-                    print("Excep:26 -> " + str(exception_value))
-                    stampa_su_file("Except:26 ->" + str(exception_value), True)
-                    bot.sendMessage(
-                        chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
-                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
-                        parse_mode="HTML")
-
-
-
-
-            elif azione[1].lower() == "mozitanews" and len(azione) >= 3:
-                # Azioni sugli
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
-                error25 = False
-                bot.sendMessage(
-                    chat_id,
-                    "<i>Invio del messaggio sul canale in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
-                    parse_mode="HTML")
-
-                try:
-                    bot.sendMessage(CHANNEL_NAME,
-                                    messaggio,
-                                    parse_mode="HTML")
-
-                except Exception as exception_value:
-                    print("Excep:25 -> " + str(exception_value))
-                    stampa_su_file("Except:25 ->" + str(exception_value), True)
-
-
-                if (not error25):
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente sul canale.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
-                else:
-                    bot.sendMessage(
-                        chat_id,
-                        "Invio messagio sul canale fallito.\n",
-                        parse_mode="HTML")
-
-
-            elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
-                # Azioni sugli avvisi importanti (tutti gli utenti)
-                del azione[0]
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
-                bot.sendMessage(
-                    chat_id,
-                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
-                    parse_mode="HTML")
-                remove_these_users = []
-                for value_for in all_users:
-                    time.sleep(.3)
-                    try:
-                        bot.sendMessage(
-                            value_for,
-                            "<b>Messaggio importante</b>\n" + messaggio,
-                            parse_mode="HTML")
-                        print(" >> Messaggio inviato alla chat: " + str(value_for))
-                        '''bot.sendMessage(
-                            chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                                     str(value_for) + "</a>",
-                            parse_mode="HTML")'''
-                    except Exception as exception_value:
-                        print("Excep:07 -> " + str(exception_value))
-                        stampa_su_file("Except:07 ->" + str(exception_value), True)
-                        remove_these_users.append(value_for)
-                for value_to_remove in remove_these_users:
-                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
-                bot.sendMessage(
-                    chat_id,
-                    "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
-                    messaggio,
-                    parse_mode="HTML")
-            elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
-                # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
-                if azione[3] == "mostra":
-                    bot.sendMessage(chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
-                elif azione[3] == "aggiungi":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    temp_chat_id = int(azione[0])
-                    if temp_chat_id not in avvisi_on_list:
-                        avvisi_on_list.append(temp_chat_id)
-                        try:
-                            with open(avvisi_on_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    avvisi_on_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "La chat_id '" +
-                                str(temp_chat_id) +
-                                "' è stata inserita correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:12 -> " + str(exception_value))
-                            stampa_su_file("Except:12 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "La chat_id '" +
-                            str(temp_chat_id) +
-                            "' è già presente.")
-                elif azione[3].lower() == "elimina":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    temp_chat_id = int(azione[0])
-                    if temp_chat_id in avvisi_on_list:
-                        avvisi_on_list.remove(temp_chat_id)
-                        try:
-                            with open(avvisi_on_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    avvisi_on_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "La chat_id '" +
-                                str(temp_chat_id) +
-                                "' è stata eliminata correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:13 -> " + str(exception_value))
-                            stampa_su_file("Except:13 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "La chat_id '" +
-                            str(temp_chat_id) +
-                            "' non è stata trovata.")
-                else:
-                    admin_err1 = True
-            elif azione[1].lower() == "progetto" and azione[2].lower() == "mozita" and len(azione) >= 5:
-                # Azioni sui progetti comunitari (mozilla italia)
-                if azione[3].lower() == "aggiungi":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if not (nome in progetti_mozita_list):
-                        progetti_mozita_list[str(nome)] = str(link)
-                        try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "Progetto comunitario '" +
-                                str(nome) +
-                                "' (" +
-                                str(link) +
-                                ") inserito correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:17 -> " + str(exception_value))
-                            stampa_su_file("Except:17 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto comunitario '" +
-                                        str(nome) + "' è già presente.")
-                elif azione[3].lower() == "modifica":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if nome in progetti_mozita_list:
-                        progetti_mozita_list[str(nome)] = str(link)
-                        try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "Progetto '" +
-                                str(nome) +
-                                "' (" +
-                                str(link) +
-                                ") modificato correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:18 -> " + str(exception_value))
-                            stampa_su_file("Except:18 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto comunitario '" +
-                                        str(nome) + "' non è stato trovato.")
-                elif azione[3].lower() == "elimina":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    nome = ' '.join(azione)
-                    if nome in progetti_mozita_list:
-                        del progetti_mozita_list[str(nome)]
-                        try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:19 -> " + str(exception_value))
-                            stampa_su_file("Except:19 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto '" +
-                                        str(nome) + "' non è stato trovato.")
-                else:
-                    admin_err1 = True
-            elif azione[1].lower() == "progetto" and len(azione) >= 4:
-                # Azione sui progetti (mozilla)
-                if azione[2] == "aggiungi":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if not (nome in progetti_list):
-                        progetti_list[str(nome)] = str(link)
-                        try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "Progetto '" +
-                                str(nome) +
-                                "' (" +
-                                str(link) +
-                                ") inserito correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:17 -> " + str(exception_value))
-                            stampa_su_file("Except:17 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto '" +
-                                        str(nome) + "' è già presente.")
-                elif azione[2].lower() == "modifica":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    link = azione[-1]
-                    del azione[-1]
-                    nome = ' '.join(azione)
-                    if nome in progetti_list:
-                        progetti_list[str(nome)] = str(link)
-                        try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id,
-                                "Progetto '" +
-                                str(nome) +
-                                "' (" +
-                                str(link) +
-                                ") modificato correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:18 -> " + str(exception_value))
-                            stampa_su_file("Except:18 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto '" +
-                                        str(nome) + "' non è stato trovato.")
-                elif azione[2].lower() == "elimina":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    nome = ' '.join(azione)
-                    if nome in progetti_list:
-                        del progetti_list[str(nome)]
-                        try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
-                        except Exception as exception_value:
-                            print("Excep:19 -> " + str(exception_value))
-                            stampa_su_file("Except:19 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
-                    else:
-                        bot.sendMessage(chat_id, "Il progetto '" +
-                                        str(nome) + "' non è stato trovato.")
-                else:
-                    admin_err1 = True
-            elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
-                # Azione sui collaboratori
-                if azione[2] == "aggiungi":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    nome = ' '.join(azione)
-                    if nome not in collaboratori_hub:
-                        collaboratori_hub.append(str(nome))
-                        try:
-                            with open(collaboratori_hub_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    sorted(collaboratori_hub)).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
-                        except Exception as exception_value:
-                            print("Excep:20 -> " + str(exception_value))
-                            stampa_su_file("Except:20 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "'" +
-                            str(nome) +
-                            "' è già presente nella lista dei collaboratori.")
-                elif azione[2].lower() == "elimina":
-                    del azione[0]
-                    del azione[0]
-                    del azione[0]
-                    nome = ' '.join(azione)
-                    if nome in collaboratori_hub:
-                        collaboratori_hub.remove(str(nome))
-                        try:
-                            with open(collaboratori_hub_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    collaboratori_hub).encode("utf-8"))
-                            bot.sendMessage(
-                                chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
-                        except Exception as exception_value:
-                            print("Excep:21 -> " + str(exception_value))
-                            stampa_su_file("Except:21 ->" + str(exception_value), True)
-                            bot.sendMessage(
-                                chat_id,
-                                "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
-                    else:
-                        bot.sendMessage(
-                            chat_id,
-                            "'" +
-                            str(nome) +
-                            "' non è presente nella lista dei collaboratori.")
-                else:
-                    admin_err1 = True
-            elif azione[1].lower() == "scarica" and len(azione) == 5:
-                # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
-                nome_file = "log_" + azione[2] + "_" + azione[3] + "_" + azione[4] + ".txt"
-                if os.path.exists("./history_mozitabot/" + nome_file):
-                    bot.sendMessage(chat_id, "<i>Invio del file " + nome_file + " in corso</i>", parse_mode="HTML")
-                    bot.sendDocument(chat_id, open("./history_mozitabot/" + nome_file, "rb"))
-                else:
-                    bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
+                    print("Excep:05 -> " + str(exception_value))
+                    stampa_su_file("Except:05 ->" + str(exception_value), True)
+                    bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
             else:
-                admin_err1 = True
+                bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
+        elif text.lower() == "/avvisiOff".lower():
+            if user_id in avvisi_on_list:
+                avvisi_on_list.remove(user_id)
+                try:
+                    with open(avvisi_on_list_path, "wb") as file_with:
+                        file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
+                    bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
+                except Exception as exception_value:
+                    print("Excep:06 -> " + str(exception_value))
+                    stampa_su_file("Except:06 ->" + str(exception_value), True)
+                    bot.sendMessage(
+                        chat_id, frasi["avvisiOff2"], parse_mode="HTML")
+            else:
+                bot.sendMessage(chat_id, frasi["avvisiOff3"])
+        elif text.lower() == "/social".lower():
+            bot.sendMessage(chat_id, frasi["social"],
+                            reply_markup=social, parse_mode="HTML")
+        elif "/admin" in text.lower():
+            if status_user == "A":
+                if type_msg == "LK":
+                    admin = True
+            else:
+                bot.sendMessage(chat_id, frasi["non_sei_admin"], parse_mode="HTML")
         else:
             bot.sendMessage(
                 chat_id,
-                "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                frasi["comando_non_riconosciuto"],
+                reply_markup=start,
                 parse_mode="HTML")
 
-        if admin_err1:
-            bot.sendMessage(
-                chat_id,
-                "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
-                parse_mode="HTML")
+        if type_msg == "BIC" and query_id != "-":
+            bot.answerCallbackQuery(query_id,
+                                    cache_time=0)  # se voglio mostrare un messaggio a scomparsa: bot.answerCallbackQuery(chat_id, text="Testo (0-200 caratteri)" cache_time=0)
 
-    try:
-        # stringa stampata a terminale, per ogni operazione effettuata
-        stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(
-            status_user) + "]  --  Chat: " + str(
-            chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(
-            text)
-        print(stampa + "\n--------------------\n")
-        stampa_su_file(stampa, False)
-    except Exception as exception_value:
-        stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
-        print(stampa)
-        stampa_su_file("Except:01 ->" + str(exception_value), True)
+        if admin:
+            # CONTROLLO AZIONI ADMIN
+            azione = list(text.split(" "))
+            admin_err1 = False
+            if azione[0].lower() == "/admin" and len(azione) >= 1:
+                if len(azione) == 1 or (azione[1].lower() == "help" and len(azione) == 2):
+                    # Elenco azioni
+                    bot.sendMessage(chat_id,
+                                    "Questo è l'elenco dei comandi che puoi eseguire:\n" +
+                                    "\n\n" +
+                                    "<b>Generali</b>:\n"
+                                    "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
+                                    "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                                    "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                                    "- <code>/admin mozitanews |Messaggio da inviare|</code>\n"
+                                    "- <code>/admin mozitanews preview |Messaggio da inviare|</code>\n"                                
+                                    "\n" +
+                                    "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
+                                    "- <code>/admin avvisi list mostra</code>\n" +
+                                    "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
+                                    "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
+                                    "\n" +
+                                    "<b>Gestione progetti (Mozilla)</b>:\n" +
+                                    "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
+                                    "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
+                                    "- <code>/admin progetto elimina |Nome progetto da eliminare|</code>\n" +
+                                    "\n" +
+                                    "<b>Gestione progetti Mozilla Italia</b>:\n" +
+                                    "- <code>/admin progetto mozita aggiungi |Nome progetto comunitario da aggiungere| |LinkProgetto|</code>\n" +
+                                    "- <code>/admin progetto mozita modifica |Nome progetto comunitario da modificare| |LinkProgettoModificato|</code>\n" +
+                                    "- <code>/admin progetto mozita elimina |Nome progetto comunitario da eliminare|</code>\n" +
+                                    "\n" +
+                                    "<b>Gestione collaboratori di MozItaBot</b>:\n" +
+                                    "- <code>/admin collaboratore aggiungi |Nome Cognome (@usernameTelegram)|</code>\n" +
+                                    "- <code>/admin collaboratore elimina |Nome Cognome (@usernameTelegram)|</code>\n" +
+                                    "\n" +
+                                    "<b>Scaricare file log di MozItaBot</b>:\n" +
+                                    "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
+                                    "\n" +
+                                    "<b>Esempi:</b>\n" +
+                                    "- <code>/admin avviso Messaggio di prova</code>\n" +
+                                    "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
+                                    "- <code>/admin scarica 2019 10 09</code>",
+                                    parse_mode="HTML")
+                elif azione[1].lower() == "avviso" and len(azione) >= 3:
+                    # Azioni sugli avvisi
+                    del azione[0]
+                    del azione[0]
+                    messaggio = ' '.join(azione)
+                    error08 = False
+                    bot.sendMessage(
+                        chat_id,
+                        "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                        parse_mode="HTML")
+                    remove_these_users = []
+                    for value_for in avvisi_on_list:
+                        time.sleep(.3)
+                        try:
+                            bot.sendMessage(
+                                value_for,
+                                messaggio +
+                                "\n\n--------------------\n" +
+                                frasi["footer_messaggio_avviso"],
+                                parse_mode="HTML")
+                            print(" >> Messaggio inviato alla chat: " + str(value_for))
+                            '''
+                            bot.sendMessage(
+                                chat_id,
+                                "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                str(value_for) + "</a>",
+                                parse_mode="HTML")
+                            '''
+                        except Exception as exception_value:
+                            print("Excep:08 -> " + str(exception_value))
+                            stampa_su_file("Except:08 ->" + str(exception_value), True)
+                            remove_these_users.append(value_for)
+                            error08 = True
+                    for value_to_remove in remove_these_users:
+                        remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
+                    if (not error08):
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
+                    else:
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
+
+                elif azione[1].lower() == "preview" and len(azione) >= 3:
+                    del azione[0]
+                    del azione[0]
+                    messaggio = ' '.join(azione)
+                    try:
+                        bot.sendMessage(
+                            chat_id,
+                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
+                            messaggio +
+                            "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
+                            parse_mode="HTML")
+                    except Exception as exception_value:
+                        print("Excep:23 -> " + str(exception_value))
+                        stampa_su_file("Except:23 ->" + str(exception_value), True)
+                        bot.sendMessage(
+                            chat_id,
+                            "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                            "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                            parse_mode="HTML")
+
+                elif azione[1].lower() == "mozitanews" and azione[2].lower() == "preview" and len(azione) >= 5:
+                    del azione[0]
+                    del azione[0]
+                    messaggio = ' '.join(azione)
+                    try:
+                        bot.sendMessage(
+                            chat_id,
+                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
+                            messaggio,
+                            parse_mode="HTML")
+                    except Exception as exception_value:
+                        print("Excep:26 -> " + str(exception_value))
+                        stampa_su_file("Except:26 ->" + str(exception_value), True)
+                        bot.sendMessage(
+                            chat_id,
+                            "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                            "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                            parse_mode="HTML")
+
+
+
+
+                elif azione[1].lower() == "mozitanews" and len(azione) >= 3:
+                    # Azioni sugli
+                    del azione[0]
+                    del azione[0]
+                    messaggio = ' '.join(azione)
+                    error25 = False
+                    bot.sendMessage(
+                        chat_id,
+                        "<i>Invio del messaggio sul canale in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                        parse_mode="HTML")
+
+                    try:
+                        bot.sendMessage(CHANNEL_NAME,
+                                        messaggio,
+                                        parse_mode="HTML")
+
+                    except Exception as exception_value:
+                        print("Excep:25 -> " + str(exception_value))
+                        stampa_su_file("Except:25 ->" + str(exception_value), True)
+
+
+                    if (not error25):
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente sul canale.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
+                    else:
+                        bot.sendMessage(
+                            chat_id,
+                            "Invio messagio sul canale fallito.\n",
+                            parse_mode="HTML")
+
+
+                elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
+                    # Azioni sugli avvisi importanti (tutti gli utenti)
+                    del azione[0]
+                    del azione[0]
+                    del azione[0]
+                    messaggio = ' '.join(azione)
+                    bot.sendMessage(
+                        chat_id,
+                        "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                        parse_mode="HTML")
+                    remove_these_users = []
+                    for value_for in all_users:
+                        time.sleep(.3)
+                        try:
+                            bot.sendMessage(
+                                value_for,
+                                "<b>Messaggio importante</b>\n" + messaggio,
+                                parse_mode="HTML")
+                            print(" >> Messaggio inviato alla chat: " + str(value_for))
+                            '''bot.sendMessage(
+                                chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                        str(value_for) + "</a>",
+                                parse_mode="HTML")'''
+                        except Exception as exception_value:
+                            print("Excep:07 -> " + str(exception_value))
+                            stampa_su_file("Except:07 ->" + str(exception_value), True)
+                            remove_these_users.append(value_for)
+                    for value_to_remove in remove_these_users:
+                        remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
+                    bot.sendMessage(
+                        chat_id,
+                        "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
+                        messaggio,
+                        parse_mode="HTML")
+                elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
+                    # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
+                    if azione[3] == "mostra":
+                        bot.sendMessage(chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
+                    elif azione[3] == "aggiungi":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        temp_chat_id = int(azione[0])
+                        if temp_chat_id not in avvisi_on_list:
+                            avvisi_on_list.append(temp_chat_id)
+                            try:
+                                with open(avvisi_on_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        avvisi_on_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "La chat_id '" +
+                                    str(temp_chat_id) +
+                                    "' è stata inserita correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:12 -> " + str(exception_value))
+                                stampa_su_file("Except:12 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
+                        else:
+                            bot.sendMessage(
+                                chat_id,
+                                "La chat_id '" +
+                                str(temp_chat_id) +
+                                "' è già presente.")
+                    elif azione[3].lower() == "elimina":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        temp_chat_id = int(azione[0])
+                        if temp_chat_id in avvisi_on_list:
+                            avvisi_on_list.remove(temp_chat_id)
+                            try:
+                                with open(avvisi_on_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        avvisi_on_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "La chat_id '" +
+                                    str(temp_chat_id) +
+                                    "' è stata eliminata correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:13 -> " + str(exception_value))
+                                stampa_su_file("Except:13 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
+                        else:
+                            bot.sendMessage(
+                                chat_id,
+                                "La chat_id '" +
+                                str(temp_chat_id) +
+                                "' non è stata trovata.")
+                    else:
+                        admin_err1 = True
+                elif azione[1].lower() == "progetto" and azione[2].lower() == "mozita" and len(azione) >= 5:
+                    # Azioni sui progetti comunitari (mozilla italia)
+                    if azione[3].lower() == "aggiungi":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        link = azione[-1]
+                        del azione[-1]
+                        nome = ' '.join(azione)
+                        if not (nome in progetti_mozita_list):
+                            progetti_mozita_list[str(nome)] = str(link)
+                            try:
+                                with open(progetti_mozita_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_mozita_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Progetto comunitario '" +
+                                    str(nome) +
+                                    "' (" +
+                                    str(link) +
+                                    ") inserito correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:17 -> " + str(exception_value))
+                                stampa_su_file("Except:17 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto comunitario '" +
+                                            str(nome) + "' è già presente.")
+                    elif azione[3].lower() == "modifica":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        link = azione[-1]
+                        del azione[-1]
+                        nome = ' '.join(azione)
+                        if nome in progetti_mozita_list:
+                            progetti_mozita_list[str(nome)] = str(link)
+                            try:
+                                with open(progetti_mozita_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_mozita_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Progetto '" +
+                                    str(nome) +
+                                    "' (" +
+                                    str(link) +
+                                    ") modificato correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:18 -> " + str(exception_value))
+                                stampa_su_file("Except:18 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto comunitario '" +
+                                            str(nome) + "' non è stato trovato.")
+                    elif azione[3].lower() == "elimina":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        nome = ' '.join(azione)
+                        if nome in progetti_mozita_list:
+                            del progetti_mozita_list[str(nome)]
+                            try:
+                                with open(progetti_mozita_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_mozita_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:19 -> " + str(exception_value))
+                                stampa_su_file("Except:19 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto '" +
+                                            str(nome) + "' non è stato trovato.")
+                    else:
+                        admin_err1 = True
+                elif azione[1].lower() == "progetto" and len(azione) >= 4:
+                    # Azione sui progetti (mozilla)
+                    if azione[2] == "aggiungi":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        link = azione[-1]
+                        del azione[-1]
+                        nome = ' '.join(azione)
+                        if not (nome in progetti_list):
+                            progetti_list[str(nome)] = str(link)
+                            try:
+                                with open(progetti_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Progetto '" +
+                                    str(nome) +
+                                    "' (" +
+                                    str(link) +
+                                    ") inserito correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:17 -> " + str(exception_value))
+                                stampa_su_file("Except:17 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto '" +
+                                            str(nome) + "' è già presente.")
+                    elif azione[2].lower() == "modifica":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        link = azione[-1]
+                        del azione[-1]
+                        nome = ' '.join(azione)
+                        if nome in progetti_list:
+                            progetti_list[str(nome)] = str(link)
+                            try:
+                                with open(progetti_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Progetto '" +
+                                    str(nome) +
+                                    "' (" +
+                                    str(link) +
+                                    ") modificato correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:18 -> " + str(exception_value))
+                                stampa_su_file("Except:18 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto '" +
+                                            str(nome) + "' non è stato trovato.")
+                    elif azione[2].lower() == "elimina":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        nome = ' '.join(azione)
+                        if nome in progetti_list:
+                            del progetti_list[str(nome)]
+                            try:
+                                with open(progetti_list_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        progetti_list).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
+                            except Exception as exception_value:
+                                print("Excep:19 -> " + str(exception_value))
+                                stampa_su_file("Except:19 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
+                        else:
+                            bot.sendMessage(chat_id, "Il progetto '" +
+                                            str(nome) + "' non è stato trovato.")
+                    else:
+                        admin_err1 = True
+                elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
+                    # Azione sui collaboratori
+                    if azione[2] == "aggiungi":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        nome = ' '.join(azione)
+                        if nome not in collaboratori_hub:
+                            collaboratori_hub.append(str(nome))
+                            try:
+                                with open(collaboratori_hub_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        sorted(collaboratori_hub)).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
+                            except Exception as exception_value:
+                                print("Excep:20 -> " + str(exception_value))
+                                stampa_su_file("Except:20 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
+                        else:
+                            bot.sendMessage(
+                                chat_id,
+                                "'" +
+                                str(nome) +
+                                "' è già presente nella lista dei collaboratori.")
+                    elif azione[2].lower() == "elimina":
+                        del azione[0]
+                        del azione[0]
+                        del azione[0]
+                        nome = ' '.join(azione)
+                        if nome in collaboratori_hub:
+                            collaboratori_hub.remove(str(nome))
+                            try:
+                                with open(collaboratori_hub_path, "wb") as file_with:
+                                    file_with.write(json.dumps(
+                                        collaboratori_hub).encode("utf-8"))
+                                bot.sendMessage(
+                                    chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
+                            except Exception as exception_value:
+                                print("Excep:21 -> " + str(exception_value))
+                                stampa_su_file("Except:21 ->" + str(exception_value), True)
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
+                        else:
+                            bot.sendMessage(
+                                chat_id,
+                                "'" +
+                                str(nome) +
+                                "' non è presente nella lista dei collaboratori.")
+                    else:
+                        admin_err1 = True
+                elif azione[1].lower() == "scarica" and len(azione) == 5:
+                    # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
+                    nome_file = "log_" + azione[2] + "_" + azione[3] + "_" + azione[4] + ".txt"
+                    if os.path.exists("./history_mozitabot/" + nome_file):
+                        bot.sendMessage(chat_id, "<i>Invio del file " + nome_file + " in corso</i>", parse_mode="HTML")
+                        bot.sendDocument(chat_id, open("./history_mozitabot/" + nome_file, "rb"))
+                    else:
+                        bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
+                else:
+                    admin_err1 = True
+            else:
+                bot.sendMessage(
+                    chat_id,
+                    "Errore: Comando non riconosciuto.\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                    parse_mode="HTML")
+
+            if admin_err1:
+                bot.sendMessage(
+                    chat_id,
+                    "Questo comando nella sezione ADMIN non è stato riconosciuto.\n\nPer scoprire tutti i comandi consentiti in questa sezione digita /admin",
+                    parse_mode="HTML")
+
+        try:
+            # stringa stampata a terminale, per ogni operazione effettuata
+            stampa = str(localtime) + "  --  Utente: " + str(user_name) + " (" + str(user_id) + ")[" + str(
+                status_user) + "]  --  Chat: " + str(
+                chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(
+                text)
+            print(stampa + "\n--------------------\n")
+            stampa_su_file(stampa, False)
+        except Exception as exception_value:
+            stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
+            print(stampa)
+            stampa_su_file("Except:01 ->" + str(exception_value), True)
+    elif msg_saved2['chat']['type'] == "channel":
+        print("|| Gestione bot in un canale ||")
+    else:
+        print("|| Il bot non è abilitato a interagire qui ||")
 
 
 try:
