@@ -56,6 +56,8 @@ progetti_mozita_list_path = "progetti_mozita_list.json"
 collaboratori_hub_path = "collaboratori_hub.json"
 all_users_path = "all_users.json"
 social_list_path = "social_list.json"
+channels_list_path = "channels_list.json"
+
 adminlist = []
 if Path(avvisi_on_list_path).exists():
     avvisi_on_list = json.loads(open(avvisi_on_list_path).read())
@@ -81,6 +83,12 @@ if Path(social_list_path).exists():
     social_list = json.loads(open(social_list_path).read())
 else:
     social_list = []
+
+if Path(channels_list_path).exists():
+    channels_list = json.loads(open(channels_list_path).read())
+else:
+    channels_list = []
+
 # array mesi
 listaMesi = [
     "Gennaio",
@@ -741,15 +749,15 @@ def risposte(msg):
                         chat_id,
                         "<i>Invio del messaggio sul canale in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
                         parse_mode="HTML")
+                    for channel_name in channels_list:
+                        try:
+                            bot.sendMessage(channel_name,
+                                            messaggio,
+                                            parse_mode="HTML")
 
-                    try:
-                        bot.sendMessage(CHANNEL_NAME,
-                                        messaggio,
-                                        parse_mode="HTML")
-
-                    except Exception as exception_value:
-                        print("Excep:25 -> " + str(exception_value))
-                        stampa_su_file("Except:25 ->" + str(exception_value), True)
+                        except Exception as exception_value:
+                            print("Excep:25 -> " + str(exception_value))
+                            stampa_su_file("Except:25 ->" + str(exception_value), True)
 
 
                     if (not error25):
@@ -761,7 +769,7 @@ def risposte(msg):
                     else:
                         bot.sendMessage(
                             chat_id,
-                            "Invio messagio sul canale fallito.\n",
+                            "Invio messagio su alcuni canali avvenuto.\n",
                             parse_mode="HTML")
 
 
