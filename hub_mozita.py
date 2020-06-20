@@ -167,6 +167,28 @@ def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
         print("Excep:24 -> " + str(exception_value))
         stampa_su_file("Except:24 ->" + str(exception_value), True)
 
+def remove_channel_from_channels_list(channel_name):
+    try:
+        channels_list.remove(channel_name)
+        with open(channels_list_path, "wb") as channels_list_file:
+            channels_list_file.write(json.dumps(
+                channels_list).encode("utf-8"))
+    except Exception as exception_value:
+        print("Excep:27 -> {}".format(exception_value))
+        stampa_su_file("Except:27 ->".format(exception_value))
+
+def add_channel_to_channels_list(channel_name):
+    try:
+        channels_list.append(channel_name)
+        with open(channels_list_path, "wb") as channels_list_file:
+            channels_list_file.write(json.dumps(
+                channels_list).encode("utf-8"))
+    except Exception as exception_value:
+        print("Excep:28 -> {}".format(exception_value))
+        stampa_su_file("Except:28 ->".format(exception_value))
+
+
+
 #il "main"
 def risposte(msg):
     localtime = datetime.now()
@@ -627,6 +649,11 @@ def risposte(msg):
                                     "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
                                     "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
                                     "\n" +
+                                    "<b>Gestione canali</b>:\n" +
+                                    "- <code>/admin canale mostra</code>\n" +
+                                    "- <code>/admin canale aggiungi |Channel_name|</code>\n" +
+                                    "- <code>/admin canale elimina |Channel_name|</code>\n" +
+                                    "\n" +
                                     "<b>Gestione progetti (Mozilla)</b>:\n" +
                                     "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
                                     "- <code>/admin progetto modifica |Nome progetto da modificare| |LinkProgettoModificato|</code>\n" +
@@ -771,6 +798,29 @@ def risposte(msg):
                             chat_id,
                             "Invio messagio su alcuni canali avvenuto.\n",
                             parse_mode="HTML")
+
+                elif azione[1].lower() == "canale" and len(azione) >= 3:
+                    del azione[0]
+                    del azione[0]
+
+                    if azione[0] == "mostra" and len(azione) == 1:
+                        bot.sendMessage(chat_id, "Lista canali disponibili:\n{}".format(channels_list))
+                    elif azione[0] == "rimuovi" and len(azione) == 2:
+                        to_del_channel = azione[1]
+                        try:
+                            remove_channel_from_channels_list(to_del_channel)
+                            bot.sendMessage(chat_id, "Canale {} rimosso correttamente".format(to_del_channel))
+                        except Exception as valErr:
+                            bot.sendMessage(chat_id, "Il canale {} non è in lista".format(to_del_channel))
+                            #Non scrivo sul file l'eccezione perchè la scrittura è gestita da remove_channel_from_channels_list
+                    elif azione[0] == "aggiungi" and len(azione) == 2:
+                        to_add_channel = azione[1]
+                        try:
+                            add_channel_to_channels_list(to_add_channel)
+                            bot.sendMessage(chat_id, "Canale {} aggiunto correttamente".format(to_add_channel))
+                        except Exception as valErr:
+                            bot.sendMessage(chat_id, "Il canale {} non è stato aggiunto in lista".format(to_add_channel))
+                            # Non scrivo sul file l'eccezione perchè la scrittura è gestita da remove_channel_from_channels_list
 
 
                 elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
