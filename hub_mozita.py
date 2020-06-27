@@ -805,7 +805,7 @@ def risposte(msg):
 
                     if azione[0] == "mostra" and len(azione) == 1:
                         bot.sendMessage(chat_id, "Lista canali disponibili:\n{}".format(channels_list))
-                    elif azione[0] == "rimuovi" and len(azione) == 2:
+                    elif azione[0] == "elimina" and len(azione) == 2:
                         to_del_channel = azione[1]
                         try:
                             remove_channel_from_channels_list(to_del_channel)

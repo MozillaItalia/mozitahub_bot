@@ -26,5 +26,5 @@ Questo è l'elenco delle eccezioni gestite nel bot, con la relativa descrizione:
  - 24
  - 25: Errore in /admin mozitanews (probabilmente perchè bot non presente in canale o nome canale errato)
  - 26: Errore in /admin mozitanews preview
- - 27: Errore in /admin canale rimuovi |channel_name| (channel name non presente in channels_list.json)
+ - 27: Errore in /admin canale elimina |channel_name| (channel name non presente in channels_list.json)
  - 28: Errore in /admin canale aggiungi |channel_name|
