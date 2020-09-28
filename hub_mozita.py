@@ -37,8 +37,8 @@ else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.3.6"
-ultimo_aggiornamento = "23-04-2020"
+versione = "1.4.1"
+ultimo_aggiornamento = "28-04-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -132,6 +132,33 @@ def stampa_su_file(stampa, err):
     except Exception as exception_value:
         print("Excep:02 -> " + str(exception_value))
         stampa_su_file("Except:02 ->" + str(exception_value), True)
+
+
+def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
+    '''
+    bot.sendMessage(
+        chat_id,
+        "‼️❌ <a href='tg://user?id=" +
+        str(userid_to_remove) + "'>" + str(userid_to_remove) + "</a> rimosso dalla lista.",
+        parse_mode="HTML")
+    '''
+    try:
+        if (userid_to_remove in avvisi_on_list):
+            avvisi_on_list.remove(userid_to_remove)
+            with open(avvisi_on_list_path, "wb") as file_with:
+                file_with.write(json.dumps(
+                    avvisi_on_list).encode("utf-8"))
+        if (userid_to_remove in all_users):
+            all_users.remove(userid_to_remove)
+            with open(all_users_path, "wb") as file_with:
+                file_with.write(json.dumps(
+                    all_users).encode("utf-8"))
+        testo_to_print = str(userid_to_remove) + " rimosso dalla lista all_users (ed eventualmente dalla avvisi_list)"
+        print(testo_to_print)
+        stampa_su_file(testo_to_print, False)
+    except Exception as exception_value:
+        print("Excep:24 -> " + str(exception_value))
+        stampa_su_file("Except:24 ->" + str(exception_value), True)
 
 
 def risposte(msg):
@@ -609,7 +636,13 @@ def risposte(msg):
                 del azione[0]
                 messaggio = ' '.join(azione)
                 error08 = False
+                bot.sendMessage(
+                    chat_id,
+                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                    parse_mode="HTML")
+                remove_these_users = []
                 for value_for in avvisi_on_list:
+                    time.sleep(.3)
                     try:
                         bot.sendMessage(
                             value_for,
@@ -617,28 +650,21 @@ def risposte(msg):
                             "\n\n--------------------\n" +
                             frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
+                        print(" >> Messaggio inviato alla chat: " + str(value_for))
+                        '''
                         bot.sendMessage(
                             chat_id,
                             "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                             str(value_for) + "</a>",
                             parse_mode="HTML")
+                        '''
                     except Exception as exception_value:
                         print("Excep:08 -> " + str(exception_value))
                         stampa_su_file("Except:08 ->" + str(exception_value), True)
-                        if (str(
-                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
-                            bot.sendMessage(
-                                chat_id,
-                                "‼️❌ Chat non trovata: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                parse_mode="HTML")
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                parse_mode="HTML")
+                        remove_these_users.append(value_for)
                         error08 = True
+                for value_to_remove in remove_these_users:
+                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
                 if (not error08):
                     bot.sendMessage(
                         chat_id,
@@ -678,32 +704,29 @@ def risposte(msg):
                 del azione[0]
                 del azione[0]
                 messaggio = ' '.join(azione)
+                bot.sendMessage(
+                    chat_id,
+                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
+                    parse_mode="HTML")
+                remove_these_users = []
                 for value_for in all_users:
+                    time.sleep(.3)
                     try:
                         bot.sendMessage(
                             value_for,
                             "<b>Messaggio importante</b>\n" + messaggio,
                             parse_mode="HTML")
-                        bot.sendMessage(
+                        print(" >> Messaggio inviato alla chat: " + str(value_for))
+                        '''bot.sendMessage(
                             chat_id, "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
                                      str(value_for) + "</a>",
-                            parse_mode="HTML")
+                            parse_mode="HTML")'''
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
                         stampa_su_file("Except:07 ->" + str(exception_value), True)
-                        if (str(
-                                exception_value) == "('Bad Request: chat not found', 400, {'ok': False, 'error_code': 400, 'description': 'Bad Request: chat not found'})"):
-                            bot.sendMessage(
-                                chat_id,
-                                "‼️❌ Chat non trovata: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                parse_mode="HTML")
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "❌ Non è stato possibile inviare il messaggio alla chat: <a href='tg://user?id=" +
-                                str(value_for) + "'>" + str(value_for) + "</a>",
-                                parse_mode="HTML")
+                        remove_these_users.append(value_for)
+                for value_to_remove in remove_these_users:
+                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
                 bot.sendMessage(
                     chat_id,
                     "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
