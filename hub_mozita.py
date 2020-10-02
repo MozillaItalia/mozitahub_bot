@@ -48,7 +48,7 @@ else:
     exit()
 
 # managing version and last update
-versione = "1.5.0"
+versione = "1.5.1"
 ultimo_aggiornamento = "02-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
@@ -643,7 +643,7 @@ def risposte(msg):
 
                                 "- <code>/admin messaggio preview |canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n"
                                 "- <code>/admin messaggio | canale | |Messaggio da inviare in un canale|</code>\n"
-                                "- <code>/admin messaggio broadcast |Messaggio da inviare in un canale|</code>\n"
+                                "- <code>/admin messaggio broadcast |Messaggio da inviare in tutti i canali|</code>\n"
 
                                 "\n" +
                                 "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
