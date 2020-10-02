@@ -1,17 +1,31 @@
 #!/usr/bin/python3
-
-
 import os
-from configparser import ConfigParser
 import json
-from pathlib import Path
-from datetime import datetime
 import calendar
 import time
 import telepot
+import telegram_events
+from pathlib import Path
+from datetime import datetime
+from configparser import ConfigParser
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-import telegram_events
+
+# must be defined at the beginning: while refactoring variable initialization must be
+# in another function
+def load_list_from_path(generic_path):
+    return json.loads(open(generic_path).read()) if Path(generic_path).exists() else []
+
+
+def load_dict_from_path(generic_path):
+    return json.loads(open(generic_path).read()) if Path(generic_path).exists() else {}
+
+def fix_username(username):
+    # add @ character if not provided
+    if username[0] != "@":
+        username = "@" + username
+    return username
+
 
 if not os.path.isfile("config.ini"):
     print(
@@ -23,62 +37,51 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 config_parser = ConfigParser()
 config_parser.read(os.path.join(script_path, "config.ini"))
 
+# managing token
 TOKEN = config_parser.get("access", "token")
 
 if TOKEN == "":
     print("Token non presente.")
     exit()
 
-# CARICAMENTO FRASI DA FILE
-
+# loading sentences from file
 if Path("frasi.json").exists():
     frasi = json.loads(open("frasi.json", encoding="utf8").read())
 else:
     print("File frasi non presente.")
     exit()
 
-versione = "1.4.1"
-ultimo_aggiornamento = "28-04-2020"
+# managing version and last update
+versione = "1.5.4"
+ultimo_aggiornamento = "03-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
 
 response = ""
 
-# CARICAMENTO DELLE VARIE LISTE
-
-adminlist_path = "adminlist_hub.json"
-avvisi_on_list_path = "avvisi_on_list.json"
-progetti_list_path = "progetti_list.json"
-progetti_mozita_list_path = "progetti_mozita_list.json"
-collaboratori_hub_path = "collaboratori_hub.json"
+# setting lists
 all_users_path = "all_users.json"
+adminlist_path = "adminlist_hub.json"
 social_list_path = "social_list.json"
+channels_list_path = "channels_list.json"
+progetti_list_path = "progetti_list.json"
+avvisi_on_list_path = "avvisi_on_list.json"
+collaboratori_hub_path = "collaboratori_hub.json"
+progetti_mozita_list_path = "progetti_mozita_list.json"
 adminlist = []
-if Path(avvisi_on_list_path).exists():
-    avvisi_on_list = json.loads(open(avvisi_on_list_path).read())
-else:
-    avvisi_on_list = []
-if Path(progetti_list_path).exists():
-    progetti_list = json.loads(open(progetti_list_path).read())
-else:
-    progetti_list = {}
-if Path(progetti_mozita_list_path).exists():
-    progetti_mozita_list = json.loads(open(progetti_mozita_list_path).read())
-else:
-    progetti_mozita_list = {}
-if Path(collaboratori_hub_path).exists():
-    collaboratori_hub = json.loads(open(collaboratori_hub_path).read())
-else:
-    collaboratori_hub = []
-if Path(all_users_path).exists():
-    all_users = json.loads(open(all_users_path).read())
-else:
-    all_users = []
-if Path(social_list_path).exists():
-    social_list = json.loads(open(social_list_path).read())
-else:
-    social_list = []
+
+# loading lists and dicts
+progetti_list = load_dict_from_path(progetti_list_path)
+progetti_mozita_list = load_dict_from_path(progetti_mozita_list_path)
+
+avvisi_on_list = load_list_from_path(avvisi_on_list_path)
+collaboratori_hub = load_list_from_path(collaboratori_hub_path)
+all_users = load_list_from_path(all_users_path)
+social_list = load_list_from_path(social_list_path)
+channels_list = load_list_from_path(channels_list_path)
+
+
 # array mesi
 listaMesi = [
     "Gennaio",
@@ -95,8 +98,7 @@ listaMesi = [
     "Dicembre"]
 
 
-# questa funzione serve per calcolare il primo venerdì del mese
-
+# calcola il primo venerdì del mese
 def first_friday_of_the_month(year, month):
     for day, weekday in calendar.Calendar().itermonthdays2(year, month):
         if weekday == 4:
@@ -106,8 +108,12 @@ def first_friday_of_the_month(year, month):
                 return day + 7
 
 
-# il "main"
-def stampa_su_file(stampa, err):
+'''
+log: log function
+'''
+
+
+def log(stampa, err):
     global response, data_salvataggio
     if err:
         stampa = str(response) + "\n\n" + str(stampa)
@@ -118,7 +124,7 @@ def stampa_su_file(stampa, err):
             os.mkdir("./history_mozitabot")
     except Exception as exception_value:
         print("Excep:22 -> " + str(exception_value))
-        stampa_su_file("Except:22 ->" + str(exception_value), True)
+        log("Except:22 ->" + str(exception_value), True)
 
     try:
         # apre il file in scrittura "append" per inserire orario e data -> log
@@ -131,7 +137,7 @@ def stampa_su_file(stampa, err):
         file.close()
     except Exception as exception_value:
         print("Excep:02 -> " + str(exception_value))
-        stampa_su_file("Except:02 ->" + str(exception_value), True)
+        log("Except:02 ->" + str(exception_value), True)
 
 
 def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
@@ -153,12 +159,52 @@ def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
             with open(all_users_path, "wb") as file_with:
                 file_with.write(json.dumps(
                     all_users).encode("utf-8"))
-        testo_to_print = str(userid_to_remove) + " rimosso dalla lista all_users (ed eventualmente dalla avvisi_list)"
+        testo_to_print = str(
+            userid_to_remove) + " rimosso dalla lista all_users (ed eventualmente dalla avvisi_list)"
         print(testo_to_print)
-        stampa_su_file(testo_to_print, False)
+        log(testo_to_print, False)
     except Exception as exception_value:
         print("Excep:24 -> " + str(exception_value))
-        stampa_su_file("Except:24 ->" + str(exception_value), True)
+        log("Except:24 ->" + str(exception_value), True)
+
+# send a message in a channel
+def send_message_channel(channel_name, messaggio, chat_id, optional_text = ""):
+    
+    try:
+        bot.sendMessage(channel_name.lower(),
+                        messaggio,
+                        parse_mode="HTML")
+
+        bot.sendMessage(
+            chat_id,
+            "Messaggio inviato correttamente sul canale <code>" + channel_name.lower() + "</code>" +
+            ".\n\nIl messaggio inviato è:\n" +
+            messaggio,
+            parse_mode="HTML")
+    except Exception as exception_value:
+        print("Excep:25 -> " + str(exception_value))
+        log("Except:25 ->" + str(exception_value), True)
+        
+        if optional_text != "":
+            bot.sendMessage(
+                chat_id,
+                optional_text + "canale <code>" + channel_name.lower() + "</code>.\n",
+                parse_mode="HTML"
+            )
+        else:
+            bot.sendMessage(
+                chat_id,
+                "Si è verificato un errore per il canale <code>" + channel_name.lower() + "</code>.\n" +
+                "Controlla che: \n" +
+                "- il bot abbia i privilegi giusti\n" +
+                "- BotFather sia settato correttamente\n" +
+                "- hai aggiunto l'ID nella lista canali (con la @)\n\n" +
+                "Se ancora hai problemi potrebbe trattarsi di un errore momentaneo.\n" +
+                "Riprova più tardi!",
+                parse_mode="HTML"
+            )
+
+        
 
 
 def risposte(msg):
@@ -171,19 +217,22 @@ def risposte(msg):
     # Admin, Other
 
     global frasi  # frasi è il dictionary globali che contiene tutte le frasi da visualizzare
-
     global response
-    response = bot.getUpdates()
-    # print(response)
-
     global adminlist
+    global channels_list
+
     """
         Lista degli admin:
         240188083 -> @Sav22999
         69903837 -> @Mte90
         75870906 -> @mone27
-        295348075 -> @dag7d
+        810740389 -> @dag7d
+        123150516 -> @edovio
+        161975186 -> @astrastefania
     """
+
+    response = bot.getUpdates()
+
     if Path(adminlist_path).exists():
         adminlist = json.loads(open(adminlist_path).read())
     else:
@@ -196,8 +245,6 @@ def risposte(msg):
     eventi_list = telegram_events.events(msg, ["LK", "NM"], response)
     text = eventi_list["text"]
     type_msg = eventi_list["type_msg"]
-    # modificato=eventi_list["modificato"]
-    # risposta=eventi_list["risposta"]
 
     query_id = "-"
     if type_msg == "BIC" and "id" in msg:
@@ -273,17 +320,21 @@ def risposte(msg):
 
     help = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_testo_gruppi"], callback_data='/gruppi'),
-         InlineKeyboardButton(text=frasi["button_testo_social"], callback_data='/social'),
+         InlineKeyboardButton(
+             text=frasi["button_testo_social"], callback_data='/social'),
          InlineKeyboardButton(text=frasi["button_testo_supporto"], callback_data='/supporto')],
 
         [InlineKeyboardButton(text=frasi["button_testo_avvisi"], callback_data='/avvisi'),
-         InlineKeyboardButton(text=frasi["button_testo_call"], callback_data='/meeting'),
+         InlineKeyboardButton(
+             text=frasi["button_testo_call"], callback_data='/meeting'),
          InlineKeyboardButton(text=frasi["button_testo_progetti_attivi"], callback_data='/progetti')],
 
         [InlineKeyboardButton(text=frasi["button_testo_vademecum"], callback_data='/vademecum'),
-         InlineKeyboardButton(text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
+         InlineKeyboardButton(
+             text=frasi["button_testo_regolamento"], callback_data='/regolamento'),
          InlineKeyboardButton(text=frasi["button_testo_info"], callback_data='/info')],
-        [InlineKeyboardButton(text=frasi["button_feedback"], callback_data='/feedback')],
+        [InlineKeyboardButton(text=frasi["button_feedback"],
+                              callback_data='/feedback')],
     ])
 
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
@@ -436,13 +487,13 @@ def risposte(msg):
                 file_with.write(json.dumps(all_users).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:03 -> " + str(exception_value))
-            stampa_su_file("Except:03 ->" + str(exception_value), True)
+            log("Except:03 ->" + str(exception_value), True)
         try:
             with open(avvisi_on_list_path, "wb") as file_with:
                 file_with.write(json.dumps(avvisi_on_list).encode("utf-8"))
         except Exception as exception_value:
             print("Excep:04 -> " + str(exception_value))
-            stampa_su_file("Except:04 ->" + str(exception_value), True)
+            log("Except:04 ->" + str(exception_value), True)
 
     if user_id in avvisi_on_list:
         stato_avvisi = frasi["avvisiStatoOn"]
@@ -550,7 +601,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOn"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:05 -> " + str(exception_value))
-                stampa_su_file("Except:05 ->" + str(exception_value), True)
+                log("Except:05 ->" + str(exception_value), True)
                 bot.sendMessage(chat_id, frasi["avvisiOn2"], parse_mode="HTML")
         else:
             bot.sendMessage(chat_id, frasi["avvisiOn3"], parse_mode="HTML")
@@ -563,7 +614,7 @@ def risposte(msg):
                 bot.sendMessage(chat_id, frasi["avvisiOff"], parse_mode="HTML")
             except Exception as exception_value:
                 print("Excep:06 -> " + str(exception_value))
-                stampa_su_file("Except:06 ->" + str(exception_value), True)
+                log("Except:06 ->" + str(exception_value), True)
                 bot.sendMessage(
                     chat_id, frasi["avvisiOff2"], parse_mode="HTML")
         else:
@@ -600,13 +651,23 @@ def risposte(msg):
                                 "\n\n" +
                                 "<b>Generali</b>:\n"
                                 "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
-                                "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
-                                "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                                "- <code>/admin avviso preview |Messaggio da inviare|</code>\n  <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                                "- <code>/admin all users |Messaggio importante da inviare|</code>\n  <i>Solo per messaggi importanti, altrimenti usare 'avviso'</i>\n" +
                                 "\n" +
                                 "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                                 "- <code>/admin avvisi list mostra</code>\n" +
-                                "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
-                                "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
+                                "- <code>/admin avvisi list aggiungi |Id chat|</code>\n" +
+                                "- <code>/admin avvisi list elimina |Id chat|</code>\n" +
+                                "\n" +
+                                "<b>Gestione canali</b>:\n" +
+                                "- <code>/admin canale mostra</code>\n" +
+                                "- <code>/admin canale aggiungi |Username canale|</code>\n" +
+                                "- <code>/admin canale elimina |Username canale|</code>\n" +
+                                
+                                "- <code>/admin canale preview |Username canale| |Messaggio da inviare in un canale|</code>\n  <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" + 
+                                "- <code>/admin canale |Username canale| |Messaggio da inviare in un canale|</code>\n" + 
+                                "- <code>/admin canale broadcast |Messaggio da inviare in tutti i canali|</code>\n" + 
+
                                 "\n" +
                                 "<b>Gestione progetti (Mozilla)</b>:\n" +
                                 "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
@@ -630,74 +691,232 @@ def risposte(msg):
                                 "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
                                 "- <code>/admin scarica 2019 10 09</code>",
                                 parse_mode="HTML")
+            # ======
+            # AVVISO
+            # ======
             elif azione[1].lower() == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
                 del azione[0]
                 del azione[0]
-                messaggio = ' '.join(azione)
-                error08 = False
-                bot.sendMessage(
-                    chat_id,
-                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
-                    parse_mode="HTML")
-                remove_these_users = []
-                for value_for in avvisi_on_list:
-                    time.sleep(.3)
+
+                # Syntax : /admin avviso preview |Messaggio da inviare|
+                if azione[0].lower() == "preview" and len(azione) >= 4:
+                    del azione[0]
+                    messaggio = ' '.join(azione)
                     try:
                         bot.sendMessage(
-                            value_for,
+                            chat_id,
+                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
                             messaggio +
                             "\n\n--------------------\n" +
                             frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
-                        print(" >> Messaggio inviato alla chat: " + str(value_for))
-                        '''
+                    except Exception as exception_value:
+                        print("Excep:23 -> " + str(exception_value))
+                        log("Except:23 ->" + str(exception_value), True)
                         bot.sendMessage(
                             chat_id,
-                            "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                            str(value_for) + "</a>",
+                            "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                            "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                             parse_mode="HTML")
-                        '''
-                    except Exception as exception_value:
-                        print("Excep:08 -> " + str(exception_value))
-                        stampa_su_file("Except:08 ->" + str(exception_value), True)
-                        remove_these_users.append(value_for)
-                        error08 = True
-                for value_to_remove in remove_these_users:
-                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
-                if (not error08):
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
                 else:
+                    # Syntax : /admin avviso |Messaggio da inviare|
+                    messaggio = ' '.join(azione)
+                    error08 = False
                     bot.sendMessage(
                         chat_id,
-                        "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
+                        "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
                         parse_mode="HTML")
+                    remove_these_users = []
+                    for value_for in avvisi_on_list:
+                        time.sleep(.3)
+                        try:
+                            bot.sendMessage(
+                                value_for,
+                                messaggio +
+                                "\n\n--------------------\n" +
+                                frasi["footer_messaggio_avviso"],
+                                parse_mode="HTML")
+                            print(" >> Messaggio inviato alla chat: " + str(value_for))
+                            '''
+                            bot.sendMessage(
+                                chat_id,
+                                "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                str(value_for) + "</a>",
+                                parse_mode="HTML")
+                            '''
+                        except Exception as exception_value:
+                            print("Excep:08 -> " + str(exception_value))
+                            log("Except:08 ->" +
+                                str(exception_value), True)
+                            remove_these_users.append(value_for)
+                            error08 = True
+                    for value_to_remove in remove_these_users:
+                        remove_user_from_avvisi_allusers_lists(
+                            chat_id, value_to_remove)
+                    if (not error08):
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
+                    else:
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
 
-            elif azione[1].lower() == "preview" and len(azione) >= 3:
+            # canale => gestisce i canali
+            # syntax: /admin canale mostra
+            # OPPURE
+            # syntax: /admin canale lista
+            elif azione[1].lower() == "canale" and len(azione) >= 3:
                 del azione[0]
                 del azione[0]
-                messaggio = ' '.join(azione)
-                try:
-                    bot.sendMessage(
-                        chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
-                        messaggio +
-                        "\n\n--------------------\n" + frasi["footer_messaggio_avviso"],
-                        parse_mode="HTML")
-                except Exception as exception_value:
-                    print("Excep:23 -> " + str(exception_value))
-                    stampa_su_file("Except:23 ->" + str(exception_value), True)
-                    bot.sendMessage(
-                        chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
-                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
-                        parse_mode="HTML")
 
+                # shows channels saved on file
+                # everytime it reloads the file to avoid uncommon situations
+                if azione[0] == "mostra" or azione[0] == "lista" and len(azione) == 1:
+                    channels_list = load_list_from_path(channels_list_path)
+                    bot.sendMessage(
+                        chat_id, "Lista canali disponibili:\n{}".format(channels_list))
+
+                # preview messaggio canale => non invia il messaggio
+                # syntax: /admin canale preview |canale||messaggio|
+                elif len(azione) >= 4 and azione[0].lower() == "preview":
+                    # delete all the part not-related to the message (preview)
+                    del azione[0]
+
+                    # saves channel name
+                    ch = azione[0]
+                    del azione[0]
+
+                    messaggio = ' '.join(azione)
+
+                    if messaggio != "":
+                        try:
+                            bot.sendMessage(
+                                chat_id,
+                                "<b>== PREVIEW DEL MESSAGGIO ==</b>️\n" +
+                                "<i>Questo messaggio sarà inoltrato in: <code>" + ch + "</code></i>️\n\n"+
+                                messaggio + "\n",
+                                parse_mode="HTML")
+                        except Exception as exception_value:
+                            print("Excep:26 -> " + str(exception_value))
+                            log("Except:26 ->" +
+                                str(exception_value), True)
+                            bot.sendMessage(
+                                chat_id,
+                                "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                                "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                                parse_mode="HTML")
+                    else:
+                        bot.sendMessage(
+                            chat_id,
+                            "‼️ <b>ERRORE</b>: La preview è vuota! Assicurati di inserire un messaggio " +
+                            "e riprova",
+                            parse_mode="HTML")
+                        print("La preview non può essere vuota.")
+
+                # adds a channel in a file
+                # syntax /admin canale aggiungi |username canale|
+                elif azione[0].lower() == "aggiungi" and len(azione) == 2:
+                    # lets fix the username by adding @ at the beginning if not present
+                    fixed_username = fix_username(azione[1]).lower()
+
+                    # lets check if username is not present in the channel_list
+                    if fixed_username not in set(channels_list):
+                        try:
+                            channels_list.append(fixed_username)
+                            with open(channels_list_path, "wb") as channels_list_file:
+                                channels_list_file.write(json.dumps(
+                                    channels_list).encode("utf-8"))
+
+                            bot.sendMessage(
+                                chat_id, "Canale <code>{}</code> aggiunto correttamente".format(fixed_username), parse_mode="HTML")
+                        except Exception as exception_value:
+                            print("Excep:28 -> {}".format(exception_value))
+                            log("Except:28 -> {}".format(exception_value), True)
+                            bot.sendMessage(
+                                chat_id, "Il canale <code>{}</code> non è stato aggiunto in lista".format(fixed_username), parse_mode="HTML")
+                    else:
+                        print("Il canale " + fixed_username + " è già presente!")
+                        bot.sendMessage(
+                            chat_id, "Il canale <code>{}</code> è già presente nella lista!".format(fixed_username), parse_mode="HTML")
+
+
+                # removes a channel in a file
+                # syntax /admin canale elimina |username canale| IN ALTERNATIVA
+                # syntax /admin canale rimuovi |username canale|
+                elif azione[0].lower() == "elimina" or azione[0].lower() == "rimuovi" and len(azione) == 2:
+                    try:
+                        channels_list.remove(fix_username(azione[1]))
+                        with open(channels_list_path, "wb") as channels_list_file:
+                            channels_list_file.write(json.dumps(
+                                channels_list).encode("utf-8"))
+
+                        bot.sendMessage(
+                            chat_id, "Canale <code>{}</code> rimosso correttamente".format(azione[1].lower()), parse_mode="HTML")
+                    except Exception as exception_value:
+                        print("Excep:28 -> {}".format(exception_value))
+                        log("Except:28 -> {}".format(exception_value), True)
+                        bot.sendMessage(
+                            chat_id, "Il canale <code>{}</code> non è stato rimosso dalla lista".format(azione[1].lower()), parse_mode="HTML")
+
+                # canale |canale| |messaggio| => invia il messaggio a quel canale
+                # syntax: /admin canale | canale | |Messaggio da inviare in un canale|"
+                # syntax: /admin canale broadcast |Messaggio da inviare in tutti i canali|"
+                elif len(azione) >= 2 or len(azione) >= 1:
+                    messaggio = ""
+
+                    # check: empty channels
+                    if len(channels_list) == 0:
+                        bot.sendMessage(
+                            chat_id,
+                            "Lista canali vuota! Impossibile inviare un messaggio!",
+                            parse_mode="HTML")
+
+                        print("Lista canali vuota! Impossibile inviare un messaggio!")
+                    else:
+                        if azione[0].lower() == "broadcast":
+                            del azione[0]
+
+                            messaggio = ' '.join(azione)
+
+                            if messaggio != "":
+                                for channel_name in channels_list:
+                                    send_message_channel(
+                                        channel_name, messaggio, chat_id, "Messaggio non inviato in ")
+                            else:
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Messaggio vuoto. Impossibile procedere.",
+                                    parse_mode="HTML")
+
+                                print("Messaggio vuoto. Impossibile procedere.")
+                        else:
+                            # it is not a broadcast message
+                            channel_name = fix_username(azione[0])
+                            del azione[0]
+
+                            messaggio = ' '.join(azione)
+
+                            if messaggio != "":
+                                send_message_channel(
+                                    channel_name, messaggio, chat_id)
+                            else:
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Messaggio vuoto. Impossibile procedere.",
+                                    parse_mode="HTML")
+
+
+                else:
+                    print("Comando non riconosciuto.")
+                    admin_err1 = True
+
+            # /admin all users
             elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
@@ -723,10 +942,12 @@ def risposte(msg):
                             parse_mode="HTML")'''
                     except Exception as exception_value:
                         print("Excep:07 -> " + str(exception_value))
-                        stampa_su_file("Except:07 ->" + str(exception_value), True)
+                        log("Except:07 ->" +
+                            str(exception_value), True)
                         remove_these_users.append(value_for)
                 for value_to_remove in remove_these_users:
-                    remove_user_from_avvisi_allusers_lists(chat_id, value_to_remove)
+                    remove_user_from_avvisi_allusers_lists(
+                        chat_id, value_to_remove)
                 bot.sendMessage(
                     chat_id,
                     "Messaggio inviato correttamente a tutti gli utenti.\n\nIl messaggio inviato è:\n" +
@@ -734,9 +955,10 @@ def risposte(msg):
                     parse_mode="HTML")
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
-                if azione[3] == "mostra":
-                    bot.sendMessage(chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
-                elif azione[3] == "aggiungi":
+                if azione[3].lower() == "mostra":
+                    bot.sendMessage(
+                        chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
+                elif azione[3].lower() == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -755,7 +977,8 @@ def risposte(msg):
                                 "' è stata inserita correttamente.")
                         except Exception as exception_value:
                             print("Excep:12 -> " + str(exception_value))
-                            stampa_su_file("Except:12 ->" + str(exception_value), True)
+                            log("Except:12 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -784,7 +1007,8 @@ def risposte(msg):
                                 "' è stata eliminata correttamente.")
                         except Exception as exception_value:
                             print("Excep:13 -> " + str(exception_value))
-                            stampa_su_file("Except:13 ->" + str(exception_value), True)
+                            log("Except:13 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'avvisi_on_list.json'.")
@@ -821,7 +1045,8 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
-                            stampa_su_file("Except:17 ->" + str(exception_value), True)
+                            log("Except:17 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -851,7 +1076,8 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
-                            stampa_su_file("Except:18 ->" + str(exception_value), True)
+                            log("Except:18 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -874,7 +1100,8 @@ def risposte(msg):
                                 chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
-                            stampa_su_file("Except:19 ->" + str(exception_value), True)
+                            log("Except:19 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_mozita_list.json'.")
@@ -907,7 +1134,8 @@ def risposte(msg):
                                 ") inserito correttamente.")
                         except Exception as exception_value:
                             print("Excep:17 -> " + str(exception_value))
-                            stampa_su_file("Except:17 ->" + str(exception_value), True)
+                            log("Except:17 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -936,7 +1164,8 @@ def risposte(msg):
                                 ") modificato correttamente.")
                         except Exception as exception_value:
                             print("Excep:18 -> " + str(exception_value))
-                            stampa_su_file("Except:18 ->" + str(exception_value), True)
+                            log("Except:18 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -958,7 +1187,8 @@ def risposte(msg):
                                 chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
                             print("Excep:19 -> " + str(exception_value))
-                            stampa_su_file("Except:19 ->" + str(exception_value), True)
+                            log("Except:19 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'progetti_list.json'.")
@@ -969,7 +1199,7 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
                 # Azione sui collaboratori
-                if azione[2] == "aggiungi":
+                if azione[2].lower() == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -984,7 +1214,8 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:20 -> " + str(exception_value))
-                            stampa_su_file("Except:20 ->" + str(exception_value), True)
+                            log("Except:20 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -1009,7 +1240,8 @@ def risposte(msg):
                                 chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:21 -> " + str(exception_value))
-                            stampa_su_file("Except:21 ->" + str(exception_value), True)
+                            log("Except:21 ->" +
+                                str(exception_value), True)
                             bot.sendMessage(
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
@@ -1023,12 +1255,16 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1].lower() == "scarica" and len(azione) == 5:
                 # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
-                nome_file = "log_" + azione[2] + "_" + azione[3] + "_" + azione[4] + ".txt"
+                nome_file = "log_" + azione[2] + "_" + \
+                    azione[3] + "_" + azione[4] + ".txt"
                 if os.path.exists("./history_mozitabot/" + nome_file):
-                    bot.sendMessage(chat_id, "<i>Invio del file " + nome_file + " in corso</i>", parse_mode="HTML")
-                    bot.sendDocument(chat_id, open("./history_mozitabot/" + nome_file, "rb"))
+                    bot.sendMessage(chat_id, "<i>Invio del file " +
+                                    nome_file + " in corso</i>", parse_mode="HTML")
+                    bot.sendDocument(chat_id, open(
+                        "./history_mozitabot/" + nome_file, "rb"))
                 else:
-                    bot.sendMessage(chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
+                    bot.sendMessage(
+                        chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
             else:
                 admin_err1 = True
         else:
@@ -1050,11 +1286,12 @@ def risposte(msg):
             chat_id) + "\n >> >> Tipo messaggio: " + str(type_msg) + "\n >> >> Contenuto messaggio: " + str(
             text)
         print(stampa + "\n--------------------\n")
-        stampa_su_file(stampa, False)
+        log(stampa, False)
     except Exception as exception_value:
-        stampa = "Excep:01 -> " + str(exception_value) + "\n--------------------\n"
+        stampa = "Excep:01 -> " + \
+            str(exception_value) + "\n--------------------\n"
         print(stampa)
-        stampa_su_file("Except:01 ->" + str(exception_value), True)
+        log("Except:01 ->" + str(exception_value), True)
 
 
 try:
@@ -1062,8 +1299,9 @@ try:
     MessageLoop(
         bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
 except Exception as exception_value:
-    print("ERRORE GENERALE.\n\nError: " + str(exception_value) + "\n--------------------\n")
-    stampa_su_file("ERRORE GENERALE.\n\nError: " + str(exception_value), True)
+    print("ERRORE GENERALE.\n\nError: " +
+          str(exception_value) + "\n--------------------\n")
+    log("ERRORE GENERALE.\n\nError: " + str(exception_value), True)
 
 while True:
     time.sleep(10)
