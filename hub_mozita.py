@@ -20,6 +20,12 @@ def load_list_from_path(generic_path):
 def load_dict_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else {}
 
+def fix_username(username):
+    # add @ character if not provided
+    if username[0] != "@":
+        username = "@" + username
+    return username
+
 
 if not os.path.isfile("config.ini"):
     print(
@@ -46,7 +52,7 @@ else:
     exit()
 
 # managing version and last update
-versione = "1.5.2"
+versione = "1.5.3"
 ultimo_aggiornamento = "02-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
@@ -162,34 +168,43 @@ def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
         log("Except:24 ->" + str(exception_value), True)
 
 # send a message in a channel
-def send_message_channel(channel_name, messaggio, chat_id):
+def send_message_channel(channel_name, messaggio, chat_id, optional_text = ""):
+    
     try:
-        bot.sendMessage(channel_name,
+        bot.sendMessage(channel_name.lower(),
                         messaggio,
                         parse_mode="HTML")
 
         bot.sendMessage(
             chat_id,
-            "Messaggio inviato correttamente sul canale.\n\nIl messaggio inviato è:\n" +
+            "Messaggio inviato correttamente sul canale <code>" + channel_name.lower() + "</code>" +
+            ".\n\nIl messaggio inviato è:\n" +
             messaggio,
             parse_mode="HTML")
     except Exception as exception_value:
         print("Excep:25 -> " + str(exception_value))
         log("Except:25 ->" + str(exception_value), True)
+        
+        if optional_text != "":
+            bot.sendMessage(
+                chat_id,
+                optional_text + "canale <code>" + channel_name.lower() + "</code>.\n",
+                parse_mode="HTML"
+            )
+        else:
+            bot.sendMessage(
+                chat_id,
+                "Si è verificato un errore per il canale <code>" + channel_name.lower() + "</code>.\n" +
+                "Controlla che: \n" +
+                "- il bot abbia i privilegi giusti\n" +
+                "- BotFather sia settato correttamente\n" +
+                "- hai aggiunto l'ID nella lista canali (con la @)\n\n" +
+                "Se ancora hai problemi potrebbe trattarsi di un errore momentaneo.\n" +
+                "Riprova più tardi!",
+                parse_mode="HTML"
+            )
 
-        bot.sendMessage(
-            chat_id,
-            "Si è verificato un errore per il canale <code>" + channel_name + "</code>.\n" +
-            "Controlla che: \n" +
-            "- stai specificando il canale <b>utilizzando</b> la @\n" +
-            "ES. @mozitanews <b>e non</b> mozitanews\n" +
-            "- il bot abbia i privilegi giusti\n" +
-            "- BotFather sia settato correttamente\n" +
-            "- hai aggiunto l'ID nella lista canali (con la @)\n\n" +
-            "Se ancora hai problemi potrebbe trattarsi di un errore momentaneo.\n" +
-            "Riprova più tardi!",
-            parse_mode="HTML"
-        )
+        
 
 
 def risposte(msg):
@@ -636,13 +651,8 @@ def risposte(msg):
                                 "\n\n" +
                                 "<b>Generali</b>:\n"
                                 "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
-                                "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                                "- <code>/admin avviso preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
                                 "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
-
-                                "- <code>/admin messaggio preview | nome canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n"
-                                "- <code>/admin messaggio | nome canale | |Messaggio da inviare in un canale|</code>\n"
-                                "- <code>/admin messaggio broadcast |Messaggio da inviare in tutti i canali|</code>\n"
-
                                 "\n" +
                                 "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                                 "- <code>/admin avvisi list mostra</code>\n" +
@@ -653,6 +663,11 @@ def risposte(msg):
                                 "- <code>/admin canale mostra</code>\n" +
                                 "- <code>/admin canale aggiungi |Channel_name|</code>\n" +
                                 "- <code>/admin canale elimina |Channel_name|</code>\n" +
+                                
+                                "- <code>/admin canale preview | username canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" + 
+                                "- <code>/admin canale | username canale | |Messaggio da inviare in un canale|</code>\n" + 
+                                "- <code>/admin canale broadcast |Messaggio da inviare in tutti i canali|</code>\n" + 
+
                                 "\n" +
                                 "<b>Gestione progetti (Mozilla)</b>:\n" +
                                 "- <code>/admin progetto aggiungi |Nome progetto da aggiungere| |LinkProgetto|</code>\n" +
@@ -676,215 +691,232 @@ def risposte(msg):
                                 "- <code>/admin call aggiungi Nome call di esempio 2019 https://mozillaitalia.it</code>\n" +
                                 "- <code>/admin scarica 2019 10 09</code>",
                                 parse_mode="HTML")
+            # ======
+            # AVVISO
+            # ======
             elif azione[1].lower() == "avviso" and len(azione) >= 3:
                 # Azioni sugli avvisi
                 del azione[0]
                 del azione[0]
-                messaggio = ' '.join(azione)
-                error08 = False
-                bot.sendMessage(
-                    chat_id,
-                    "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
-                    parse_mode="HTML")
-                remove_these_users = []
-                for value_for in avvisi_on_list:
-                    time.sleep(.3)
+
+                # Syntax : /admin avviso preview |Messaggio da inviare|
+                if azione[0].lower() == "preview" and len(azione) >= 4:
+                    del azione[0]
+                    messaggio = ' '.join(azione)
                     try:
                         bot.sendMessage(
-                            value_for,
+                            chat_id,
+                            "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
                             messaggio +
                             "\n\n--------------------\n" +
                             frasi["footer_messaggio_avviso"],
                             parse_mode="HTML")
-                        print(" >> Messaggio inviato alla chat: " + str(value_for))
-                        '''
-                        bot.sendMessage(
-                            chat_id,
-                            "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
-                            str(value_for) + "</a>",
-                            parse_mode="HTML")
-                        '''
                     except Exception as exception_value:
-                        print("Excep:08 -> " + str(exception_value))
-                        log("Except:08 ->" +
-                            str(exception_value), True)
-                        remove_these_users.append(value_for)
-                        error08 = True
-                for value_to_remove in remove_these_users:
-                    remove_user_from_avvisi_allusers_lists(
-                        chat_id, value_to_remove)
-                if (not error08):
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
-                else:
-                    bot.sendMessage(
-                        chat_id,
-                        "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
-                        messaggio,
-                        parse_mode="HTML")
-
-            # preview messaggio canale => non invia il messaggio
-            # sintax: /admin messaggio preview |canale||messaggio|
-            elif len(azione) >= 4 and azione[1].lower() == "messaggio" and azione[2].lower() == "preview":
-                # delete all the part not-related to the message
-                del azione[0]
-                del azione[0]
-                del azione[0]
-
-                # saves channel name
-                ch = azione[0]
-                del azione[0]
-
-                messaggio = ' '.join(azione)
-
-                if messaggio != "":
-                    try:
-                        bot.sendMessage(
-                            chat_id,
-                            "<b>== PREVIEW DEL MESSAGGIO ==</b>️\n" +
-                            messaggio + "\n" +
-                            "<b>Verrà inviato nel canale: <code>" + ch + "</code></b>️\n\n",
-                            parse_mode="HTML")
-                    except Exception as exception_value:
-                        print("Excep:26 -> " + str(exception_value))
-                        log("Except:26 ->" +
-                            str(exception_value), True)
+                        print("Excep:23 -> " + str(exception_value))
+                        log("Except:23 ->" + str(exception_value), True)
                         bot.sendMessage(
                             chat_id,
                             "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
                             "Verificare di avere <b>chiuso</b> tutti i tag usati.",
                             parse_mode="HTML")
                 else:
+                    # Syntax : /admin avviso |Messaggio da inviare|
+                    messaggio = ' '.join(azione)
+                    error08 = False
                     bot.sendMessage(
                         chat_id,
-                        "‼️ <b>ERRORE</b>: La preview è vuota! Assicurati di inserire un messaggio " +
-                        "e riprova",
+                        "<i>Invio del messaggio in corso...\nRiceverai un messaggio quando finisce l'invio.</i>",
                         parse_mode="HTML")
-                    print("La preview non può essere vuota.")
-
-            # messaggio |canale| |maessaggio| => invia il messaggio a quel canale
-            # syntax: /admin messaggio | canale | |Messaggio da inviare in un canale|"
-            # syntax: /admin messaggio broadcast |Messaggio da inviare in tutti i canali|"
-            elif len(azione) >= 3 and azione[1].lower() == "messaggio":
-                del azione[0]
-                del azione[0]
-
-                messaggio = ""
-
-                # check: empty channels
-                if len(channels_list) == 0:
-                    bot.sendMessage(
-                        chat_id,
-                        "Lista canali vuota! Impossibile inviare un messaggio!",
-                        parse_mode="HTML")
-
-                    print("Lista canali vuota! Impossibile inviare un messaggio!")
-                else:
-                    if azione[0] == "broadcast":
-                        del azione[0]
-
-                        messaggio = ' '.join(azione)
-
-                        if messaggio != "":
-                            for channel_name in channels_list:
-                                send_message_channel(
-                                    channel_name, messaggio, chat_id)
-                        else:
+                    remove_these_users = []
+                    for value_for in avvisi_on_list:
+                        time.sleep(.3)
+                        try:
+                            bot.sendMessage(
+                                value_for,
+                                messaggio +
+                                "\n\n--------------------\n" +
+                                frasi["footer_messaggio_avviso"],
+                                parse_mode="HTML")
+                            print(" >> Messaggio inviato alla chat: " + str(value_for))
+                            '''
                             bot.sendMessage(
                                 chat_id,
-                                "Messaggio vuoto. Impossibile procedere.",
+                                "✔️ Messaggio inviato alla chat: <a href='tg://user?id=" + str(value_for) + "'>" +
+                                str(value_for) + "</a>",
                                 parse_mode="HTML")
-
-                            print("Messaggio vuoto. Impossibile procedere.")
+                            '''
+                        except Exception as exception_value:
+                            print("Excep:08 -> " + str(exception_value))
+                            log("Except:08 ->" +
+                                str(exception_value), True)
+                            remove_these_users.append(value_for)
+                            error08 = True
+                    for value_to_remove in remove_these_users:
+                        remove_user_from_avvisi_allusers_lists(
+                            chat_id, value_to_remove)
+                    if (not error08):
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente a tutti gli utenti iscritti alle news.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
                     else:
-                        # it is not a broadcast message
-                        channel_name = azione[0]
-                        del azione[0]
-
-                        messaggio = ' '.join(azione)
-
-                        if messaggio != "":
-                            send_message_channel(
-                                channel_name, messaggio, chat_id)
-                        else:
-                            bot.sendMessage(
-                                chat_id,
-                                "Messaggio vuoto. Impossibile procedere.",
-                                parse_mode="HTML")
+                        bot.sendMessage(
+                            chat_id,
+                            "Messaggio inviato correttamente ad alcune chat.\n\nIl messaggio inviato è:\n" +
+                            messaggio,
+                            parse_mode="HTML")
 
             # canale => gestisce i canali
-            # syntax: /admin canale mostra | elimina | aggiungi
+            # syntax: /admin canale mostra
+            # OPPURE
+            # syntax: /admin canale lista
             elif azione[1].lower() == "canale" and len(azione) >= 3:
                 del azione[0]
                 del azione[0]
 
                 # shows channels saved on file
                 # everytime it reloads the file to avoid uncommon situations
-                if azione[0] == "mostra" and len(azione) == 1:
+                if azione[0] == "mostra" or azione[0] == "lista" and len(azione) == 1:
                     channels_list = load_list_from_path(channels_list_path)
                     bot.sendMessage(
                         chat_id, "Lista canali disponibili:\n{}".format(channels_list))
 
-                # adds a channel in a file
-                elif azione[0] == "aggiungi" and len(azione) == 2:
-                    try:
-                        channels_list.append(azione[1])
-                        with open(channels_list_path, "wb") as channels_list_file:
-                            channels_list_file.write(json.dumps(
-                                channels_list).encode("utf-8"))
+                # preview messaggio canale => non invia il messaggio
+                # syntax: /admin canale preview |canale||messaggio|
+                elif len(azione) >= 4 and azione[0].lower() == "preview":
+                    # delete all the part not-related to the message (preview)
+                    del azione[0]
 
+                    # saves channel name
+                    ch = azione[0]
+                    del azione[0]
+
+                    messaggio = ' '.join(azione)
+
+                    if messaggio != "":
+                        try:
+                            bot.sendMessage(
+                                chat_id,
+                                "<b>== PREVIEW DEL MESSAGGIO ==</b>️\n" +
+                                "<i>Questo messaggio sarà inoltrato in: <code>" + ch + "</code></i>️\n\n"+
+                                messaggio + "\n",
+                                parse_mode="HTML")
+                        except Exception as exception_value:
+                            print("Excep:26 -> " + str(exception_value))
+                            log("Except:26 ->" +
+                                str(exception_value), True)
+                            bot.sendMessage(
+                                chat_id,
+                                "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
+                                "Verificare di avere <b>chiuso</b> tutti i tag usati.",
+                                parse_mode="HTML")
+                    else:
                         bot.sendMessage(
-                            chat_id, "Canale {} aggiunto correttamente".format(azione[1]))
-                    except Exception as exception_value:
-                        print("Excep:28 -> {}".format(exception_value))
-                        log("Except:28 -> {}".format(exception_value), True)
+                            chat_id,
+                            "‼️ <b>ERRORE</b>: La preview è vuota! Assicurati di inserire un messaggio " +
+                            "e riprova",
+                            parse_mode="HTML")
+                        print("La preview non può essere vuota.")
+
+                # adds a channel in a file
+                # syntax /admin canale aggiungi |username canale|
+                elif azione[0].lower() == "aggiungi" and len(azione) == 2:
+                    # lets fix the username by adding @ at the beginning if not present
+                    fixed_username = fix_username(azione[1]).lower()
+
+                    # lets check if username is not present in the channel_list
+                    if fixed_username not in set(channels_list):
+                        try:
+                            channels_list.append(fixed_username)
+                            with open(channels_list_path, "wb") as channels_list_file:
+                                channels_list_file.write(json.dumps(
+                                    channels_list).encode("utf-8"))
+
+                            bot.sendMessage(
+                                chat_id, "Canale <code>{}</code> aggiunto correttamente".format(fixed_username), parse_mode="HTML")
+                        except Exception as exception_value:
+                            print("Excep:28 -> {}".format(exception_value))
+                            log("Except:28 -> {}".format(exception_value), True)
+                            bot.sendMessage(
+                                chat_id, "Il canale <code>{}</code> non è stato aggiunto in lista".format(fixed_username), parse_mode="HTML")
+                    else:
+                        print("Il canale " + fixed_username + " è già presente!")
                         bot.sendMessage(
-                            chat_id, "Il canale {} non è stato aggiunto in lista".format(azione[1]))
+                            chat_id, "Il canale <code>{}</code> è già presente nella lista!".format(fixed_username), parse_mode="HTML")
+
 
                 # removes a channel in a file
-                elif azione[0] == "rimuovi" and len(azione) == 2:
+                # syntax /admin canale elimina |username canale| IN ALTERNATIVA
+                # syntax /admin canale rimuovi |username canale|
+                elif azione[0].lower() == "elimina" or azione[0].lower() == "rimuovi" and len(azione) == 2:
                     try:
-                        channels_list.remove(azione[1])
+                        channels_list.remove(fix_username(azione[1]))
                         with open(channels_list_path, "wb") as channels_list_file:
                             channels_list_file.write(json.dumps(
                                 channels_list).encode("utf-8"))
 
                         bot.sendMessage(
-                            chat_id, "Canale {} rimosso correttamente".format(azione[1]))
+                            chat_id, "Canale <code>{}</code> rimosso correttamente".format(azione[1].lower()), parse_mode="HTML")
                     except Exception as exception_value:
                         print("Excep:28 -> {}".format(exception_value))
                         log("Except:28 -> {}".format(exception_value), True)
                         bot.sendMessage(
-                            chat_id, "Il canale {} non è stato rimosso dalla lista".format(azione[1]))
+                            chat_id, "Il canale <code>{}</code> non è stato rimosso dalla lista".format(azione[1].lower()), parse_mode="HTML")
+
+                # canale |canale| |messaggio| => invia il messaggio a quel canale
+                # syntax: /admin canale | canale | |Messaggio da inviare in un canale|"
+                # syntax: /admin canale broadcast |Messaggio da inviare in tutti i canali|"
+                elif len(azione) >= 2 or len(azione) >= 1:
+                    messaggio = ""
+
+                    # check: empty channels
+                    if len(channels_list) == 0:
+                        bot.sendMessage(
+                            chat_id,
+                            "Lista canali vuota! Impossibile inviare un messaggio!",
+                            parse_mode="HTML")
+
+                        print("Lista canali vuota! Impossibile inviare un messaggio!")
+                    else:
+                        if azione[0].lower() == "broadcast":
+                            del azione[0]
+
+                            messaggio = ' '.join(azione)
+
+                            if messaggio != "":
+                                for channel_name in channels_list:
+                                    send_message_channel(
+                                        channel_name, messaggio, chat_id, "Messaggio non inviato in ")
+                            else:
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Messaggio vuoto. Impossibile procedere.",
+                                    parse_mode="HTML")
+
+                                print("Messaggio vuoto. Impossibile procedere.")
+                        else:
+                            # it is not a broadcast message
+                            channel_name = fix_username(azione[0])
+                            del azione[0]
+
+                            messaggio = ' '.join(azione)
+
+                            if messaggio != "":
+                                send_message_channel(
+                                    channel_name, messaggio, chat_id)
+                            else:
+                                bot.sendMessage(
+                                    chat_id,
+                                    "Messaggio vuoto. Impossibile procedere.",
+                                    parse_mode="HTML")
+
 
                 else:
                     print("Comando non riconosciuto.")
                     admin_err1 = True
 
-            elif azione[1].lower() == "preview" and len(azione) >= 3:
-                del azione[0]
-                del azione[0]
-                messaggio = ' '.join(azione)
-                try:
-                    bot.sendMessage(
-                        chat_id,
-                        "<b>‼️‼️ ||PREVIEW DEL MESSAGGIO|| ‼️‼</b>️\n\n" +
-                        messaggio +
-                        "\n\n--------------------\n" +
-                        frasi["footer_messaggio_avviso"],
-                        parse_mode="HTML")
-                except Exception as exception_value:
-                    print("Excep:23 -> " + str(exception_value))
-                    log("Except:23 ->" + str(exception_value), True)
-                    bot.sendMessage(
-                        chat_id,
-                        "‼️ <b>ERRORE</b>: il messaggio contiene degli errori di sintassi.\n" +
-                        "Verificare di avere <b>chiuso</b> tutti i tag usati.",
-                        parse_mode="HTML")
-
+            
             elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
@@ -923,10 +955,10 @@ def risposte(msg):
                     parse_mode="HTML")
             elif azione[1].lower() == "avvisi" and azione[2].lower() == "list" and len(azione) >= 4:
                 # Azioni sugli utenti (chat_id) presenti in avvisi_on_list.json
-                if azione[3] == "mostra":
+                if azione[3].lower() == "mostra":
                     bot.sendMessage(
                         chat_id, "Ecco la 'avvisi_on_list':\n\n" + str(avvisi_on_list))
-                elif azione[3] == "aggiungi":
+                elif azione[3].lower() == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
@@ -1167,7 +1199,7 @@ def risposte(msg):
                     admin_err1 = True
             elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
                 # Azione sui collaboratori
-                if azione[2] == "aggiungi":
+                if azione[2].lower() == "aggiungi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
