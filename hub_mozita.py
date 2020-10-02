@@ -13,8 +13,6 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 # must be defined at the beginning: while refactoring variable initialization must be
 # in another function
-
-
 def load_list_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else []
 
@@ -48,7 +46,7 @@ else:
     exit()
 
 # managing version and last update
-versione = "1.5.1"
+versione = "1.5.2"
 ultimo_aggiornamento = "02-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
@@ -164,8 +162,6 @@ def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
         log("Except:24 ->" + str(exception_value), True)
 
 # send a message in a channel
-
-
 def send_message_channel(channel_name, messaggio, chat_id):
     try:
         bot.sendMessage(channel_name,
@@ -216,6 +212,8 @@ def risposte(msg):
         69903837 -> @Mte90
         75870906 -> @mone27
         810740389 -> @dag7d
+        123150516 -> @edovio
+        161975186 -> @astrastefania
     """
 
     response = bot.getUpdates()
@@ -641,8 +639,8 @@ def risposte(msg):
                                 "- <code>/admin preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
                                 "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
 
-                                "- <code>/admin messaggio preview |canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n"
-                                "- <code>/admin messaggio | canale | |Messaggio da inviare in un canale|</code>\n"
+                                "- <code>/admin messaggio preview | nome canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n"
+                                "- <code>/admin messaggio | nome canale | |Messaggio da inviare in un canale|</code>\n"
                                 "- <code>/admin messaggio broadcast |Messaggio da inviare in tutti i canali|</code>\n"
 
                                 "\n" +
