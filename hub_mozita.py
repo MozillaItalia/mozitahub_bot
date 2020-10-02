@@ -52,8 +52,8 @@ else:
     exit()
 
 # managing version and last update
-versione = "1.5.3"
-ultimo_aggiornamento = "02-10-2020"
+versione = "1.5.4"
+ultimo_aggiornamento = "03-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -651,21 +651,21 @@ def risposte(msg):
                                 "\n\n" +
                                 "<b>Generali</b>:\n"
                                 "- <code>/admin avviso |Messaggio da inviare|</code>\n" +
-                                "- <code>/admin avviso preview |Messaggio da inviare|</code> <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
-                                "- <code>/admin all users |Messaggio importante da inviare|</code> <i>Solo per messaggio importanti, altrimenti usare 'avviso'</i>\n" +
+                                "- <code>/admin avviso preview |Messaggio da inviare|</code>\n  <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" +
+                                "- <code>/admin all users |Messaggio importante da inviare|</code>\n  <i>Solo per messaggi importanti, altrimenti usare 'avviso'</i>\n" +
                                 "\n" +
                                 "<b>Gestione lista degli iscritti agli avvisi</b>\n" +
                                 "- <code>/admin avvisi list mostra</code>\n" +
-                                "- <code>/admin avvisi list aggiungi |Chat_id|</code>\n" +
-                                "- <code>/admin avvisi list elimina |Chat_id|</code>\n" +
+                                "- <code>/admin avvisi list aggiungi |Id chat|</code>\n" +
+                                "- <code>/admin avvisi list elimina |Id chat|</code>\n" +
                                 "\n" +
                                 "<b>Gestione canali</b>:\n" +
                                 "- <code>/admin canale mostra</code>\n" +
-                                "- <code>/admin canale aggiungi |Channel_name|</code>\n" +
-                                "- <code>/admin canale elimina |Channel_name|</code>\n" +
+                                "- <code>/admin canale aggiungi |Username canale|</code>\n" +
+                                "- <code>/admin canale elimina |Username canale|</code>\n" +
                                 
-                                "- <code>/admin canale preview | username canale| |Messaggio da inviare in un canale|</code><i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" + 
-                                "- <code>/admin canale | username canale | |Messaggio da inviare in un canale|</code>\n" + 
+                                "- <code>/admin canale preview |Username canale| |Messaggio da inviare in un canale|</code>\n  <i>Anteprima del messaggio da inviare, per verificare che tutto venga visualizzato correttamente</i>\n" + 
+                                "- <code>/admin canale |Username canale| |Messaggio da inviare in un canale|</code>\n" + 
                                 "- <code>/admin canale broadcast |Messaggio da inviare in tutti i canali|</code>\n" + 
 
                                 "\n" +
@@ -916,7 +916,7 @@ def risposte(msg):
                     print("Comando non riconosciuto.")
                     admin_err1 = True
 
-            
+            # /admin all users
             elif azione[1].lower() == "all" and azione[2].lower() == "users" and len(azione) >= 4:
                 # Azioni sugli avvisi importanti (tutti gli utenti)
                 del azione[0]
