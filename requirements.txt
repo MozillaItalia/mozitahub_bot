@@ -1,1 +1,4 @@
 telepot 
+tweepy
+requests
+threading

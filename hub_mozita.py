@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 import os
 import json
-import calendar
 import time
 import telepot
+import calendar
+import requests
+import threading
 import telegram_events
+import tweepy as ty
 from pathlib import Path
 from datetime import datetime
 from configparser import ConfigParser
@@ -16,7 +19,6 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 def load_list_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else []
 
-
 def load_dict_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else {}
 
@@ -26,23 +28,45 @@ def fix_username(username):
         username = "@" + username
     return username
 
+def safe_conf_get(config_parser, section, key_name):
+    '''
+    returns parsed value if key_name exists in config.ini, null otherwise
+    '''
+    try:
+        return config_parser.get(section, key_name)
+    except Exception:
+        print(key_name + " non presente nella sezione " + section + "!")
+        exit()
 
+######################
+#  LOADING SECRETS   #
+######################
+# managing config.ini
 if not os.path.isfile("config.ini"):
     print(
         "Il file di configurazione non è presente.\n" +
-        "Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci il token.".encode("utf-8"))
+        "Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci i dati mancanti.".encode("utf-8"))
     exit()
 
+# useful object to manage secret values
 script_path = os.path.dirname(os.path.realpath(__file__))
 config_parser = ConfigParser()
 config_parser.read(os.path.join(script_path, "config.ini"))
+localtime = datetime.now()
+data_salvataggio = localtime.strftime("%Y_%m_%d")
+    
+###########################
+#  MANAGING BOT CONSTANTS #
+###########################
+TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
+NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
-# managing token
-TOKEN = config_parser.get("access", "token")
+# managing version and last update
+versione = "1.6.0"
+ultimo_aggiornamento = "03-10-2020"
 
-if TOKEN == "":
-    print("Token non presente.")
-    exit()
+print("(MozItaBot) Versione: " + versione +
+      " - Aggiornamento: " + ultimo_aggiornamento)
 
 # loading sentences from file
 if Path("frasi.json").exists():
@@ -50,15 +74,6 @@ if Path("frasi.json").exists():
 else:
     print("File frasi non presente.")
     exit()
-
-# managing version and last update
-versione = "1.5.4"
-ultimo_aggiornamento = "03-10-2020"
-
-print("(MozItaBot) Versione: " + versione +
-      " - Aggiornamento: " + ultimo_aggiornamento)
-
-response = ""
 
 # setting lists
 all_users_path = "all_users.json"
@@ -81,6 +96,98 @@ all_users = load_list_from_path(all_users_path)
 social_list = load_list_from_path(social_list_path)
 channels_list = load_list_from_path(channels_list_path)
 
+#######################
+# TWITTER INTEGRATION #
+#######################
+# start time from OS
+starttime=time.time()
+
+# init almost everything needed by Twitter
+def twitter_init(config_parser, starttime):
+    # managing twitter tokens
+    CONSUMER_KEY = safe_conf_get(config_parser, "twitter", "CONSUMER_KEY")
+    CONSUMER_SECRET = safe_conf_get(config_parser, "twitter", "CONSUMER_SECRET")
+    ACCESS_TOKEN = safe_conf_get(config_parser, "twitter", "ACCESS_TOKEN")
+    ACCESS_SECRET = safe_conf_get(config_parser, "twitter", "ACCESS_SECRET")
+    TWITTER_REFRESH_TIME = float(safe_conf_get(config_parser, "twitter", "TWITTER_REFRESH_TIME"))
+    TWITTER_SOURCE_ACCOUNT = safe_conf_get(config_parser, "twitter", "TWITTER_SOURCE_ACCOUNT")
+
+    # authorizes the code
+    auth = ty.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
+    twitter_api = ty.API(auth)
+
+    # check if user exists
+    try:
+        twitter_api.get_user(TWITTER_SOURCE_ACCOUNT)
+    except Exception:
+        print("Nome utente Twitter non valido! Assicurati di aver inserito il nome utente giusto e riprova!")
+        log("Nome utente Twitter non valido! Assicurati di aver inserito il nome utente giusto e riprova!", True)
+        exit()
+
+    # tuple: it contains Twitter username and lastpostid
+    user_params = [TWITTER_SOURCE_ACCOUNT,'1']	# 1: dummy value
+
+    threading.Thread(target=fetch_twitter, args=(twitter_api, starttime, TWITTER_REFRESH_TIME, NEWS_CHANNEL, user_params)).start() 
+
+# social function: updates twitter -- used by thread
+def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozitanews", user_params=["MozillaItalia",'1']):
+    channel_username = fix_username(channel_username)
+    """ 
+    function to fetch MozillaItalia's Tweets and post them on a channel
+    """
+    if channel_username not in channels_list:
+        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
+        log("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter errato, non esistente o il bot non ha il permesso di scrivere", True)
+        exit()
+
+    while True:
+        get_user_tweet(twitter_api, channel_username, user_params)
+        time.sleep(seconds - ((time.time() - starttime) % seconds))
+
+# get tweets of a user and post it on a channel
+def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1']):
+    '''
+    get tweets of a user and post it on a channel
+    '''
+    global tweet
+    
+    user = user_params[0]
+    old_id = user_params[1]
+    
+    # fetch user timeline
+    r = twitter_api.user_timeline(user, count=1, tweet_mode='extended')
+    
+    status = twitter_api.get_status(r[0].id, tweet_mode="extended")
+    
+    # update last post id
+    user_params[1] =  "[" + str(r[0].id) + "]"
+
+    if user_params[1] != old_id:
+        try:
+            tweet = status.retweeted_status.full_text
+        except AttributeError:  # Not a Retweet
+            tweet = status.full_text
+        
+        # send the message to mozitanews
+        try:
+            bot.sendMessage(channel_name,
+                            tweet,
+                            parse_mode="HTML")
+        except Exception as exception_value:
+            print("Excep:29 -> " + str(exception_value))
+            log("Except:29 ->" + str(exception_value), True)
+
+        print("Tweet: " + tweet)
+    else:
+        print("Nessun nuovo Tweet. ")
+
+# [TWITTER]: init everything and start
+twitter_init(config_parser, starttime)
+
+##################################################################
+
+response = ""
 
 # array mesi
 listaMesi = [
@@ -208,9 +315,8 @@ def send_message_channel(channel_name, messaggio, chat_id, optional_text = ""):
 
 
 def risposte(msg):
-    localtime = datetime.now()
     global data_salvataggio
-    data_salvataggio = localtime.strftime("%Y_%m_%d")
+    global localtime
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     type_msg = "NM"  # Normal Message
     status_user = "-"  # inizializzazione dello 'status' dell'utente {"A"|"-"}
@@ -1300,8 +1406,9 @@ try:
         bot, {'chat': risposte, 'callback_query': risposte}).run_as_thread()
 except Exception as exception_value:
     print("ERRORE GENERALE.\n\nError: " +
-          str(exception_value) + "\n--------------------\n")
+        str(exception_value) + "\n--------------------\n")
     log("ERRORE GENERALE.\n\nError: " + str(exception_value), True)
 
+# keeps the bot alive
 while True:
-    time.sleep(10)
+    pass
