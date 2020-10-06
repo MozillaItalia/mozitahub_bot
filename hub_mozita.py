@@ -141,7 +141,7 @@ def twitter_init(config_parser, starttime):
         exit()
 
     # tuple: it contains Twitter username and lastpostid
-    user_params = [TWITTER_SOURCE_ACCOUNT,get_last_id_posted()]	# 1: dummy value
+    user_params = [TWITTER_SOURCE_ACCOUNT,get_last_id_posted()]
 
     threading.Thread(target=fetch_twitter, args=(twitter_api, starttime, TWITTER_REFRESH_TIME, NEWS_CHANNEL, user_params)).start() 
 
