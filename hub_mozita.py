@@ -58,7 +58,6 @@ data_salvataggio = localtime.strftime("%Y_%m_%d")
 ###########################
 #  MANAGING BOT CONSTANTS #
 ###########################
-TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
