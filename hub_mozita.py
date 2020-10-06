@@ -2,6 +2,7 @@
 import os
 import json
 import time
+import calendar
 import telepot
 import calendar
 import requests
@@ -63,7 +64,7 @@ NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
 versione = "1.6.0"
-ultimo_aggiornamento = "03-10-2020"
+ultimo_aggiornamento = "06-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -102,6 +103,20 @@ channels_list = load_list_from_path(channels_list_path)
 # start time from OS
 starttime=time.time()
 
+def get_last_id_posted():
+    last_twitter_id_path = "last_twitter_id.json"
+
+    # managing last post id
+    last_post_id = load_list_from_path(last_twitter_id_path)
+    
+    if len(last_post_id) != 1:
+        print("Errore. Non c'e' un id dell'ultimo post salvato da Twitter nel file last_twitter_id.json")
+        print("Rinomina il file last_twitter_id-sample.json, inserisci l'id dell'ultimo post e riprova")
+        exit()
+
+    return last_post_id[0]
+
+
 # init almost everything needed by Twitter
 def twitter_init(config_parser, starttime):
     # managing twitter tokens
@@ -126,7 +141,7 @@ def twitter_init(config_parser, starttime):
         exit()
 
     # tuple: it contains Twitter username and lastpostid
-    user_params = [TWITTER_SOURCE_ACCOUNT,'1']	# 1: dummy value
+    user_params = [TWITTER_SOURCE_ACCOUNT,get_last_id_posted()]	# 1: dummy value
 
     threading.Thread(target=fetch_twitter, args=(twitter_api, starttime, TWITTER_REFRESH_TIME, NEWS_CHANNEL, user_params)).start() 
 
@@ -142,6 +157,8 @@ def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozi
         exit()
 
     while True:
+        user_params[1] = get_last_id_posted()
+
         get_user_tweet(twitter_api, channel_username, user_params)
         time.sleep(seconds - ((time.time() - starttime) % seconds))
 
@@ -157,13 +174,13 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
     
     # fetch user timeline
     r = twitter_api.user_timeline(user, count=1, tweet_mode='extended')
-    
-    status = twitter_api.get_status(r[0].id, tweet_mode="extended")
+    last_tweet_id = r[0].id
+    status = twitter_api.get_status(last_tweet_id, tweet_mode="extended")
     
     # update last post id
-    user_params[1] =  "[" + str(r[0].id) + "]"
-
-    if user_params[1] != old_id:
+    
+    if last_tweet_id != old_id:
+        # defining tweet text depending on the content
         try:
             tweet = status.retweeted_status.full_text
         except AttributeError:  # Not a Retweet
@@ -177,7 +194,16 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
         except Exception as exception_value:
             print("Excep:29 -> " + str(exception_value))
             log("Except:29 ->" + str(exception_value), True)
-
+        
+        # updates last tweet file
+        try:
+            fd = open("last_twitter_id.json", "w")
+            string =  "[" + str(r[0].id) + "]"
+            fd.write(string)
+        except Exception:
+            print("Errore aggiornamento file!")
+            exit()
+        
         print("Tweet: " + tweet)
     else:
         print("Nessun nuovo Tweet. ")
