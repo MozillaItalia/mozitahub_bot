@@ -28,3 +28,4 @@ Questo è l'elenco delle eccezioni gestite nel bot, con la relativa descrizione:
  - 26: Errore in /admin mozitanews preview
  - 27: Errore in /admin canale elimina |channel_name| (channel name non presente in channels_list.json)
  - 28: Errore in /admin canale aggiungi |channel_name|
+ - 29: Errore Twitter: impossibile inviare il tweet nel canale
