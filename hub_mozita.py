@@ -10,7 +10,7 @@ import threading
 import telegram_events
 import tweepy as ty
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from configparser import ConfigParser
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
@@ -338,7 +338,15 @@ def send_message_channel(channel_name, messaggio, chat_id, optional_text = ""):
             )
 
         
-
+def send_log(nome_file, chat_id):
+    if os.path.exists("./history_mozitabot/" + nome_file):
+        bot.sendMessage(chat_id, "<i>Invio del file " +
+                        nome_file + " in corso</i>", parse_mode="HTML")
+        bot.sendDocument(chat_id, open(
+            "./history_mozitabot/" + nome_file, "rb"))
+    else:
+        bot.sendMessage(
+            chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
 
 def risposte(msg):
     global data_salvataggio
@@ -817,6 +825,8 @@ def risposte(msg):
                                 "\n" +
                                 "<b>Scaricare file log di MozItaBot</b>:\n" +
                                 "- <code>/admin scarica |ANNO| |MESE| |GIORNO|</code>\n" +
+                                "- <code>/admin scarica today</code>\n" +
+                                "- <code>/admin scarica yesterday</code>\n" +
                                 "\n" +
                                 "<b>Esempi:</b>\n" +
                                 "- <code>/admin avviso Messaggio di prova</code>\n" +
@@ -1389,14 +1399,17 @@ def risposte(msg):
                 # Azione per scaricare file di log -> esempio: /admin scarica 2019 10 20
                 nome_file = "log_" + azione[2] + "_" + \
                     azione[3] + "_" + azione[4] + ".txt"
-                if os.path.exists("./history_mozitabot/" + nome_file):
-                    bot.sendMessage(chat_id, "<i>Invio del file " +
-                                    nome_file + " in corso</i>", parse_mode="HTML")
-                    bot.sendDocument(chat_id, open(
-                        "./history_mozitabot/" + nome_file, "rb"))
-                else:
-                    bot.sendMessage(
-                        chat_id, "Il file <i>" + nome_file + "</i> non esiste.", parse_mode="HTML")
+                send_log(nome_file, chat_id)
+            elif azione[1].lower() == "scarica" and azione[2].lower() == "today":
+                # Azione per scaricare file di log di oggi
+                nome_file = "log_" + data_salvataggio + ".txt"
+                send_log(nome_file, chat_id)
+            elif azione[1].lower() == "scarica" and azione[2].lower() == "yesterday":
+                # Azione per scaricare file di log di ieri
+                yesterday_time = datetime.now() - timedelta(days = 1)
+                data_ieri = yesterday_time.strftime("%Y_%m_%d")
+                nome_file = "log_" + data_ieri + ".txt"
+                send_log(nome_file, chat_id)
             else:
                 admin_err1 = True
         else:
