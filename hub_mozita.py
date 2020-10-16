@@ -493,7 +493,7 @@ def risposte(msg):
         [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
                               url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/mozItaL10n')],
+         InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
         [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
          InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
         [InlineKeyboardButton(
@@ -514,8 +514,8 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    l10n = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_l10n"],
+    L10n = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_L10n"],
                               url='https://t.me/mozItaL10n')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
@@ -721,9 +721,9 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
-    elif text.lower() == "/l10n":
-        bot.sendMessage(chat_id, frasi["l10n"],
-                        reply_markup=l10n, parse_mode="HTML")
+    elif text.lower() == "/L10n":
+        bot.sendMessage(chat_id, frasi["L10n"],
+                        reply_markup=L10n, parse_mode="HTML")
     elif text.lower() == "/iot":
         bot.sendMessage(chat_id, frasi["iot"],
                         reply_markup=iot, parse_mode="HTML")
