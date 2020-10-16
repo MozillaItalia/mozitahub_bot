@@ -153,8 +153,8 @@ def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozi
     function to fetch MozillaItalia's Tweets and post them on a channel
     """
     if channel_username not in channels_list:
-        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
-        log("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter errato, non esistente o il bot non ha il permesso di scrivere", True)
+        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
+        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
         exit()
 
     while True:
@@ -493,7 +493,7 @@ def risposte(msg):
         [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
                               url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/mozItaL10n')],
         [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
          InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
         [InlineKeyboardButton(
@@ -514,6 +514,13 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
+    l10n = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_l10n"],
+                              url='https://t.me/mozItaL10n')],
+        [InlineKeyboardButton(
+            text=frasi["button_mostra_help"], callback_data='/help')],
+    ])
+
     iot = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
@@ -524,6 +531,7 @@ def risposte(msg):
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
          InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
+         [InlineKeyboardButton(text=frasi["button_cv"], callback_data='/vademecumCV')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -680,7 +688,7 @@ def risposte(msg):
         bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf", "rb"))
     elif text.lower() == "/vademecumCV".lower():
-        bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
+        bot.sendMessage(chat_id, frasi["invio_cv_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("CV.pdf", "rb"))
     elif text.lower() == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"],
@@ -713,6 +721,9 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
+    elif text.lower() == "/l10n":
+        bot.sendMessage(chat_id, frasi["l10n"],
+                        reply_markup=l10n, parse_mode="HTML")
     elif text.lower() == "/iot":
         bot.sendMessage(chat_id, frasi["iot"],
                         reply_markup=iot, parse_mode="HTML")

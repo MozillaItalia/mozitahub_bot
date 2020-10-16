@@ -1,12 +1,11 @@
 {
-  "Common Voice": "https://voice.mozilla.org/it",
+  "Common Voice": "https://commonvoice.mozilla.org/it",
   "Firefox Desktop": "https://www.mozilla.org/it/firefox/new/",
   "Firefox Fire Tv": "https://www.amazon.it/Mozilla-Firefox-for-Fire-TV/dp/B078B5YMPD",
-  "Firefox Focus": "https://support.mozilla.org/it/kb/firefox-focus-android",
   "Firefox Mobile": "https://www.mozilla.org/it/firefox/mobile/",
-  "Firefox Reality": "https://play.google.com/store/apps/details?id=org.mozilla.vrbrowser",
-  "Firefox Lockwise": "https://itunes.apple.com/us/app/firefox-lockbox/id1314000270?ls=1&mt=8",
-  "Firefox ScreenshotGo (Beta)": "https://play.google.com/store/apps/details?id=org.mozilla.screenshot.go&hl=it",
+  "Firefox Monitor": "https://monitor.firefox.com/",
+  "Firefox Lockwise": "https://www.mozilla.org/it/firefox/lockwise/",
   "IHR (Internet Health Report)": "https://internethealthreport.org/",
-  "MDN (Mozilla Developer Network)": "https://developer.mozilla.org/it/"
+  "MDN Web Docs": "https://developer.mozilla.org/it/",
+  "Mozilla Voice": "https://voice.mozilla.org/"
 }
