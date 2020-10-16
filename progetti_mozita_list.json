@@ -1,8 +1,8 @@
 {
-  "Vademecum Generale e Tecnico": "https://github.com/MozillaItalia/firefox-vademecum",
+  "Common Voice Tool": "https://github.com/dag7dev/common-voice-tool",
+  "Frasi Common Voice (italiane)": "https://github.com/MozillaItalia/voice-web/tree/ita-review",
   "Mozilla Italia Hub Bot": "https://github.com/Sav22999/mozitahub_bot",
   "Mozilla Italia Antispam Bot": "https://github.com/Sav22999/mozitaantispam_bot",
   "Mozilla Italia MyUserId Bot": "https://github.com/Sav22999/mozitamyuserid_bot",
-  "Frasi Common Voice (italiane)": "https://github.com/MozillaItalia/voice-web/tree/ita-review",
-  "Common Voice Tool": "https://github.com/dag7dev/common-voice-tool"
+  "Vademecum Generale / Tecnico / Common Voice": "https://github.com/MozillaItalia/firefox-vademecum"
 }

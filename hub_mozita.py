@@ -3,6 +3,7 @@ import os
 import json
 import time
 import calendar
+import datetime
 import telepot
 import calendar
 import requests
@@ -63,8 +64,8 @@ TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
-versione = "1.6.0"
-ultimo_aggiornamento = "06-10-2020"
+versione = "1.6.1"
+ultimo_aggiornamento = "16-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -198,7 +199,6 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
                                     text=frasi["view tweet"],
                                     url = tweet_url)]]))
             
-
             # updates last tweet file
             try:
                 fd = open("last_twitter_id.json", "w")
@@ -359,7 +359,7 @@ def send_log(nome_file, chat_id):
 def risposte(msg):
     global data_salvataggio
     global localtime
-    localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
+    localtime = (datetime.now()).strftime("%d/%m/%y %H:%M:%S")
     type_msg = "NM"  # Normal Message
     status_user = "-"  # inizializzazione dello 'status' dell'utente {"A"|"-"}
     # Admin, Other
