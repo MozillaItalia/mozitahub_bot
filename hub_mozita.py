@@ -182,29 +182,37 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
     if last_tweet_id != old_id:
         # defining tweet text depending on the content
         try:
-            tweet = status.retweeted_status.full_text
+            tweet = "RT: " + status.retweeted_status.full_text
         except AttributeError:  # Not a Retweet
             tweet = status.full_text
         
-        # send the message to mozitanews
+        tweet_url = "https://twitter.com/" + user + "/status/" + str(status.id)
+
+        # send message to mozitanews
         try:
             bot.sendMessage(channel_name,
                             tweet,
-                            parse_mode="HTML")
+                            parse_mode="HTML",
+                            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                [InlineKeyboardButton(
+                                    text=frasi["view tweet"],
+                                    url = tweet_url)]]))
+            
+
+            # updates last tweet file
+            try:
+                fd = open("last_twitter_id.json", "w")
+                string =  "[" + str(r[0].id) + "]"
+                fd.write(string)
+            except Exception:
+                print("Errore aggiornamento file!")
+                exit()
+            
+            print("Tweet -> " + tweet)
+
         except Exception as exception_value:
             print("Excep:29 -> " + str(exception_value))
             log("Except:29 ->" + str(exception_value), True)
-        
-        # updates last tweet file
-        try:
-            fd = open("last_twitter_id.json", "w")
-            string =  "[" + str(r[0].id) + "]"
-            fd.write(string)
-        except Exception:
-            print("Errore aggiornamento file!")
-            exit()
-        
-        print("Tweet: " + tweet)
     else:
         print("Nessun nuovo Tweet. ")
 
@@ -669,6 +677,9 @@ def risposte(msg):
     elif text.lower() == "/vademecumTecnico".lower():
         bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf", "rb"))
+    elif text.lower() == "/vademecumCV".lower():
+        bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
+        bot.sendDocument(chat_id, open("CV.pdf", "rb"))
     elif text.lower() == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"],
                         reply_markup=feedback, parse_mode="HTML")
