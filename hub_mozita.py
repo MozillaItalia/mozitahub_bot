@@ -721,7 +721,7 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
-    elif text.lower() == "/L10n":
+    elif text.lower() == "/l10n":
         bot.sendMessage(chat_id, frasi["L10n"],
                         reply_markup=L10n, parse_mode="HTML")
     elif text.lower() == "/iot":
