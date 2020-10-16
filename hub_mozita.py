@@ -359,7 +359,6 @@ def send_log(nome_file, chat_id):
 def risposte(msg):
     global data_salvataggio
     global localtime
-    localtime = (datetime.now()).strftime("%d/%m/%y %H:%M:%S")
     localtime = localtime.strftime("%d/%m/%y %H:%M:%S")
     type_msg = "NM"  # Normal Message
     status_user = "-"  # inizializzazione dello 'status' dell'utente {"A"|"-"}
