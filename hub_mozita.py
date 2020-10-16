@@ -3,6 +3,7 @@ import os
 import json
 import time
 import calendar
+import datetime
 import telepot
 import calendar
 import requests
@@ -63,8 +64,8 @@ TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
-versione = "1.6.0"
-ultimo_aggiornamento = "06-10-2020"
+versione = "1.6.1"
+ultimo_aggiornamento = "16-10-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -152,8 +153,8 @@ def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozi
     function to fetch MozillaItalia's Tweets and post them on a channel
     """
     if channel_username not in channels_list:
-        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
-        log("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter errato, non esistente o il bot non ha il permesso di scrivere", True)
+        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
+        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
         exit()
 
     while True:
@@ -182,29 +183,36 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
     if last_tweet_id != old_id:
         # defining tweet text depending on the content
         try:
-            tweet = status.retweeted_status.full_text
+            tweet = "RT: " + status.retweeted_status.full_text
         except AttributeError:  # Not a Retweet
             tweet = status.full_text
         
-        # send the message to mozitanews
+        tweet_url = "https://twitter.com/" + user + "/status/" + str(status.id)
+
+        # send message to mozitanews
         try:
             bot.sendMessage(channel_name,
                             tweet,
-                            parse_mode="HTML")
+                            parse_mode="HTML",
+                            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                                [InlineKeyboardButton(
+                                    text=frasi["view tweet"],
+                                    url = tweet_url)]]))
+            
+            # updates last tweet file
+            try:
+                fd = open("last_twitter_id.json", "w")
+                string =  "[" + str(r[0].id) + "]"
+                fd.write(string)
+            except Exception:
+                print("Errore aggiornamento file!")
+                exit()
+            
+            print("Tweet -> " + tweet)
+
         except Exception as exception_value:
             print("Excep:29 -> " + str(exception_value))
             log("Except:29 ->" + str(exception_value), True)
-        
-        # updates last tweet file
-        try:
-            fd = open("last_twitter_id.json", "w")
-            string =  "[" + str(r[0].id) + "]"
-            fd.write(string)
-        except Exception:
-            print("Errore aggiornamento file!")
-            exit()
-        
-        print("Tweet: " + tweet)
     else:
         print("Nessun nuovo Tweet. ")
 
@@ -485,7 +493,7 @@ def risposte(msg):
         [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
                               url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text=frasi["button_testo_l10n"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
+         InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
         [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
          InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
         [InlineKeyboardButton(
@@ -506,6 +514,13 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
+    L10n = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_L10n"],
+                              url='https://t.me/mozItaL10n')],
+        [InlineKeyboardButton(
+            text=frasi["button_mostra_help"], callback_data='/help')],
+    ])
+
     iot = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
@@ -516,6 +531,7 @@ def risposte(msg):
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
          InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
+         [InlineKeyboardButton(text=frasi["button_cv"], callback_data='/vademecumCV')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -671,6 +687,9 @@ def risposte(msg):
     elif text.lower() == "/vademecumTecnico".lower():
         bot.sendMessage(chat_id, frasi["invio_vt_in_corso"], parse_mode="HTML")
         bot.sendDocument(chat_id, open("VT.pdf", "rb"))
+    elif text.lower() == "/vademecumCV".lower():
+        bot.sendMessage(chat_id, frasi["invio_cv_in_corso"], parse_mode="HTML")
+        bot.sendDocument(chat_id, open("CV.pdf", "rb"))
     elif text.lower() == "/feedback":
         bot.sendMessage(chat_id, frasi["feedback"],
                         reply_markup=feedback, parse_mode="HTML")
@@ -702,6 +721,9 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
+    elif text.lower() == "/l10n":
+        bot.sendMessage(chat_id, frasi["L10n"],
+                        reply_markup=L10n, parse_mode="HTML")
     elif text.lower() == "/iot":
         bot.sendMessage(chat_id, frasi["iot"],
                         reply_markup=iot, parse_mode="HTML")
