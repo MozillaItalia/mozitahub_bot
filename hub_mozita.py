@@ -154,7 +154,6 @@ def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozi
     """
     if channel_username not in channels_list:
         print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
-        print("Errore! Il canale destinazione dove inoltrare i nuovi post di Twitter è errato, non esiste, non esiste nella channel_list.json o il bot non ha il permesso di scrivere! Assicurati di aver specificato l'username giusto in config.ini")
         exit()
 
     while True:
