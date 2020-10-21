@@ -12,6 +12,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
+    steps:  
+    - name: Checkout repo
+      uses: actions/checkout@v2
     - name: run tests
       run: python3 -m unittest -v tests.test_telegram_events
