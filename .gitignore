@@ -6,3 +6,4 @@ history_mozitabot/*
 all_users.json
 avvisi_on_list.json
 last_twitter_id.json
+/venv/
