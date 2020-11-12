@@ -489,12 +489,9 @@ def risposte(msg):
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_testo_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
          InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
-        [InlineKeyboardButton(text=frasi["button_testo_vog_div_volontario"],
-                              url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
          InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
-        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
-         InlineKeyboardButton(text=frasi["button_testo_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
+        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -520,13 +517,6 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    iot = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(
-            text=frasi["button_iot"], url='https://t.me/joinchat/B1cgtEzLzr0gvSJcEicq1g')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
     vademecum = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_vg"], callback_data='/vademecumGenerale'),
          InlineKeyboardButton(text=frasi["button_vt"], callback_data='/vademecumTecnico')],
@@ -534,21 +524,6 @@ def risposte(msg):
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
-
-    collabora = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=frasi["button_collabora"],
-                    url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-                InlineKeyboardButton(
-                    text=frasi["button_collabora2"],
-                    url='https://t.me/joinchat/B1cgtEQAHkGVBTbI0XPd-A')],
-            [
-                InlineKeyboardButton(
-                    text=frasi["button_mostra_help"],
-                    callback_data='/help')],
-        ])
 
     news = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_news"],
@@ -565,8 +540,6 @@ def risposte(msg):
     ])
 
     call = InlineKeyboardMarkup(inline_keyboard=[
-        # [InlineKeyboardButton(text=frasi["button_call"],
-        # callback_data='/listacall')],
         [InlineKeyboardButton(text=frasi["button_vai_a_canale_youtube"],
                               url='https://www.youtube.com/channel/UCsTquqVS0AJxCf4D3n9hQ1w')],
         [InlineKeyboardButton(text=frasi["button_call2"],
@@ -617,20 +590,6 @@ def risposte(msg):
 
     social = InlineKeyboardMarkup(inline_keyboard=load_social)
 
-    '''
-    mostra_menu_principale = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-    '''
-
-    '''
-    nome_nome = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text='Testo bottone (riga 1, col 1)', callback_data='/comando'),
-                    InlineKeyboardButton(text='Testo bottone 2 (riga 1, col 2)', callback_data='/comando2')],
-                    [InlineKeyboardButton(text='Testo bottone 3 (riga 2, col 1-2)', url='https://t.me/')],
-                ])
-    '''
-
     admin = False
     collaboratori_stampa = ""
     for value_for in sorted(collaboratori_hub):
@@ -673,10 +632,6 @@ def risposte(msg):
     elif text.lower() == "/gruppi":
         bot.sendMessage(chat_id, frasi["gruppi"],
                         reply_markup=gruppi, parse_mode="HTML")
-    elif text.lower() == "/collabora":
-        bot.sendMessage(chat_id, frasi["collabora"], parse_mode="HTML")
-        bot.sendMessage(chat_id, frasi["collabora2"],
-                        reply_markup=collabora, parse_mode="HTML")
     elif text.lower() == "/vademecum":
         bot.sendMessage(chat_id, frasi["vademecum"],
                         reply_markup=vademecum, parse_mode="HTML")
@@ -723,9 +678,6 @@ def risposte(msg):
     elif text.lower() == "/l10n":
         bot.sendMessage(chat_id, frasi["L10n"],
                         reply_markup=L10n, parse_mode="HTML")
-    elif text.lower() == "/iot":
-        bot.sendMessage(chat_id, frasi["iot"],
-                        reply_markup=iot, parse_mode="HTML")
     elif text.lower() == "/call" or text.lower() == "/meeting":
         bot.sendMessage(chat_id, frasi["call"],
                         reply_markup=call, parse_mode="HTML")
