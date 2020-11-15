@@ -64,8 +64,8 @@ TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
-versione = "1.6.1"
-ultimo_aggiornamento = "16-10-2020"
+versione = "1.6.2"
+ultimo_aggiornamento = "15-11-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
