@@ -2,12 +2,11 @@
 import os
 import json
 import time
-import calendar
 import datetime
+from typing import Tuple
 import telepot
 import calendar
-import requests
-import threading
+from threading import Thread
 import telegram_events
 import tweepy as ty
 from pathlib import Path
@@ -64,8 +63,11 @@ TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
-versione = "1.6.2"
-ultimo_aggiornamento = "15-11-2020"
+versione = "1.6.3"
+ultimo_aggiornamento = "16-11-2020"
+
+# it contains all the data about next meeting => gg mm aaaa hh mm
+call_data: Tuple[str, str, str, str, str] = ("11", "12", "2020", "18", "30")
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -144,7 +146,7 @@ def twitter_init(config_parser, starttime):
     # tuple: it contains Twitter username and lastpostid
     user_params = [TWITTER_SOURCE_ACCOUNT,get_last_id_posted()]
 
-    threading.Thread(target=fetch_twitter, args=(twitter_api, starttime, TWITTER_REFRESH_TIME, NEWS_CHANNEL, user_params)).start() 
+    Thread(target=fetch_twitter, args=(twitter_api, starttime, TWITTER_REFRESH_TIME, NEWS_CHANNEL, user_params)).start()
 
 # social function: updates twitter -- used by thread
 def fetch_twitter(twitter_api, starttime, seconds=300.0, channel_username="@mozitanews", user_params=["MozillaItalia",'1']):
@@ -415,26 +417,6 @@ def risposte(msg):
         msg = msg["message"]
     chat_id = msg['chat']['id']
 
-    if datetime.now().month == 12:
-        anno_call = str(datetime.now().year + 1)
-        mese_call = listaMesi[0]
-        giorno_call = str(first_friday_of_the_month(int(anno_call), 1))
-    else:
-        anno_call = str(datetime.now().year)
-        giorno_call = first_friday_of_the_month(
-            int(anno_call), datetime.now().month)
-        if datetime.now().day >= giorno_call:
-            mese_call = datetime.now().month + 1
-            giorno_call = str(first_friday_of_the_month(
-                int(anno_call), datetime.now().month + 1))
-        else:
-            mese_call = datetime.now().month
-            giorno_call = str(giorno_call)
-        mese_call = listaMesi[mese_call - 1]
-        # non è possibile utilizzare la funzione
-        # datetime.now().(month+1).strftime("%B") perché lo restituisce in
-        # inglese
-
     home = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_vai_a_home"],
                               url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ')],
@@ -491,7 +473,8 @@ def risposte(msg):
          InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
          InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
-        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
+         InlineKeyboardButton(text=frasi["button_testo_marketing"], url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -506,6 +489,13 @@ def risposte(msg):
     design = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_design"],
                               url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(
+            text=frasi["button_mostra_help"], callback_data='/help')],
+    ])
+
+    marketing = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_marketing"],
+                              url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -675,6 +665,9 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
+    elif text.lower() == "/marketing":
+        bot.sendMessage(chat_id, frasi["marketing"],
+                        reply_markup=marketing, parse_mode="HTML")
     elif text.lower() == "/l10n":
         bot.sendMessage(chat_id, frasi["L10n"],
                         reply_markup=L10n, parse_mode="HTML")
@@ -684,15 +677,9 @@ def risposte(msg):
     elif text.lower() == "/prossimacall" or text.lower() == "/prossimoMeeting".lower():
         bot.sendMessage(
             chat_id,
-            str(
-                ((frasi["prossima_call"]).replace(
-                    "{{**giorno_call**}}",
-                    str(giorno_call))).replace(
-                    "{{**mese_call**}}",
-                    str(mese_call))).replace(
-                "{{**anno_call**}}",
-                str(anno_call)),
-            parse_mode="HTML")
+            frasi['prossima_call'].format(call_data[0], call_data[1], call_data[2], call_data[3], call_data[4]),
+            parse_mode="HTML",
+            reply_markup=home)
     elif text.lower() == "/progetti":
         bot.sendMessage(chat_id, frasi["progetti"],
                         reply_markup=progetti, parse_mode="HTML")
