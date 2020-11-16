@@ -17,6 +17,36 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 # must be defined at the beginning: while refactoring variable initialization must be
 # in another function
+
+def log(stampa, err):
+    '''
+    log: log function
+    '''
+    global response, data_salvataggio
+    if err:
+        stampa = str(response) + "\n\n" + str(stampa)
+    stampa = stampa + "\n--------------------\n"
+    try:
+        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
+        if os.path.exists("./history_mozitabot") == False:
+            os.mkdir("./history_mozitabot")
+    except Exception as exception_value:
+        print("Excep:22 -> " + str(exception_value))
+        log("Except:22 ->" + str(exception_value), True)
+
+    try:
+        # apre il file in scrittura "append" per inserire orario e data -> log
+        # di utilizzo del bot (ANONIMO)
+        file = open("./history_mozitabot/log_" +
+                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
+        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
+        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
+        file.write(stampa)
+        file.close()
+    except Exception as exception_value:
+        print("Excep:02 -> " + str(exception_value))
+        log("Except:02 ->" + str(exception_value), True)
+
 def load_list_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else []
 
@@ -248,38 +278,6 @@ def first_friday_of_the_month(year, month):
                 return day
             else:
                 return day + 7
-
-
-'''
-log: log function
-'''
-
-
-def log(stampa, err):
-    global response, data_salvataggio
-    if err:
-        stampa = str(response) + "\n\n" + str(stampa)
-    stampa = stampa + "\n--------------------\n"
-    try:
-        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
-        if os.path.exists("./history_mozitabot") == False:
-            os.mkdir("./history_mozitabot")
-    except Exception as exception_value:
-        print("Excep:22 -> " + str(exception_value))
-        log("Except:22 ->" + str(exception_value), True)
-
-    try:
-        # apre il file in scrittura "append" per inserire orario e data -> log
-        # di utilizzo del bot (ANONIMO)
-        file = open("./history_mozitabot/log_" +
-                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
-        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
-        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
-        file.write(stampa)
-        file.close()
-    except Exception as exception_value:
-        print("Excep:02 -> " + str(exception_value))
-        log("Except:02 ->" + str(exception_value), True)
 
 
 def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
