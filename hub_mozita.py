@@ -2,11 +2,9 @@
 import os
 import json
 import time
-import calendar
 import datetime
-import telepot
 import calendar
-import requests
+import telepot
 import threading
 import telegram_events
 import tweepy as ty
@@ -18,6 +16,35 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 # must be defined at the beginning: while refactoring variable initialization must be
 # in another function
+def log(stampa, err):
+    '''
+    log: log function
+    '''
+    global response, data_salvataggio
+    if err:
+        stampa = str(response) + "\n\n" + str(stampa)
+    stampa = stampa + "\n--------------------\n"
+    try:
+        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
+        if os.path.exists("./history_mozitabot") == False:
+            os.mkdir("./history_mozitabot")
+    except Exception as exception_value:
+        print("Excep:22 -> " + str(exception_value))
+        log("Except:22 ->" + str(exception_value), True)
+
+    try:
+        # apre il file in scrittura "append" per inserire orario e data -> log
+        # di utilizzo del bot (ANONIMO)
+        file = open("./history_mozitabot/log_" +
+                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
+        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
+        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
+        file.write(stampa)
+        file.close()
+    except Exception as exception_value:
+        print("Excep:02 -> " + str(exception_value))
+        log("Except:02 ->" + str(exception_value), True)
+
 def load_list_from_path(generic_path):
     return json.loads(open(generic_path).read()) if Path(generic_path).exists() else []
 
@@ -64,8 +91,8 @@ TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 
 # managing version and last update
-versione = "1.6.2"
-ultimo_aggiornamento = "15-11-2020"
+versione = "1.6.3"
+ultimo_aggiornamento = "18-11-2020"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -246,38 +273,6 @@ def first_friday_of_the_month(year, month):
                 return day
             else:
                 return day + 7
-
-
-'''
-log: log function
-'''
-
-
-def log(stampa, err):
-    global response, data_salvataggio
-    if err:
-        stampa = str(response) + "\n\n" + str(stampa)
-    stampa = stampa + "\n--------------------\n"
-    try:
-        # verifica l'esistenza del filela cartella "history_mozitabot", altrimenti la crea
-        if os.path.exists("./history_mozitabot") == False:
-            os.mkdir("./history_mozitabot")
-    except Exception as exception_value:
-        print("Excep:22 -> " + str(exception_value))
-        log("Except:22 ->" + str(exception_value), True)
-
-    try:
-        # apre il file in scrittura "append" per inserire orario e data -> log
-        # di utilizzo del bot (ANONIMO)
-        file = open("./history_mozitabot/log_" +
-                    str(data_salvataggio) + ".txt", "a", -1, "UTF-8")
-        # ricordare che l'orario è in fuso orario UTC pari a 0 (Greenwich,
-        # Londra) - mentre l'Italia è a +1 (CET) o +2 (CEST - estate)
-        file.write(stampa)
-        file.close()
-    except Exception as exception_value:
-        print("Excep:02 -> " + str(exception_value))
-        log("Except:02 ->" + str(exception_value), True)
 
 
 def remove_user_from_avvisi_allusers_lists(chat_id, userid_to_remove):
@@ -491,7 +486,8 @@ def risposte(msg):
          InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
         [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
          InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
-        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
+         InlineKeyboardButton(text=frasi["button_testo_marketing"], url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -506,6 +502,13 @@ def risposte(msg):
     design = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_design"],
                               url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
+        [InlineKeyboardButton(
+            text=frasi["button_mostra_help"], callback_data='/help')],
+    ])
+
+    marketing = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_marketing"],
+                              url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -675,6 +678,9 @@ def risposte(msg):
     elif text.lower() == "/design":
         bot.sendMessage(chat_id, frasi["design"],
                         reply_markup=design, parse_mode="HTML")
+    elif text.lower() == "/marketing":
+        bot.sendMessage(chat_id, frasi["marketing"],
+                        reply_markup=marketing, parse_mode="HTML")
     elif text.lower() == "/l10n":
         bot.sendMessage(chat_id, frasi["L10n"],
                         reply_markup=L10n, parse_mode="HTML")
