@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from configparser import ConfigParser
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+from datetime import datetime
 
 # must be defined at the beginning: while refactoring variable initialization must be
 # in another function
@@ -196,6 +197,10 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
     '''
     global tweet
     
+    # get current date and time for time stamp and properly format it
+    now = datetime.now()
+    date_time = now.strftime("%d-%m-%Y %H:%M:%S")
+    
     user = user_params[0]
     old_id = user_params[1]
     
@@ -234,13 +239,13 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
                 print("Errore aggiornamento file!")
                 exit()
             
-            print("Tweet -> " + tweet)
+            print("[" + date_time + "] " + "Tweet -> " + tweet)
 
         except Exception as exception_value:
             print("Excep:29 -> " + str(exception_value))
             log("Except:29 ->" + str(exception_value), True)
     else:
-        print("Nessun nuovo Tweet. ")
+        print("[" + date_time + "] " + "Nessun nuovo Tweet. ")
 
 # [TWITTER]: init everything and start
 twitter_init(config_parser, starttime)
