@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 from configparser import ConfigParser
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-from datetime import datetime
 
 # must be defined at the beginning: while refactoring variable initialization must be
 # in another function
