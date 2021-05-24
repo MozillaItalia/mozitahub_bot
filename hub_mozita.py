@@ -247,7 +247,7 @@ def get_user_tweet(twitter_api, channel_name, user_params=["MozillaItalia",'1'])
         print("[" + date_time + "] " + "Nessun nuovo Tweet. ")
 
 # [TWITTER]: init everything and start
-twitter_init(config_parser, starttime)
+# twitter_init(config_parser, starttime)
 
 ##################################################################
 
