@@ -1,4 +1,2 @@
 telepot 
 tweepy
-requests
-threading
