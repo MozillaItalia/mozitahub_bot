@@ -74,7 +74,7 @@ def safe_conf_get(config_parser, section, key_name):
 if not os.path.isfile("config.ini"):
     print(
         "Il file di configurazione non è presente.\n" +
-        "Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci i dati mancanti.".encode("utf-8"))
+        "Rinomina il file 'config-sample.ini' in 'config.ini' e inserisci i dati mancanti.")
     exit()
 
 # useful object to manage secret values
@@ -111,32 +111,28 @@ else:
     print("File frasi non presente.")
     exit()
 
-# setting lists
+# setting lists --- almost everything is merged into one single file, to avoid confusion
+lists_path = "liste.json"
+liste = load_dict_from_path(lists_path)
+
 all_users_path = "all_users.json"
-adminlist_path = "adminlist_hub.json"
-social_list_path = "social_list.json"
-channels_list_path = "channels_list.json"
-progetti_list_path = "progetti_list.json"
 avvisi_on_list_path = "avvisi_on_list.json"
-collaboratori_hub_path = "collaboratori_hub.json"
-progetti_mozita_list_path = "progetti_mozita_list.json"
 adminlist = []
 
-# loading lists and dicts
-progetti_list = load_dict_from_path(progetti_list_path)
-progetti_mozita_list = load_dict_from_path(progetti_mozita_list_path)
-
 avvisi_on_list = load_list_from_path(avvisi_on_list_path)
-collaboratori_hub = load_list_from_path(collaboratori_hub_path)
 all_users = load_list_from_path(all_users_path)
-social_list = load_list_from_path(social_list_path)
-channels_list = load_list_from_path(channels_list_path)
 
 #######################
 # TWITTER INTEGRATION #
 #######################
 # start time from OS
 starttime=time.time()
+
+def updateJSON(data, path):
+    jsonstr = json.dumps(data, sort_keys=True, indent=4)
+    jsonfile = open(path, "w")
+    jsonfile.write(jsonstr)
+    jsonfile.close()
 
 def get_last_id_posted():
     last_twitter_id_path = "last_twitter_id.json"
@@ -374,24 +370,13 @@ def risposte(msg):
     global frasi  # frasi è il dictionary globali che contiene tutte le frasi da visualizzare
     global response
     global adminlist
-    global channels_list
-
-    """
-        Lista degli admin:
-        240188083 -> @Sav22999
-        69903837 -> @Mte90
-        75870906 -> @mone27
-        810740389 -> @dag7d
-        123150516 -> @edovio
-        161975186 -> @astrastefania
-    """
 
     response = bot.getUpdates()
 
-    if Path(adminlist_path).exists():
-        adminlist = json.loads(open(adminlist_path).read())
+    if not liste["adminlist"] or not liste["adminlist"] == {}:
+        adminlist = [ int(admin) for admin in list(liste["adminlist"].keys()) ]  # definita in liste.json
     else:
-        # nel caso in cui non dovesse esistere alcun file "adminlist.json" imposta staticamente l'userid di Sav22999
+        # nel caso in cui non dovesse esistere alcuna lista admin imposta staticamente l'userid di Sav22999
         # -> così da poter confermare anche altri utenti anche se ci sono 'malfunzionamenti' (NON DOVREBBERO ESSERCENE!)
         adminlist = [240188083]
 
@@ -555,19 +540,16 @@ def risposte(msg):
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    load_progetti = []
-    for value_for in progetti_list:
-        load_progetti.append([InlineKeyboardButton(
-            text=str(value_for), url=str(progetti_list[value_for]))])
+    load_progetti = [ [InlineKeyboardButton(
+            text=str(proj), url=liste["progetti"][proj])] for proj in list(liste["progetti"].keys()) ]
     load_progetti.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
     progetti = InlineKeyboardMarkup(inline_keyboard=load_progetti)
-
+    
     load_progettimozita = []
-    for value_for in progetti_mozita_list:
-        load_progettimozita.append([InlineKeyboardButton(
-            text=str(value_for), url=str(progetti_mozita_list[value_for]))])
+    load_progettimozita = [ [InlineKeyboardButton(
+            text=str(proj), url=liste["progetti_mozita"][proj])] for proj in list(liste["progetti_mozita"].keys()) ]
     load_progettimozita.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
@@ -589,9 +571,8 @@ def risposte(msg):
 
     # aggiungere instagram in futuro
     load_social = []
-    for value_for in social_list:
-        load_social.append([InlineKeyboardButton(
-            text=str(value_for), url=str(social_list[value_for]))])
+    load_social = [ [InlineKeyboardButton(
+            text=social, url=liste["social"][social])] for social in list(liste["social"].keys()) ]
     load_social.append([InlineKeyboardButton(
         text=frasi["button_mostra_help"], callback_data='/help')])
 
@@ -599,8 +580,8 @@ def risposte(msg):
 
     admin = False
     collaboratori_stampa = ""
-    for value_for in sorted(collaboratori_hub):
-        collaboratori_stampa += "\n - " + value_for
+    for k, v in liste["collaboratori"].items():
+        collaboratori_stampa += k + " - " + v + "\n"
 
     if chat_id not in all_users:
         all_users.append(chat_id)
@@ -902,7 +883,7 @@ def risposte(msg):
                 # shows channels saved on file
                 # everytime it reloads the file to avoid uncommon situations
                 if azione[0] == "mostra" or azione[0] == "lista" and len(azione) == 1:
-                    channels_list = load_list_from_path(channels_list_path)
+                    channels_list = list(liste["channels"].keys())
                     bot.sendMessage(
                         chat_id, "Lista canali disponibili:\n{}".format(channels_list))
 
@@ -944,18 +925,19 @@ def risposte(msg):
                         print("La preview non può essere vuota.")
 
                 # adds a channel in a file
-                # syntax /admin canale aggiungi |username canale|
+                # syntax /admin canale aggiungi |username canale | descrizione |
                 elif azione[0].lower() == "aggiungi" and len(azione) == 2:
                     # lets fix the username by adding @ at the beginning if not present
                     fixed_username = fix_username(azione[1]).lower()
-
+                    
+                    # manage the case the user doesn't put anything
+                    # TODO: let the user choice the name
+                    
                     # lets check if username is not present in the channel_list
-                    if fixed_username not in set(channels_list):
+                    if fixed_username not in liste["channels"]:
                         try:
-                            channels_list.append(fixed_username)
-                            with open(channels_list_path, "wb") as channels_list_file:
-                                channels_list_file.write(json.dumps(
-                                    channels_list).encode("utf-8"))
+                            liste["channels"][fixed_username] = "undefined"
+                            updateJSON(liste, lists_path)
 
                             bot.sendMessage(
                                 chat_id, "Canale <code>{}</code> aggiunto correttamente".format(fixed_username), parse_mode="HTML")
@@ -975,10 +957,8 @@ def risposte(msg):
                 # syntax /admin canale rimuovi |username canale|
                 elif azione[0].lower() == "elimina" or azione[0].lower() == "rimuovi" and len(azione) == 2:
                     try:
-                        channels_list.remove(fix_username(azione[1]))
-                        with open(channels_list_path, "wb") as channels_list_file:
-                            channels_list_file.write(json.dumps(
-                                channels_list).encode("utf-8"))
+                        liste["channels"].pop(fix_username(azione[1]))
+                        updateJSON(liste, lists_path)
 
                         bot.sendMessage(
                             chat_id, "Canale <code>{}</code> rimosso correttamente".format(azione[1].lower()), parse_mode="HTML")
@@ -995,7 +975,7 @@ def risposte(msg):
                     messaggio = ""
 
                     # check: empty channels
-                    if len(channels_list) == 0:
+                    if len(liste["channels"]) == 0:
                         bot.sendMessage(
                             chat_id,
                             "Lista canali vuota! Impossibile inviare un messaggio!",
@@ -1009,7 +989,7 @@ def risposte(msg):
                             messaggio = ' '.join(azione)
 
                             if messaggio != "":
-                                for channel_name in channels_list:
+                                for channel_name in liste["channels"].keys():
                                     send_message_channel(
                                         channel_name, messaggio, chat_id, "Messaggio non inviato in ")
                             else:
@@ -1154,12 +1134,10 @@ def risposte(msg):
                     link = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if not (nome in progetti_mozita_list):
-                        progetti_mozita_list[str(nome)] = str(link)
+                    if not nome in liste["progetti_mozita"]:
+                        liste["progetti_mozita"][nome] = str(link)
                         try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
                             bot.sendMessage(
                                 chat_id,
                                 "Progetto comunitario '" +
@@ -1185,12 +1163,10 @@ def risposte(msg):
                     link = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if nome in progetti_mozita_list:
-                        progetti_mozita_list[str(nome)] = str(link)
+                    if nome in liste["progetti_mozita"]:
+                        liste["progetti_mozita"][nome] = str(link)
                         try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
                             bot.sendMessage(
                                 chat_id,
                                 "Progetto '" +
@@ -1214,12 +1190,10 @@ def risposte(msg):
                     del azione[0]
                     del azione[0]
                     nome = ' '.join(azione)
-                    if nome in progetti_mozita_list:
-                        del progetti_mozita_list[str(nome)]
+                    if nome in liste["progetti_mozita"]:
+                        liste["progetti_mozita"].pop(nome)
                         try:
-                            with open(progetti_mozita_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_mozita_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
                             bot.sendMessage(
                                 chat_id, "Progetto comunitario '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
@@ -1243,12 +1217,10 @@ def risposte(msg):
                     link = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if not (nome in progetti_list):
-                        progetti_list[str(nome)] = str(link)
+                    if not nome in liste["progetti"]:
+                        liste["progetti"][nome] = str(link)
                         try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
                             bot.sendMessage(
                                 chat_id,
                                 "Progetto '" +
@@ -1273,12 +1245,12 @@ def risposte(msg):
                     link = azione[-1]
                     del azione[-1]
                     nome = ' '.join(azione)
-                    if nome in progetti_list:
-                        progetti_list[str(nome)] = str(link)
+
+                    if nome in liste["progetti"]:
+                        liste["progetti"][nome] = str(link)
                         try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
+
                             bot.sendMessage(
                                 chat_id,
                                 "Progetto '" +
@@ -1301,12 +1273,10 @@ def risposte(msg):
                     del azione[0]
                     del azione[0]
                     nome = ' '.join(azione)
-                    if nome in progetti_list:
-                        del progetti_list[str(nome)]
+                    if nome in liste["progetti"]:
+                        liste["progetti"][nome] = str(link)
                         try:
-                            with open(progetti_list_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    progetti_list).encode("utf-8"))
+                            updateJSON(liste, lists_path)
                             bot.sendMessage(
                                 chat_id, "Progetto '" + str(nome) + "' eliminato correttamente.")
                         except Exception as exception_value:
@@ -1321,19 +1291,20 @@ def risposte(msg):
                                         str(nome) + "' non è stato trovato.")
                 else:
                     admin_err1 = True
-            elif azione[1].lower() == "collaboratore" and len(azione) >= 4:
+            elif azione[1].lower() == "collaboratore":
                 # Azione sui collaboratori
-                if azione[2].lower() == "aggiungi":
+                if azione[2].lower() == "aggiungi" and len(azione) >= 5:
                     del azione[0]
                     del azione[0]
                     del azione[0]
+                    username = azione[-1]
+                    del azione[-1]
                     nome = ' '.join(azione)
-                    if nome not in collaboratori_hub:
-                        collaboratori_hub.append(str(nome))
+                    if not username in liste["collaboratori"]:
+                        liste["collaboratori"][fix_username(username)] = str(nome)
                         try:
-                            with open(collaboratori_hub_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    sorted(collaboratori_hub)).encode("utf-8"))
+                            updateJSON(liste, lists_path)
+
                             bot.sendMessage(
                                 chat_id, "'" + str(nome) + "' aggiunto correttamente ai collaboratori.")
                         except Exception as exception_value:
@@ -1344,24 +1315,19 @@ def risposte(msg):
                                 chat_id,
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
                     else:
-                        bot.sendMessage(
-                            chat_id,
-                            "'" +
-                            str(nome) +
-                            "' è già presente nella lista dei collaboratori.")
-                elif azione[2].lower() == "elimina":
+                        bot.sendMessage(chat_id, "'" + str(nome) + "' è già presente nella lista dei collaboratori.")
+                elif azione[2].lower() == "elimina" or azione[2].lower() == "rimuovi":
                     del azione[0]
                     del azione[0]
                     del azione[0]
-                    nome = ' '.join(azione)
-                    if nome in collaboratori_hub:
-                        collaboratori_hub.remove(str(nome))
+                    username = ' '.join(azione)
+                    if fix_username(username) in liste["collaboratori"]:
+                        liste["collaboratori"].pop(fix_username(username))
                         try:
-                            with open(collaboratori_hub_path, "wb") as file_with:
-                                file_with.write(json.dumps(
-                                    collaboratori_hub).encode("utf-8"))
+                            updateJSON(liste, lists_path)
+
                             bot.sendMessage(
-                                chat_id, "'" + str(nome) + "' rimosso correttamente dai collaboratori.")
+                                chat_id, "'" + str(username) + "' rimosso correttamente dai collaboratori.")
                         except Exception as exception_value:
                             print("Excep:21 -> " + str(exception_value))
                             log("Except:21 ->" +
@@ -1371,10 +1337,7 @@ def risposte(msg):
                                 "Si è verificato un errore inaspettato e non è possibile salvare 'collaboratori_hub.json'.")
                     else:
                         bot.sendMessage(
-                            chat_id,
-                            "'" +
-                            str(nome) +
-                            "' non è presente nella lista dei collaboratori.")
+                            chat_id, "'" + str(username) + "' non è presente nella lista dei collaboratori.")
                 else:
                     admin_err1 = True
             elif azione[1].lower() == "scarica" and len(azione) == 5:

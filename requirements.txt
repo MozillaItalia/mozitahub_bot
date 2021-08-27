@@ -1,2 +1,2 @@
-telepot 
 tweepy
+git+git://github.com/MoumenKhadr/telepot

@@ -1,7 +1,6 @@
 # Mozilla Italia Bot - @MozItaBot
 Questo è il repository del bot di Mozilla Italia "@MozItaBot" su Telegram.
 
-
 # Informazioni utili
 Per segnalare errori aprire un nuovo ticket (si prega di aprire un ticket per ogni errore/idee/bug/ecc, poiché raggrupparli tutti in un unico issue è dispersivo).
 Il bot è attualmente funzionante, basta cercare su Telegram _@MozItaBot_ e il gioco è fatto.
@@ -10,12 +9,13 @@ Grazie a tutti.
 
 ### Installazione ed esecuzione bot
 Per poter eseguire il codice, quindi far girare il bot, è necessario seguire i seguenti passaggi (in ordine):
- - Clonare questa repository, quindi premere su *Fork* in alto a destra
- - Installare Python 3 (o verificare di averlo già installato) **sviluppato e testato con Python 3.7**, ma dovrebbe funzionare anche con altre versioni
- - Il bot attualmente gira su server con Python 3.5
- - Installare la libreria **telepot**, tramite *pip* (o verificare di averla già installata)
-
-   > pip3 install telepot
+  - Clonare questa repository, quindi premere su *Fork* in alto a destra
+  - Installare Python 3 (o verificare di averlo già installato) **sviluppato e testato con Python 3.9**, ma dovrebbe funzionare anche con altre versioni
+  - Il bot attualmente gira su server con Python 3.5
+  - Installare i requirements:
+```
+  pip install -r requirements.txt
+```
 
 ### Frasi visualizzate e contenuto bottoni
 
@@ -56,7 +56,7 @@ Sono disponibili svariate funzionalità:
  - /news: rimani sempre aggiornato sulle novità di Mozilla Italia; su questo canale potrai ricevere tutte le novità necessarie.
  - /iot: il gruppo dedicato strettamente alla tecnologia IoT di Mozilla.
  - /developer: il gruppo dei volontari sviluppatori di Mozilla Italia.
- - /design: il gruppo dei volontari designer di Mozilla Italia.
+ - /dem: il gruppo dei volontari  designer e marketing di Mozilla Italia.
  - /feedback: sentiti libero di lasciare un feedback sul bot e sui servizi di Mozilla Italia. Ricorda di essere sincero e imparziale per permetterci di migliore ciò che offriamo :)
  - /progetti: visualizzare tutti i progetti di Mozilla attivi e anche quelli direttamente della nostra comunità.
  - /info: avere informazioni riguardo questo bot.
@@ -137,19 +137,6 @@ Ecco ciò che si può fare se si è admin.
   - Scaricare file di log: `/admin scarica *AAAA* *MM* *GG*`
   
     > /admin scarica 2019 02 10 
-
-# Librerie utilizzate
-Elenco delle librerie utilizzate nel codice (Python):
- - Telepot
- - Time
- - Datetime
- - Calendar
- - Json
- - Pathlib
-
-## Installare le dipendenze
-
-`pip3 install -r requirements.txt`
 
 # Eccezioni
 La lista di tutte le eccezioni catturate (e gestite), è riportata nel file "ECCEZIONI.md".
