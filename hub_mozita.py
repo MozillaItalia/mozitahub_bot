@@ -89,10 +89,17 @@ data_salvataggio = localtime.strftime("%Y_%m_%d")
 ###########################
 TOKEN = safe_conf_get(config_parser, "bot", "TOKEN")
 NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
+GRUPPI_URL = {
+    "home": "https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ",
+    "news": "https://t.me/mozItaNews",
+    "developers": "https://t.me/joinchat/gR1vRg16B9swNTU0",
+    "l10n": "https://t.me/mozItaL10n",
+    "design_marketing": "https://t.me/joinchat/2fJyoMoOKa1kNjM0"
+}
 
 # managing version and last update
-versione = "1.6.3"
-ultimo_aggiornamento = "18-11-2020"
+versione = "1.6.3.1"
+ultimo_aggiornamento = "27-08-2021"
 
 print("(MozItaBot) Versione: " + versione +
       " - Aggiornamento: " + ultimo_aggiornamento)
@@ -485,41 +492,34 @@ def risposte(msg):
                               callback_data='/feedback')],
     ])
 
+
     gruppi = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_testo_home"], url='https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ'),
-         InlineKeyboardButton(text=frasi["button_testo_news"], url='https://t.me/mozItaNews')],
-        [InlineKeyboardButton(text=frasi["button_testo_developer"], url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw'),
-         InlineKeyboardButton(text=frasi["button_testo_L10n"], url='https://t.me/mozItaL10n')],
-        [InlineKeyboardButton(text=frasi["button_testo_design"], url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g'),
-         InlineKeyboardButton(text=frasi["button_testo_marketing"], url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
+        [InlineKeyboardButton(text=frasi["button_testo_home"], url=GRUPPI_URL['home']),
+         InlineKeyboardButton(text=frasi["button_testo_news"], url=GRUPPI_URL['news'])],
+        [InlineKeyboardButton(text=frasi["button_testo_developers"], url=GRUPPI_URL['developers']),
+         InlineKeyboardButton(text=frasi["button_testo_L10n"], url=GRUPPI_URL["l10n"])],
+        [InlineKeyboardButton(text=frasi["button_testo_design_marketing"], url=GRUPPI_URL["design_marketing"])],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    developer = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_developer"],
-                              url='https://t.me/joinchat/B1cgtENXHcxd3jzFar7Kuw')],
+    developers = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_developers"],
+                              url=GRUPPI_URL['developers'])],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
-    design = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_design"],
-                              url='https://t.me/joinchat/B1cgtA7DF3qDzuRvsEtT6g')],
-        [InlineKeyboardButton(
-            text=frasi["button_mostra_help"], callback_data='/help')],
-    ])
-
-    marketing = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=frasi["button_marketing"],
-                              url='https://t.me/joinchat/DlD6s0j6YtBBPePzczv6sg')],
+    design_marketing = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=frasi["button_design_marketing"],
+                              url=GRUPPI_URL['design_marketing'])],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
 
     L10n = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=frasi["button_L10n"],
-                              url='https://t.me/mozItaL10n')],
+                              url=GRUPPI_URL['l10n'])],
         [InlineKeyboardButton(
             text=frasi["button_mostra_help"], callback_data='/help')],
     ])
@@ -676,15 +676,12 @@ def risposte(msg):
     elif text.lower() == "/forum":
         bot.sendMessage(chat_id, frasi["forum"],
                         reply_markup=forum, parse_mode="HTML")
-    elif text.lower() == "/developer":
-        bot.sendMessage(chat_id, frasi["developer"],
-                        reply_markup=developer, parse_mode="HTML")
-    elif text.lower() == "/design":
-        bot.sendMessage(chat_id, frasi["design"],
-                        reply_markup=design, parse_mode="HTML")
-    elif text.lower() == "/marketing":
-        bot.sendMessage(chat_id, frasi["marketing"],
-                        reply_markup=marketing, parse_mode="HTML")
+    elif text.lower() == "/developers":
+        bot.sendMessage(chat_id, frasi["developers"],
+                        reply_markup=developers, parse_mode="HTML")
+    elif text.lower() == "/dem":
+        bot.sendMessage(chat_id, frasi["design_marketing"],
+                        reply_markup=design_marketing, parse_mode="HTML")
     elif text.lower() == "/l10n":
         bot.sendMessage(chat_id, frasi["L10n"],
                         reply_markup=L10n, parse_mode="HTML")

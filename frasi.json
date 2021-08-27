@@ -13,8 +13,7 @@
     "info": "Questo è un bot realizzato per Mozilla Italia 🇮🇹\nVersione: {{**versione**}}\nUltimo aggiornamento: {{**ultimo_aggiornamento**}}\n\nSviluppatore: Saverio Morelli (@Sav22999)\nCollaboratori (in ordine alfabetico): {{**collaboratori_stampa**}}",
     "forum": "La comunità di Mozilla Italia offre supporto tecnico gratuito tramite il <a href=\"https://forum.mozillaitalia.org\">forum ufficiale</a>. Prima di avviare una nuova discussione è caldamente consigliato <a href=\"https://forum.mozillaitalia.org/index.php?action=regolamento\">leggere il regolamento</a> e accertarsi che il proprio problema non sia stato già sottoposto e discusso in precedenza.",
     "developer": "Entra a far parte del gruppo dedicato agli sviluppatori.",
-    "design": "Unisciti al gruppo dedicato ai designer.",
-    "marketing": "Unisciti al gruppo dedicato alla promozione di Mozilla Italia! Se pensi di poterci dare una mano scrivendo brevi tweet o segnalandoci link interessanti, fai un salto qui!",
+    "designMarketing": "Unisciti al gruppo dedicato ai designer e alla promozione di Mozilla Italia! Se pensi di poterci dare una mano elaborando grafiche, scrivendo brevi tweet o segnalandoci link interessanti, fai un salto qui!",
     "L10n": "Il gruppo dedicato ai localizzatori (traduttori) dei programmi, della documentazione e degli articoli. Se pensi di poter dare una mano in tal senso fai un salto nel gruppo L10n.",
     "call": "La comunità di Mozilla Italia organizza, <i>salvo imprevisti</i>, un meeting video comunitario ogni primo venerdì del mese. Questo ci permette di non perderci mai di vista; potrai parlare di nuovi progetti, eventi o proposte che riguardano ovviamente il mondo Mozilla. Tutti possono partecipare.\nI meeting video vengono registrati e successivamente pubblicati per poter essere rivisti liberamente.",
     "listacall": "Un elenco dei meeting completati, con relativo collegamento ai file video registrati.",
@@ -81,5 +80,5 @@
     "button_vai_a_canale_youtube": "Val al canale YouTube 🦊",
     "social": "Seguici sui nostri social 🦊",
     "button_testo_social": "Social 🦊",
-    "view tweet":"Visualizza tweet"
+    "view tweet": "Visualizza tweet"
 }
