@@ -92,9 +92,9 @@ NEWS_CHANNEL = safe_conf_get(config_parser, "bot", "NEWS_CHANNEL")
 GRUPPI_URL = {
     "home": "https://t.me/joinchat/BCql3UMy26nl4qxuRecDsQ",
     "news": "https://t.me/mozItaNews",
-    "developers": "https://t.me/joinchat/gR1vRg16B9swNTU0",
+    "developers": "https://t.me/+bv2WcZQadHZhMDE0",
     "l10n": "https://t.me/mozItaL10n",
-    "design_marketing": "https://t.me/joinchat/2fJyoMoOKa1kNjM0"
+    "design_marketing": "https://t.me/+SPpi0DHZZ8cHLZ5V"
 }
 
 # managing version and last update
